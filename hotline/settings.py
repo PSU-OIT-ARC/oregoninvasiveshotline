@@ -47,7 +47,7 @@ HOSTNAME = variable("HOSTNAME", default="10.0.0.10.xip.io:8000")
 # we construct the SESSION_COOKIE_DOMAIN based on the hostname. We prepend a
 # dot so the cookie is set for all subdomains
 SESSION_COOKIE_DOMAIN = "." + HOSTNAME.split(":")[0]
-ALLOWED_HOSTS = [SESSION_COOKIE_DOMAIN]
+ALLOWED_HOSTS = "*"
 
 #
 # Test Stuff
