@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+    {{ species_form.species_name|bootstrap }}
+    <input type="submit" class="btn btn-primary" value="Submit" />
+</form>
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{ category_form.category_name|bootstrap }}
+    <input type="submit" class="btn btn-primary" value="Submit" />
+</form>
+{% endblock %}
