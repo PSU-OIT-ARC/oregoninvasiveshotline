@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 
 from .users import views as users
+from .species import views as species 
 
 admin.autodiscover()
 
@@ -20,7 +21,7 @@ urlpatterns = patterns(
     # the homepage goes straight to a template. But you may want to change this
     # into a normal view function
     url(r'^$', TemplateView.as_view(template_name="home.html"), name='home'),
-
+    url(r'^adminpanel/?$', species.admin_panel, name='admin_panel'),
     # Here we define all the URL routes for the users app. Technically, you
     # could put these routes in the app itself, but for non-reusable apps, we
     # keep them in the main urlconfs file
