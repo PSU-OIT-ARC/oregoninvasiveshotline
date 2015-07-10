@@ -7,9 +7,13 @@ class User(AbstractBaseUser):
     email = models.EmailField(max_length=255, unique=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
+    prefix = models.CharField(max_length=255)
+    suffix = models.CharField(max_length=255)
     date_joined = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True, blank=True, help_text="Inactive users cannot login")
+    is_manager = models.BooleanField(default=False, blank=True)
     is_staff = models.BooleanField(default=False, blank=True)
+    affiliations = models.TextField()
 
     USERNAME_FIELD = 'email'
 
@@ -25,12 +29,19 @@ class User(AbstractBaseUser):
         else:
             return self.email
 
+    @property
+    def is_elevated(self):
+        return self.is_manager or self.is_staff
+
     # These methods are required to work with Django's admin
     def get_full_name(self):
         return self.last_name + ", " + self.first_name
 
     def get_short_name(self):
         return self.first_name + " " + self.last_name
+
+    def get_proper_name(self):
+        return ("%s %s %s %s" % (self.prefix, self.first_name, self.last_name, self.suffix)).strip()
 
     # we don't need granular permissions; all staff will have access to
     # everything

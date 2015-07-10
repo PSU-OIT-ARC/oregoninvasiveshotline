@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Category',
             fields=[
-                ('category_id', models.AutoField(serialize=False, primary_key=True)),
+                ('category_id', models.AutoField(primary_key=True, serialize=False)),
                 ('name', models.CharField(max_length=255)),
             ],
             options={
@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Severity',
             fields=[
-                ('severity_id', models.AutoField(serialize=False, primary_key=True)),
+                ('severity_id', models.AutoField(primary_key=True, serialize=False)),
                 ('name', models.CharField(max_length=255)),
             ],
             options={
@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Species',
             fields=[
-                ('species_id', models.AutoField(serialize=False, primary_key=True)),
+                ('species_id', models.AutoField(primary_key=True, serialize=False)),
                 ('name', models.CharField(max_length=255)),
                 ('scientific_name', models.CharField(max_length=255)),
                 ('remedy', models.TextField()),

@@ -81,3 +81,34 @@ body {
 #mask-alert {
     text-align:center;
 }
+
+.credit img {
+    padding-right:5px;
+}
+
+.misidentified {
+    font-size:14px;
+    color:#ff8800;
+}
+
+.pictures {
+    margin:auto;
+}
+
+.pictures-gallery {
+    height:300px;
+    overflow:auto;
+    width:90px;
+}
+
+.pictures-gallery img {
+    display:block;
+}
+
+.location, .related, .credit {
+    margin-top:50px;
+}
+
+.sidebar div:first-child {
+    margin-top:0;
+}

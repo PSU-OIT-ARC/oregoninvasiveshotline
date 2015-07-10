@@ -4,6 +4,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
 
+from .comments import views as comments
+from .reports import views as reports
 from .users import views as users
 from .species import views as species 
 
@@ -22,6 +24,12 @@ urlpatterns = patterns(
     # into a normal view function
     url(r'^$', TemplateView.as_view(template_name="home.html"), name='home'),
     url(r'^adminpanel/?$', species.admin_panel, name='admin_panel'),
+
+    url(r'^reports/create/?$', reports.create, name='reports-create'),
+    url(r'^reports/detail/(?P<report_id>\d+)?$', reports.detail, name='reports-detail'),
+
+    url(r'^comments/edit/(?P<comment_id>\d+)?$', comments.edit, name='comments-edit'),
+
     # Here we define all the URL routes for the users app. Technically, you
     # could put these routes in the app itself, but for non-reusable apps, we
     # keep them in the main urlconfs file

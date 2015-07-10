@@ -1,0 +1,79 @@
+[
+{
+    "model": "species.category",
+    "fields": {
+        "name": "Micro-Organisms"
+    },
+    "pk": 1
+},
+{
+    "model": "species.category",
+    "fields": {
+        "name": "Aquatic Plants"
+    },
+    "pk": 2
+},
+{
+    "model": "species.category",
+    "fields": {
+        "name": "Land Plants"
+    },
+    "pk": 3
+},
+{
+    "model": "species.category",
+    "fields": {
+        "name": "Aquatic Invertebrates"
+    },
+    "pk": 4
+},
+{
+    "model": "species.category",
+    "fields": {
+        "name": "Aquatic Vertebrates"
+    },
+    "pk": 5
+},
+{
+    "model": "species.category",
+    "fields": {
+        "name": "Insects"
+    },
+    "pk": 6
+},
+{
+    "model": "species.category",
+    "fields": {
+        "name": "Fish"
+    },
+    "pk": 7
+},
+{
+    "model": "species.category",
+    "fields": {
+        "name": "Birds"
+    },
+    "pk": 8
+},
+{
+    "model": "species.category",
+    "fields": {
+        "name": "Mammals"
+    },
+    "pk": 9
+},
+{
+    "model": "species.category",
+    "fields": {
+        "name": "Land Mollusks"
+    },
+    "pk": 10
+},
+{
+    "model": "species.category",
+    "fields": {
+        "name": "Reptiles"
+    },
+    "pk": 13
+}
+]

@@ -1,0 +1,3174 @@
+[
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Phytophthora alni",
+        "category": 1,
+        "name": "Alder root rot",
+        "is_confidential": false
+    },
+    "pk": 1,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "cherry leaf roll nepovius - CLRV",
+        "category": 1,
+        "name": "Cherry leaf roll",
+        "is_confidential": false
+    },
+    "pk": 2,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "CWD prion",
+        "category": 1,
+        "name": "Chronic wasting disease",
+        "is_confidential": false
+    },
+    "pk": 3,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "elm yellows phytoplasma",
+        "category": 1,
+        "name": "Elm yellows",
+        "is_confidential": false
+    },
+    "pk": 4,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Pseudomonas avellanae",
+        "category": 1,
+        "name": "Hazelnut bacteria canker",
+        "is_confidential": false
+    },
+    "pk": 5,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "ISAV",
+        "category": 1,
+        "name": "Infectious salmon anemia virus",
+        "is_confidential": false
+    },
+    "pk": 6,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Ceratocystis fabacearum",
+        "category": 1,
+        "name": "Oak wilt",
+        "is_confidential": false
+    },
+    "pk": 7,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Gymnosporangium fuscum",
+        "category": 1,
+        "name": "Pear trellis rust",
+        "is_confidential": false
+    },
+    "pk": 8,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "plum pox potyvirus - PPV",
+        "category": 1,
+        "name": "Plum pox",
+        "is_confidential": false
+    },
+    "pk": 10,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Xanthomonas populi",
+        "category": 1,
+        "name": "Poplar canker",
+        "is_confidential": false
+    },
+    "pk": 11,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Globodera pallida, Globodera rostochiensis",
+        "category": 1,
+        "name": "Potato cyst nematodes",
+        "is_confidential": false
+    },
+    "pk": 12,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Synchytrium endobioticum",
+        "category": 1,
+        "name": "Potato wart",
+        "is_confidential": false
+    },
+    "pk": 13,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Phytophora ramorum",
+        "category": 1,
+        "name": "Sudden oak death, ramorum canker and blight",
+        "is_confidential": false
+    },
+    "pk": 14,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Myxobolus cerebralis",
+        "category": 1,
+        "name": "Whirling disease",
+        "is_confidential": false
+    },
+    "pk": 17,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Erwinia salicis",
+        "category": 1,
+        "name": "Willow watermark disease",
+        "is_confidential": false
+    },
+    "pk": 18,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Lagarosiphon major",
+        "category": 2,
+        "name": "Waterweed, African",
+        "is_confidential": false
+    },
+    "pk": 22,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Caulerpa taxifolia",
+        "category": 2,
+        "name": "Seaweed, caulerpa",
+        "is_confidential": false
+    },
+    "pk": 23,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Spartina alterniflora, Spartina densiflora, Spartina aglica, Spartina patens**",
+        "category": 2,
+        "name": "Spartina/Cordgrass",
+        "is_confidential": false
+    },
+    "pk": 24,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Codium fragile tomentosoides",
+        "category": 2,
+        "name": "Dead man\u2019s fingers",
+        "is_confidential": false
+    },
+    "pk": 25,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Trapa natans",
+        "category": 2,
+        "name": "Water chestnut, European",
+        "is_confidential": false
+    },
+    "pk": 26,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Salvinia molesta",
+        "category": 2,
+        "name": "Salvinia, giant",
+        "is_confidential": false
+    },
+    "pk": 27,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Hydrilla verticilata",
+        "category": 2,
+        "name": "Hydrilla",
+        "is_confidential": false
+    },
+    "pk": 28,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Didymosphenia geminata",
+        "category": 2,
+        "name": "Rock snot",
+        "is_confidential": false
+    },
+    "pk": 29,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Cylindrospermopsis raciborskii",
+        "category": 2,
+        "name": "Toxic cyanobacteria",
+        "is_confidential": false
+    },
+    "pk": 30,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Nymphoides peltata",
+        "category": 2,
+        "name": "Yellow floating heart",
+        "is_confidential": false
+    },
+    "pk": 31,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Landoltia punctata",
+        "category": 2,
+        "name": "Duckweed, Giant",
+        "is_confidential": false
+    },
+    "pk": 33,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Potamogeton crispus",
+        "category": 2,
+        "name": "Pondweed, Curly-leaved",
+        "is_confidential": false
+    },
+    "pk": 34,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"Pest Risk Management of _Peganum harmala_ (African rue) in Canada\":https://www.richters.com/Issues/invasive/Peganum_harmala_pest_risk_management_document.pdf",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Peganum harmala",
+        "category": 3,
+        "name": "African Rue",
+        "is_confidential": false
+    },
+    "pk": 36,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"Camelthorn info from California Invasive Plant Council\":http://www.cal-ipc.org/ip/management/ipcw/pages/detailreport.cfm@usernumber=4&surveynumber=182.php",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Alhagi pseudalhagi",
+        "category": 3,
+        "name": "Camelthorn ",
+        "is_confidential": false
+    },
+    "pk": 37,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Tussilago farfara",
+        "category": 3,
+        "name": "Coltsfoot",
+        "is_confidential": false
+    },
+    "pk": 39,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"Manage Giant Hogweed\":http://www.oregon.gov/ODA/PLANT/WEEDS/profile_gianthogweed.shtml",
+        "severity": 3,
+        "resources": "Want to join forces with your community to fight invasives? There are lots of people involved in this effort already! The links below can connect you with opportunities:\\r                                                                                                                          +\n * \"Association of Soil and Water Conservation Districts\":http://www.oacd.org/districts.html (Click on your county) \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"OPB Silent Invasion\":http://www.opb.org/programs/invasives/ (scroll down to events)\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 +\n * \"SOLV\":http://www.solv.org/programs/invasives.asp\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"Invasives Watch Volunteers\":http://www.westerninvasivesnetwork.org/pages/nature_conserv.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        +\n * \"The Nature Conservancy in Oregon\":http://www.nature.org/wherewework/northamerica/states/oregon/about/art24312.html",
+        "scientific_name": "Heracleum mantegazzianum",
+        "category": 3,
+        "name": "Hogweed, Giant",
+        "is_confidential": false
+    },
+    "pk": 40,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Aegilops triuncialis",
+        "category": 3,
+        "name": "Goatgrass, Barbed",
+        "is_confidential": false
+    },
+    "pk": 41,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Arundo donax",
+        "category": 3,
+        "name": "Reed grass, giant",
+        "is_confidential": false
+    },
+    "pk": 43,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Pueraria lobata",
+        "category": 3,
+        "name": "Kudzu",
+        "is_confidential": false
+    },
+    "pk": 44,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Nardus stricta",
+        "category": 3,
+        "name": "Matgrass",
+        "is_confidential": false
+    },
+    "pk": 45,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Polygonum perfoliatum",
+        "category": 3,
+        "name": "Mile-a-minute weed",
+        "is_confidential": false
+    },
+    "pk": 46,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"Portuguese Broom (_Cytisus striatus_) at the California Invasive Plant Council\":http://www.cal-ipc.org/ip/management/plant_profiles/Cytisus_striatus.php",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Cytisus striatus",
+        "category": 3,
+        "name": "Broom, Portuguese",
+        "is_confidential": false
+    },
+    "pk": 47,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Cyperus rotundus",
+        "category": 3,
+        "name": "Nutsedge, purple",
+        "is_confidential": false
+    },
+    "pk": 48,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Solanum elaegnifolium",
+        "category": 3,
+        "name": "Nightshade, silverleaf",
+        "is_confidential": false
+    },
+    "pk": 49,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"Skeletonleaf Bursage (_Ambrosia tomentosa_) info from Pacific Northwest Weed Management Handbook\":http://pnwhandbooks.org/weed/other-items/control-problem-weeds/bursage-skeletonleaf-ambrosia-tomentosa",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Ambrosia tomentosa",
+        "category": 3,
+        "name": "Bursage, Skeletonleaf",
+        "is_confidential": false
+    },
+    "pk": 50,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Centaurea virgata",
+        "category": 3,
+        "name": "Knapweed, squarrose",
+        "is_confidential": false
+    },
+    "pk": 51,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Centaurea iberica",
+        "category": 3,
+        "name": "Starthistle, Iberian",
+        "is_confidential": false
+    },
+    "pk": 52,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Echium plantagineum",
+        "category": 3,
+        "name": "Patersons curse",
+        "is_confidential": false
+    },
+    "pk": 62,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"PCA's Alien Plant Working Group - Black Locust\":http://www.nps.gov/plants/ALIEN/fact/rops1.htm",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Robinia pseudoacacia",
+        "category": 3,
+        "name": "Acacia, False",
+        "is_confidential": false
+    },
+    "pk": 65,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"Management of Bearded Creeper (_Crupina vulgaris_) in King County, WA\":http://www.kingcounty.gov/environment/animalsAndPlants/noxious-weeds/laws/list.aspx",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Crupina vulgaris",
+        "category": 3,
+        "name": "Bearded Creeper",
+        "is_confidential": false
+    },
+    "pk": 66,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"California Department of Food and Agriculture Weed Information - Biddy-Biddy (_Acaena novae-zelandia_)\":http://www.cdfa.ca.gov/plant/ipc/weedinfo/acaena.htm#anchor616800",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Acaena novae-zelandieae",
+        "category": 3,
+        "name": "Biddy-Biddy",
+        "is_confidential": false
+    },
+    "pk": 67,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"Himalayan and Evergreen Blackberries info from King County, WA\":http://www.kingcounty.gov/environment/animalsAndPlants/noxious-weeds/weed-identification/blackberry.aspx",
+        "severity": 3,
+        "resources": "Want to join forces with your community to fight invasives? There are lots of people involved in this effort already! The links below can connect you with opportunities:\\r+\n * \"Association of Soil and Water Conservation Districts Directory\":http://oacd.org/conservation-districts/directory\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"SOLV\":http://www.solv.org/\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          +\n * \"The Nature Conservancy in Oregon\":http://www.nature.org/ourinitiatives/regions/northamerica/unitedstates/oregon/index.htm\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                           +\n ",
+        "scientific_name": "Rubus bifrons, [R. aremeniacus, R. discolor, R. procerus]",
+        "category": 3,
+        "name": "Blackberry, Himalayan",
+        "is_confidential": false
+    },
+    "pk": 69,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"More Information from the Rocky Mountain Cheatgrass Management Handbook\":http://www.wyomingextension.org/agpubs/pubs/B1246.pdf",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Bromus tectorum",
+        "category": 3,
+        "name": "Brome, Cheatgrass",
+        "is_confidential": false
+    },
+    "pk": 70,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"More Information from the King County, WA Noxious Weeds Inventory\":http://www.kingcounty.gov/environment/animalsAndPlants/noxious-weeds/weed-identification/false-brome.aspx",
+        "severity": 3,
+        "resources": "Want to join forces with your community to fight invasives? There are lots of people involved in this effort already! The links below can connect you with opportunities: \\r                                      +\n * \"Association of Soil and Water Conservation Districts\":http://www.oacd.org/districts.html (Click on your county) \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"OPB Silent Invasion\":http://www.opb.org/programs/invasives/ (scroll down to events)\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 +\n * \"SOLV\":http://www.solv.org/programs/invasives.asp\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"Invasives Watch Volunteers\":http://www.westerninvasivesnetwork.org/pages/nature_conserv.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        +\n * \"The Nature Conservancy in Oregon\":http://www.nature.org/wherewework/northamerica/states/oregon/about/art24312.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  +\n ",
+        "scientific_name": "Brachypodium sylvaticum",
+        "category": 3,
+        "name": "Brome, False",
+        "is_confidential": false
+    },
+    "pk": 71,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"Management Information from the Global Invasive Species Database\":http://www.issg.org/database/species/management_info.asp?si=596&fr=1&sts=&lang=EN",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Bromus rubens",
+        "category": 3,
+        "name": "Brome, Foxtail",
+        "is_confidential": false
+    },
+    "pk": 72,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"French Broom (_Genista monspessulana_) Management Considerations from the USDA Forest Service\":http://www.fs.fed.us/database/feis/plants/shrub/genmon/all.html",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Genista monspessulana",
+        "category": 3,
+        "name": "Broom, French",
+        "is_confidential": false
+    },
+    "pk": 73,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "\"Information on broom control from King County, WA\":http://your.kingcounty.gov/dnrp/library/water-and-land/weeds/BMPs/Scotch-Broom-Control.pdf",
+        "severity": 3,
+        "resources": "Want to join forces with your community to fight invasives? There are lots of people involved in this effort already! The links below can connect you with opportunities:\\r                                                                             +\n * \"Association of Soil and Water Conservation Districts Directory\":http://oacd.org/conservation-districts/directory\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"SOLV\":http://www.solv.org/\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          +\n * \"The Nature Conservancy in Oregon\":http://www.nature.org/ourinitiatives/regions/northamerica/unitedstates/oregon/index.htm",
+        "scientific_name": "Cytisus scoparius",
+        "category": 3,
+        "name": "Broom, Scotch",
+        "is_confidential": false
+    },
+    "pk": 74,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"Spanish Broom (_Spartium junceum_) info from King County, WA\":http://www.kingcounty.gov/environment/animalsAndPlants/noxious-weeds/weed-identification/spanish-broom.aspx",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Spartium junceum",
+        "category": 3,
+        "name": "Broom, Spanish",
+        "is_confidential": false
+    },
+    "pk": 75,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"More Information from the King County, WA Noxious Weed List\":http://www.invasive.org/weedcd/species/2450.htm",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Orobanche minor",
+        "category": 3,
+        "name": "Broomrape, Small",
+        "is_confidential": false
+    },
+    "pk": 76,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"Buffalobur (_Solanum rostratum_) info from King County, WA\":http://www.kingcounty.gov/environment/animalsAndPlants/noxious-weeds/weed-identification/buffalobur.aspx",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Solanum rostratum",
+        "category": 3,
+        "name": "Buffalobur",
+        "is_confidential": false
+    },
+    "pk": 77,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"Lesser Celandine\":http://www.wewetlands.org/files/186_Lesser%20Celandine.pdf",
+        "severity": 3,
+        "resources": "Want to join forces with your community to fight invasives? There are lots of people involved in this effort already! The links below can connect you with opportunities:\\r                                                                                                                                       +\n * \"Association of Soil and Water Conservation Districts Directory\":http://oacd.org/conservation-districts/directory\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"SOLV\":http://www.solv.org/\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          +\n * \"The Nature Conservancy in Oregon\":http://www.nature.org/ourinitiatives/regions/northamerica/unitedstates/oregon/index.htm",
+        "scientific_name": "Ranunculus ficaria",
+        "category": 3,
+        "name": "Celandine, Lesser",
+        "is_confidential": false
+    },
+    "pk": 78,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"Spiny Cocklebur information from the Weed Report in _Weed Control in Natural Areas in the United States_ at UC Davis\":http://wric.ucdavis.edu/information/natural%20areas/wr_X/Xanthium_spinosum-strumarium.pdf",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Xanthium spinosum",
+        "category": 3,
+        "name": "Cocklebur, Spiny",
+        "is_confidential": false
+    },
+    "pk": 79,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"Manage Cutleaf Teasel\":http://www.weedmapper.org/dila4.html",
+        "severity": 3,
+        "resources": "Want to join forces with your community to fight invasives? There are lots of people involved in this effort already! The links below can connect you with opportunities:\\r                                                                                                                                                          +\n * \"Association of Soil and Water Conservation Districts\":http://www.oacd.org/districts.html (Click on your county) \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"OPB Silent Invasion\":http://www.opb.org/programs/invasives/ (scroll down to events)\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 +\n * \"SOLV\":http://www.solv.org/programs/invasives.asp\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"Invasives Watch Volunteers\":http://www.westerninvasivesnetwork.org/pages/nature_conserv.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        +\n * \"The Nature Conservancy in Oregon\":http://www.nature.org/wherewework/northamerica/states/oregon/about/art24312.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  +\n ",
+        "scientific_name": "Dipsacus laciniatus",
+        "category": 3,
+        "name": "Cutleaf Teasel",
+        "is_confidential": false
+    },
+    "pk": 82,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Hieracium pilosella",
+        "category": 3,
+        "name": "Hawkweed, Mouse-Ear",
+        "is_confidential": false
+    },
+    "pk": 93,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Hieracium floribundum",
+        "category": 3,
+        "name": "Hawkweed, Yellow",
+        "is_confidential": false
+    },
+    "pk": 95,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "Thanks for your report!  Unfortunately ivy is too widespread and resources are too thin for land managers to assist with control. Controlling this species is of high importance, and we encourage you to take the steps to control this plant on your property.  Below is some information to help you with this.  Don't despair, you can do it!\\r                                                                   +\n \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n Tackling an infestation of ivy is no easy task, but well worth the investment.  If you notice a small infestation, do not delay in removing it.  The longer one waits to treat ivy, the effort it takes to remedy the situation increases exponentially.   If you have a large infestation that seems overwhelming try breaking the project into smaller more manageable areas, and tackle new areas as time allows.  If you set smaller goals you might be less likely to be discouraged.\\r                                                                                                             +\n \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n Follow these simple steps for an ivy free landscape.  \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 +\n \u2022       Carefully cut vines climbing trees and pull these vines away from the base of the tree. \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n \u2022       Pull vines and roots from ivy creeping along the ground.  Don\u2019t forget your gloves and scissors.  \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             +\n \u2022       Dispose of cut vines in yard waste, or dry out completely and compost\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          +\n \u2022       Re-visit the site regularly to control re-growth\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               +\n \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n For more detailed information on English ivy and its control follow the link below:\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n http://your.kingcounty.gov/dnrp/library/water-and-land/weeds/BMPs/english-ivy-control.pdf\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              +\n \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n   ",
+        "severity": 3,
+        "resources": "Want to join forces with your community to fight invasives? There are lots of people involved in this effort already! The links below can connect you with opportunities:\\r                                                                                                                                                                                                                                                                                                                                                                                                                 +\n \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n Association of Soil and Water Conservation Districts (Click on your county) \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           +\n http://www.oacd.org/districts.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     +\n \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n OPB Silent Invasion (scroll down to events)\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            +\n http://www.opb.org/programs/invasives/\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 +\n \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n SOLV  \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 +\n http://www.solv.org/programs/invasives.asp\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             +\n \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n Invasives Watch Volunteers\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             +\n http://www.westerninvasivesnetwork.org/pages/nature_conserv.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n The Nature Conservancy in Oregon\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n http://www.nature.org/wherewework/northamerica/states/oregon/about/art24312.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n ",
+        "scientific_name": "Hedera helix",
+        "category": 3,
+        "name": "Ivy, English",
+        "is_confidential": false
+    },
+    "pk": 100,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"Manage Meadow Knapweed\":http://cru.cahe.wsu.edu/CEPublications/pnw0566/PNW0566.pdf",
+        "severity": 3,
+        "resources": "Want to join forces with your community to fight invasives? There are lots of people involved in this effort already! The links below can connect you with opportunities:\\r                                                                                                                                +\n * \"Association of Soil and Water Conservation Districts\":http://www.oacd.org/districts.html (Click on your county) \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"OPB Silent Invasion\":http://www.opb.org/programs/invasives/ (scroll down to events)\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 +\n * \"SOLV\":http://www.solv.org/programs/invasives.asp\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"Invasives Watch Volunteers\":http://www.westerninvasivesnetwork.org/pages/nature_conserv.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        +\n * \"The Nature Conservancy in Oregon\":http://www.nature.org/wherewework/northamerica/states/oregon/about/art24312.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  +\n ",
+        "scientific_name": "Centaurea pratensis",
+        "category": 3,
+        "name": "Knapweed, Meadow",
+        "is_confidential": false
+    },
+    "pk": 102,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"Manage Giant Knotweed\":http://extension.oregonstate.edu/catalog/pdf/ec/ec1597-e.pdf",
+        "severity": 3,
+        "resources": "Want to join forces with your community to fight invasives? There are lots of people involved in this effort already! The links below can connect you with opportunities:\\r                                                                                                                             +\n * \"Association of Soil and Water Conservation Districts\":http://www.oacd.org/districts.html (Click on your county) \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"OPB Silent Invasion\":http://www.opb.org/programs/invasives/ (scroll down to events)\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 +\n * \"SOLV\":http://www.solv.org/programs/invasives.asp\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"Invasives Watch Volunteers\":http://www.westerninvasivesnetwork.org/pages/nature_conserv.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        +\n * \"The Nature Conservancy in Oregon\":http://www.nature.org/wherewework/northamerica/states/oregon/about/art24312.html",
+        "scientific_name": "Polygonum sachalinense",
+        "category": 3,
+        "name": "Knotweed, Giant",
+        "is_confidential": false
+    },
+    "pk": 104,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Impatiens glandulifera",
+        "category": 3,
+        "name": "Policeman's Helmet",
+        "is_confidential": false
+    },
+    "pk": 108,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "Check out these Documents for recommended methods for controlling Tansy Ragwort\\r                                                                                                                                                                                                                                                                                                                               +\n \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n http://your.kingcounty.gov/dnrp/library/water-and-land/weeds/BMPs/tansy_ragwort-control.pdf\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            +\n http://www.imapinvasives.org/GIST/ESA/esapages/documnts/senejac.pdf\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n http://extension.oregonstate.edu/catalog/pdf/ec/ec1599-e.pdf\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           +\n http://www.co.thurston.wa.us/tcweeds/weeds/fact-sheets/Tansy.pdf\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n ",
+        "severity": 3,
+        "resources": "Check out these resource for additional information\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         +\n \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n http://www.kingcounty.gov/environment/animalsandplants/noxious-weeds/weed-identification/tansy-ragwort.aspx\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            +\n http://www.nwcb.wa.gov/weed_info/Written_findings/Senecio_jacobaea.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                +\n http://www.invasive.org/weedcd/pdfs/wow/tansy-ragwort.pdf\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              +\n http://www.oregon.gov/ODA/PLANT/WEEDS/profile_tansyragwort.shtml\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n ",
+        "scientific_name": "Senecio jacobaea",
+        "category": 3,
+        "name": "Ragwort, Tansy",
+        "is_confidential": false
+    },
+    "pk": 112,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Rosa rugosa",
+        "category": 3,
+        "name": "Rose, Japanese",
+        "is_confidential": false
+    },
+    "pk": 113,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Taeniatherum caput-medusae",
+        "category": 3,
+        "name": "Rye, Medusahead",
+        "is_confidential": false
+    },
+    "pk": 114,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Linaria dalmatica",
+        "category": 3,
+        "name": "Toadflax, Dalmation",
+        "is_confidential": false
+    },
+    "pk": 127,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Linaria vulgaris",
+        "category": 3,
+        "name": "Toadflax, Yellow",
+        "is_confidential": false
+    },
+    "pk": 128,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Cercopagis pengoi",
+        "category": 4,
+        "name": "Waterflea, fishhook",
+        "is_confidential": false
+    },
+    "pk": 134,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Hemigrapsus sanguineus",
+        "category": 4,
+        "name": "Crab, Japanese shore",
+        "is_confidential": false
+    },
+    "pk": 135,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Mnemiopsis leidyi",
+        "category": 4,
+        "name": "Comb Jelly, Leidy&rsquo;s",
+        "is_confidential": false
+    },
+    "pk": 136,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Eriocheir spp.*",
+        "category": 4,
+        "name": "Crab, Unknown Mitten",
+        "is_confidential": false
+    },
+    "pk": 137,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Sphaeroma quoyanum",
+        "category": 4,
+        "name": "Isopod, New Zealand",
+        "is_confidential": false
+    },
+    "pk": 138,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Orconectes rusticus",
+        "category": 4,
+        "name": "Crayfish, Rusty",
+        "is_confidential": false
+    },
+    "pk": 139,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Didemnum lahillei",
+        "category": 4,
+        "name": "Sea Squirt",
+        "is_confidential": false
+    },
+    "pk": 140,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Dreissena polymorpha, Dreissena bugensis",
+        "category": 4,
+        "name": "Mussel, Zebra and Quagga",
+        "is_confidential": false
+    },
+    "pk": 141,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Potamopyrgus antipodarum",
+        "category": 4,
+        "name": "Mudsnail, New Zealand",
+        "is_confidential": false
+    },
+    "pk": 145,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Nuttalia obscurata",
+        "category": 4,
+        "name": "Clam, Varnish ",
+        "is_confidential": false
+    },
+    "pk": 148,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Phithropanopeus harrisii",
+        "category": 4,
+        "name": "Crab, Harris Mud",
+        "is_confidential": false
+    },
+    "pk": 149,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Tritodynamia horvathi",
+        "category": 4,
+        "name": "Crab, Pea",
+        "is_confidential": false
+    },
+    "pk": 150,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Crassostrea sikamea",
+        "category": 4,
+        "name": "Oyster, Kumamoto",
+        "is_confidential": false
+    },
+    "pk": 151,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Perna canaliculus",
+        "category": 4,
+        "name": "Mussel, New Zealand green",
+        "is_confidential": false
+    },
+    "pk": 152,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Callinectes sapidus",
+        "category": 4,
+        "name": "Crab, Atlantic Blue",
+        "is_confidential": false
+    },
+    "pk": 153,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Venerupis phillipinarum",
+        "category": 4,
+        "name": "Clam, Manilla Littleneck",
+        "is_confidential": false
+    },
+    "pk": 155,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Crassostrea virginica",
+        "category": 4,
+        "name": "Oyster, American",
+        "is_confidential": false
+    },
+    "pk": 156,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Ostrea edulis",
+        "category": 4,
+        "name": "Oyster, Flat",
+        "is_confidential": false
+    },
+    "pk": 157,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Rana catesbeiana",
+        "category": 5,
+        "name": "Bullfrog, American",
+        "is_confidential": false
+    },
+    "pk": 162,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Trachemys scripta elegans",
+        "category": 5,
+        "name": "Turtle, Red-Eared Slider",
+        "is_confidential": false
+    },
+    "pk": 188,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Salvelinus fontinalis",
+        "category": 5,
+        "name": "Trout, Brook ",
+        "is_confidential": false
+    },
+    "pk": 189,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Apis mellifera scutellata",
+        "category": 6,
+        "name": "Bee, Africanized honey ",
+        "is_confidential": false
+    },
+    "pk": 190,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Linepithema humile",
+        "category": 6,
+        "name": "Ant, Argentine ",
+        "is_confidential": false
+    },
+    "pk": 191,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Anoplophora glabripennis, A.chinensis",
+        "category": 6,
+        "name": "Beetle, Asian longhorned",
+        "is_confidential": false
+    },
+    "pk": 192,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Tetropium fuscum, T. castaneum",
+        "category": 6,
+        "name": "Beetle, brown spruce longhorn",
+        "is_confidential": false
+    },
+    "pk": 193,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Agrilus planipennis",
+        "category": 6,
+        "name": "Ash Borer, emerald",
+        "is_confidential": false
+    },
+    "pk": 194,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Rhizotrogus majalis",
+        "category": 6,
+        "name": "Chafer, European",
+        "is_confidential": false
+    },
+    "pk": 195,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Ostrinia nubilalis",
+        "category": 6,
+        "name": "Corn borer, European",
+        "is_confidential": false
+    },
+    "pk": 196,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Sirex noctilio",
+        "category": 6,
+        "name": "Woodwasp, European ",
+        "is_confidential": false
+    },
+    "pk": 197,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Xylosandrus crassiusculus",
+        "category": 6,
+        "name": "Beetle, granulate ambrosia",
+        "is_confidential": false
+    },
+    "pk": 198,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Lymantria dispar",
+        "category": 6,
+        "name": "Gypsy Moth, European",
+        "is_confidential": false
+    },
+    "pk": 199,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Solenopsis invicta",
+        "category": 6,
+        "name": "Fire ant, imported red",
+        "is_confidential": false
+    },
+    "pk": 200,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Popillia japonica",
+        "category": 6,
+        "name": "Beetle, Japanese",
+        "is_confidential": false
+    },
+    "pk": 201,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Ceroplastes japonicus",
+        "category": 6,
+        "name": "Wax scale, Japanese",
+        "is_confidential": false
+    },
+    "pk": 202,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Trogoderma granarium",
+        "category": 6,
+        "name": "Beetle, khapra",
+        "is_confidential": false
+    },
+    "pk": 203,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Epiphyas postvittana",
+        "category": 6,
+        "name": "Moth, light brown apple ",
+        "is_confidential": false
+    },
+    "pk": 204,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Epilachna varivestis",
+        "category": 6,
+        "name": "Beetle, Mexican bean",
+        "is_confidential": false
+    },
+    "pk": 205,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Helicoverpa armigera",
+        "category": 6,
+        "name": "Bollworm, old world",
+        "is_confidential": false
+    },
+    "pk": 206,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Anomala orientlis",
+        "category": 6,
+        "name": "Beetle, Oriental",
+        "is_confidential": false
+    },
+    "pk": 207,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Conotrachelus nenuphar",
+        "category": 6,
+        "name": "Curculio, plum",
+        "is_confidential": false
+    },
+    "pk": 208,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Tomicus piniperda",
+        "category": 6,
+        "name": "Beetle, pine shoot",
+        "is_confidential": false
+    },
+    "pk": 209,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Monochamus urussovi, M. alternatus",
+        "category": 6,
+        "name": "Sawyers",
+        "is_confidential": false
+    },
+    "pk": 210,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Dendrolimus superans",
+        "category": 6,
+        "name": "Moth, Siberian ",
+        "is_confidential": false
+    },
+    "pk": 211,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Autographa gamma",
+        "category": 6,
+        "name": "Moth, silver Y",
+        "is_confidential": false
+    },
+    "pk": 212,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Ips typographus",
+        "category": 6,
+        "name": "Beetle, spruce bark",
+        "is_confidential": false
+    },
+    "pk": 213,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Contarinia nasturtii",
+        "category": 6,
+        "name": "Midge, Swede",
+        "is_confidential": false
+    },
+    "pk": 214,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Thesbe pisa",
+        "category": 6,
+        "name": "Snail, White garden",
+        "is_confidential": false
+    },
+    "pk": 215,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Homalodisca coagulata",
+        "category": 6,
+        "name": "Sharpshooter, Glassywinged",
+        "is_confidential": false
+    },
+    "pk": 219,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Rhinogobius brunneus",
+        "category": 7,
+        "name": "Goby, Amur",
+        "is_confidential": false
+    },
+    "pk": 230,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Salmo salar",
+        "category": 7,
+        "name": "Salmon, Atlantic",
+        "is_confidential": false
+    },
+    "pk": 232,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Mylopharyngodon piceus",
+        "category": 7,
+        "name": "Carp, Black",
+        "is_confidential": false
+    },
+    "pk": 233,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Neogobius melanostomas",
+        "category": 7,
+        "name": "Goby, Round",
+        "is_confidential": false
+    },
+    "pk": 235,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Gymnocephalus cernuus",
+        "category": 7,
+        "name": "Ruffe",
+        "is_confidential": false
+    },
+    "pk": 236,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Tridentiger bifasciatus",
+        "category": 7,
+        "name": "Goby, Shimofuri",
+        "is_confidential": false
+    },
+    "pk": 237,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Channa spp.",
+        "category": 7,
+        "name": "Snakeheads",
+        "is_confidential": false
+    },
+    "pk": 238,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Cygnus olor",
+        "category": 8,
+        "name": "Swan, Mute",
+        "is_confidential": false
+    },
+    "pk": 239,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Alopochen aegyptiacus",
+        "category": 8,
+        "name": "Geese, Egyptian ",
+        "is_confidential": false
+    },
+    "pk": 244,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Sus scrofa",
+        "category": 9,
+        "name": "Pig/Swine, Feral",
+        "is_confidential": false
+    },
+    "pk": 245,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Equus caballus",
+        "category": 9,
+        "name": "Horses, Feral/Wild",
+        "is_confidential": false
+    },
+    "pk": 251,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Ovis musimon, Ammotragus lervia",
+        "category": 9,
+        "name": "Sheep, Feral - Mouflon, Aoudad",
+        "is_confidential": false
+    },
+    "pk": 252,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Equus asinus",
+        "category": 9,
+        "name": "Burros, Feral",
+        "is_confidential": false
+    },
+    "pk": 253,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Capra hircus",
+        "category": 9,
+        "name": "Goats, Feral",
+        "is_confidential": false
+    },
+    "pk": 254,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Bison Bison",
+        "category": 9,
+        "name": "Bison, Feral",
+        "is_confidential": false
+    },
+    "pk": 255,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Arion rufus",
+        "category": 10,
+        "name": "Slug, European Red",
+        "is_confidential": false
+    },
+    "pk": 257,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Candidula intersecta",
+        "category": 10,
+        "name": "Snail, Wrinkled Dune",
+        "is_confidential": false
+    },
+    "pk": 258,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Cernuella virgata",
+        "category": 10,
+        "name": "Snail, Vineyard",
+        "is_confidential": false
+    },
+    "pk": 259,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Cepaea nemoralis",
+        "category": 10,
+        "name": "Snail, Brown-lipped",
+        "is_confidential": false
+    },
+    "pk": 260,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Achatina fulica, A. achatina, Archachatina marginata",
+        "category": 10,
+        "name": "Snails, Giant African",
+        "is_confidential": false
+    },
+    "pk": 261,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Halyomorpha halys",
+        "category": 6,
+        "name": "Stink Bug, Brown Marmorated ",
+        "is_confidential": false
+    },
+    "pk": 262,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Eupoecilia ambiguella",
+        "category": 6,
+        "name": "Moth, European Grape Berry",
+        "is_confidential": false
+    },
+    "pk": 263,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Arum italicum",
+        "category": 3,
+        "name": "Italian Arum",
+        "is_confidential": false
+    },
+    "pk": 264,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Ailanthus altissima",
+        "category": 3,
+        "name": "Tree of Heaven",
+        "is_confidential": false
+    },
+    "pk": 265,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Centaurea calcitrapa",
+        "category": 3,
+        "name": "Starthistle, Purple",
+        "is_confidential": false
+    },
+    "pk": 266,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "L. mathura",
+        "category": 6,
+        "name": "Gypsy Moth, Asian",
+        "is_confidential": false
+    },
+    "pk": 267,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "S. richteri",
+        "category": 6,
+        "name": "Fire ant, imported black",
+        "is_confidential": false
+    },
+    "pk": 268,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Myocastor coypus",
+        "category": 9,
+        "name": "Nutria",
+        "is_confidential": false
+    },
+    "pk": 270,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "See this site for tips on how to control knotweed:\\r                                                                                                                                                                                                                                                                                                                                                       +\n * \"Controlling Knotweed in the Pacific Northwest\":http://www.skamaniacounty.org/Noxious_Weeds/TNCreport.htm",
+        "severity": 3,
+        "resources": "Want to join forces with your community to fight invasives? There are lots of people involved in this effort already! The links below can connect you with opportunities:\\r                                                                                                                                                                                                                                                                                                        +\n * \"Association of Soil and Water Conservation Districts\":http://www.oacd.org/districts.html (Click on your county) \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"OPB Silent Invasion\":http://www.opb.org/programs/invasives/ (scroll down to events)\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 +\n * \"SOLV\":http://www.solv.org/programs/invasives.asp\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"Invasives Watch Volunteers\":http://www.westerninvasivesnetwork.org/pages/nature_conserv.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        +\n * \"The Nature Conservancy in Oregon\":http://www.nature.org/wherewework/northamerica/states/oregon/about/art24312.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  +\n ",
+        "scientific_name": "Fallopia japonica",
+        "category": 3,
+        "name": "Knotweed, Japanese",
+        "is_confidential": false
+    },
+    "pk": 271,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Hyacinthoides hispanica",
+        "category": 3,
+        "name": "Bluebell, Spanish",
+        "is_confidential": false
+    },
+    "pk": 272,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"Manage Gorse\":http://extension.oregonstate.edu/catalog/pdf/ec/ec1593-e.pdf",
+        "severity": 3,
+        "resources": "Want to join forces with your community to fight invasives? There are lots of people involved in this effort already! The links below can connect you with opportunities:\\r                                                                                                                                                        +\n * \"Association of Soil and Water Conservation Districts\":http://www.oacd.org/districts.html (Click on your county) \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"OPB Silent Invasion\":http://www.opb.org/programs/invasives/ (scroll down to events)\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 +\n * \"SOLV\":http://www.solv.org/programs/invasives.asp\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"Invasives Watch Volunteers\":http://www.westerninvasivesnetwork.org/pages/nature_conserv.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        +\n * \"The Nature Conservancy in Oregon\":http://www.nature.org/wherewework/northamerica/states/oregon/about/art24312.html",
+        "scientific_name": "Ulex europaeus",
+        "category": 3,
+        "name": "Gorse",
+        "is_confidential": false
+    },
+    "pk": 273,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"Manage Garlic Mustard\":http://extension.oregonstate.edu/catalog/pdf/ec/ec1592-e.pdf",
+        "severity": 3,
+        "resources": "Want to join forces with your community to fight invasives? There are lots of people involved in this effort already! The links below can connect you with opportunities:\\r                                                                                                                                  +\n * \"Association of Soil and Water Conservation Districts\":http://www.oacd.org/districts.html (Click on your county) \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"OPB Silent Invasion\":http://www.opb.org/programs/invasives/ (scroll down to events)\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 +\n * \"SOLV\":http://www.solv.org/programs/invasives.asp\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"Invasives Watch Volunteers\":http://www.westerninvasivesnetwork.org/pages/nature_conserv.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        +\n * \"The Nature Conservancy in Oregon\":http://www.nature.org/wherewework/northamerica/states/oregon/about/art24312.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  +\n ",
+        "scientific_name": "Alliaria petiolata",
+        "category": 3,
+        "name": "Garlic Mustard",
+        "is_confidential": false
+    },
+    "pk": 275,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 1,
+        "resources": "",
+        "scientific_name": "Cardamine oligosperma ",
+        "category": 3,
+        "name": "Little bittercress",
+        "is_confidential": false
+    },
+    "pk": 276,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Daphne laureola",
+        "category": 3,
+        "name": "Spurge Laurel",
+        "is_confidential": false
+    },
+    "pk": 277,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Euphorbia sp.",
+        "category": 3,
+        "name": "Ornamental Euphorbia",
+        "is_confidential": false
+    },
+    "pk": 278,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Ranunculus testiculatus",
+        "category": 3,
+        "name": "Buttercup, Hornseed",
+        "is_confidential": false
+    },
+    "pk": 279,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Lamiastrum galeobdolon",
+        "category": 3,
+        "name": "Yellow Archangel",
+        "is_confidential": false
+    },
+    "pk": 280,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 1,
+        "resources": "",
+        "scientific_name": "Marah oreganus",
+        "category": 3,
+        "name": "Western Wildcucumber",
+        "is_confidential": false
+    },
+    "pk": 281,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Hyacinthoides non-scripta",
+        "category": 3,
+        "name": "Bluebell, English",
+        "is_confidential": false
+    },
+    "pk": 282,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 1,
+        "resources": "",
+        "scientific_name": "Emerita spp.",
+        "category": 4,
+        "name": "Crab, Mole",
+        "is_confidential": false
+    },
+    "pk": 283,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "\"Best Management Practices from King County\":http://your.kingcounty.gov/dnrp/library/water-and-land/weeds/BMPs/yellow-flag-iris-control.pdf",
+        "scientific_name": "Iris pseudacorus",
+        "category": 2,
+        "name": "Yellow-Flag Iris",
+        "is_confidential": false
+    },
+    "pk": 284,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Pachysandra terminalis",
+        "category": 3,
+        "name": "Spurge, Japanese",
+        "is_confidential": false
+    },
+    "pk": 288,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Geranium lucidum",
+        "category": 3,
+        "name": "Shining Geranium",
+        "is_confidential": false
+    },
+    "pk": 290,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Lathyrus latifolius",
+        "category": 3,
+        "name": "Perennial peavine ",
+        "is_confidential": false
+    },
+    "pk": 291,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Phalaris arundinacea var. picta",
+        "category": 3,
+        "name": "Reed Canarygrass, Ribbon or Variegated ",
+        "is_confidential": false
+    },
+    "pk": 292,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Tragopogon porrifolius",
+        "category": 3,
+        "name": "Oyster Plant, Salsify",
+        "is_confidential": false
+    },
+    "pk": 293,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"Butterfly Bush\":http://www.invasive.org/weedcd/pdfs/wow/butterfly_bush.pdf",
+        "severity": 3,
+        "resources": "Want to join forces with your community to fight invasives? There are lots of people involved in this effort already! The links below can connect you with opportunities:\\r                                                                                                                                             +\n * \"Association of Soil and Water Conservation Districts Directory\":http://oacd.org/conservation-districts/directory\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"SOLV\":http://www.solv.org/\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          +\n * \"The Nature Conservancy in Oregon\":http://www.nature.org/ourinitiatives/regions/northamerica/unitedstates/oregon/index.htm\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                           +\n ",
+        "scientific_name": "Buddleja davidii",
+        "category": 3,
+        "name": "Butterfly Bush",
+        "is_confidential": false
+    },
+    "pk": 294,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Petaurus breviceps",
+        "category": 9,
+        "name": "Sugar Glider",
+        "is_confidential": false
+    },
+    "pk": 296,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Clematis vitalba",
+        "category": 3,
+        "name": "Old Man's Beard",
+        "is_confidential": false
+    },
+    "pk": 297,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Lythrum salicaria",
+        "category": 3,
+        "name": "Loosestrife, Purple",
+        "is_confidential": false
+    },
+    "pk": 299,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Centaurea diffusa",
+        "category": 3,
+        "name": "Knapweed, Diffuse",
+        "is_confidential": false
+    },
+    "pk": 309,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Convolvulus arvensis",
+        "category": 3,
+        "name": "Field Bindweed",
+        "is_confidential": false
+    },
+    "pk": 310,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Leucanthemum vulgare",
+        "category": 3,
+        "name": "Oxeye Daisy",
+        "is_confidential": false
+    },
+    "pk": 311,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "See this site for tips on how to control knotweed:\\r                                                                                                                                                                                                                                                                                                                                                                      +\n * \"Controlling Knotweed in the Pacific Northwest\":http://www.skamaniacounty.org/Noxious_Weeds/TNCreport.htm\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            +\n ",
+        "severity": 3,
+        "resources": "Want to join forces with your community to fight invasives? There are lots of people involved in this effort already! The links below can connect you with opportunities:\\r                                                                                                                                                                                                                                                                                                                                                                                                                   +\n * \"Association of Soil and Water Conservation Districts\":http://www.oacd.org/districts.html (Click on your county) \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"OPB Silent Invasion\":http://www.opb.org/programs/invasives/ (scroll down to events)\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 +\n * \"SOLV\":http://www.solv.org/programs/invasives.asp\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"Invasives Watch Volunteers\":http://www.westerninvasivesnetwork.org/pages/nature_conserv.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        +\n * \"The Nature Conservancy in Oregon\":http://www.nature.org/wherewework/northamerica/states/oregon/about/art24312.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  +\n ",
+        "scientific_name": "Fallopia sp.",
+        "category": 3,
+        "name": "Knotweed",
+        "is_confidential": false
+    },
+    "pk": 312,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"Manage Herb Robert\":http://www.westerninvasivesnetwork.org/pdfs/factsheets/HerbRobert_PIP.pdf",
+        "severity": 3,
+        "resources": "Want to join forces with your community to fight invasives? There are lots of people involved in this effort already! The links below can connect you with opportunities:\\r                                                                                                            +\n * \"Association of Soil and Water Conservation Districts\":http://www.oacd.org/districts.html (Click on your county) \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"OPB Silent Invasion\":http://www.opb.org/programs/invasives/ (scroll down to events)\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 +\n * \"SOLV\":http://www.solv.org/programs/invasives.asp\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"Invasives Watch Volunteers\":http://www.westerninvasivesnetwork.org/pages/nature_conserv.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        +\n * \"The Nature Conservancy in Oregon\":http://www.nature.org/wherewework/northamerica/states/oregon/about/art24312.html",
+        "scientific_name": "Geranium robertianum",
+        "category": 3,
+        "name": "Herb Robert - Stinky Bob",
+        "is_confidential": false
+    },
+    "pk": 316,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Salsola tragus",
+        "category": 3,
+        "name": "Thistle, Russian",
+        "is_confidential": false
+    },
+    "pk": 317,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Centauria stoebe",
+        "category": 3,
+        "name": "Knapweed, spotted",
+        "is_confidential": false
+    },
+    "pk": 318,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Egeria densa",
+        "category": 2,
+        "name": "South American waterweed, Brazilian elodea",
+        "is_confidential": false
+    },
+    "pk": 323,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Myriophyllum aquaticum",
+        "category": 2,
+        "name": "Parrot feather watermilfoil",
+        "is_confidential": false
+    },
+    "pk": 325,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Meleagris gallopavo",
+        "category": 8,
+        "name": "Wild Turkey",
+        "is_confidential": false
+    },
+    "pk": 328,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 1,
+        "resources": "",
+        "scientific_name": "Ambystoma gracile",
+        "category": 5,
+        "name": "Salamander, Northwest",
+        "is_confidential": false
+    },
+    "pk": 329,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "\"English Holly control options\":http://www.co.whatcom.wa.us/publicworks/weeds/pdf/HollyControlRec.pdf",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Ilex aquifolium",
+        "category": 3,
+        "name": "Holly, English",
+        "is_confidential": false
+    },
+    "pk": 330,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 1,
+        "resources": "",
+        "scientific_name": "Heracleum maximum",
+        "category": 3,
+        "name": "Cow Parsnip",
+        "is_confidential": false
+    },
+    "pk": 332,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 1,
+        "resources": "",
+        "scientific_name": "Pseudacris regilla",
+        "category": 5,
+        "name": "Frog, Pacific Tree",
+        "is_confidential": false
+    },
+    "pk": 334,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Tanacetum parthenium",
+        "category": 3,
+        "name": "Feverfew",
+        "is_confidential": false
+    },
+    "pk": 335,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "Want to join forces with your community to fight invasives? There are lots of people involved in this effort already! The links below can connect you with opportunities:\\r                                                                                                                                                                                                                       +\n * \"Association of Soil and Water Conservation Districts\":http://www.oacd.org/districts.html (Click on your county) \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"OPB Silent Invasion\":http://www.opb.org/programs/invasives/ (scroll down to events)\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 +\n * \"SOLV\":http://www.solv.org/programs/invasives.asp\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"Invasives Watch Volunteers\":http://www.westerninvasivesnetwork.org/pages/nature_conserv.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        +\n * \"The Nature Conservancy in Oregon\":http://www.nature.org/wherewework/northamerica/states/oregon/about/art24312.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  +\n ",
+        "scientific_name": "Zostera japonica",
+        "category": 2,
+        "name": "Japanese Eelgrass",
+        "is_confidential": false
+    },
+    "pk": 336,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "Want to join forces with your community to fight invasives? There are lots of people involved in this effort already! The links below can connect you with opportunities:\\r                                                                                                                                                                                                                 +\n * \"Association of Soil and Water Conservation Districts\":http://www.oacd.org/districts.html (Click on your county) \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"OPB Silent Invasion\":http://www.opb.org/programs/invasives/ (scroll down to events)\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 +\n * \"SOLV\":http://www.solv.org/programs/invasives.asp\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"Invasives Watch Volunteers\":http://www.westerninvasivesnetwork.org/pages/nature_conserv.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        +\n * \"The Nature Conservancy in Oregon\":http://www.nature.org/wherewework/northamerica/states/oregon/about/art24312.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  +\n ",
+        "scientific_name": "Eriocheir sinensis",
+        "category": 4,
+        "name": "Crab, Chinese Mitten ",
+        "is_confidential": false
+    },
+    "pk": 337,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "Want to join forces with your community to fight invasives? There are lots of people involved in this effort already! The links below can connect you with opportunities:\\r                                                                                                                                                                                                                          +\n * \"Association of Soil and Water Conservation Districts\":http://www.oacd.org/districts.html (Click on your county) \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"OPB Silent Invasion\":http://www.opb.org/programs/invasives/ (scroll down to events)\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 +\n * \"SOLV\":http://www.solv.org/programs/invasives.asp\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"Invasives Watch Volunteers\":http://www.westerninvasivesnetwork.org/pages/nature_conserv.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        +\n * \"The Nature Conservancy in Oregon\":http://www.nature.org/wherewework/northamerica/states/oregon/about/art24312.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  +\n ",
+        "scientific_name": "Didemnum sp.",
+        "category": 2,
+        "name": "Colonial Tunicates",
+        "is_confidential": false
+    },
+    "pk": 338,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "Want to join forces with your community to fight invasives? There are lots of people involved in this effort already! The links below can connect you with opportunities:\\r                                                                                                                                                                                                                           +\n * \"Association of Soil and Water Conservation Districts\":http://www.oacd.org/districts.html (Click on your county) \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"OPB Silent Invasion\":http://www.opb.org/programs/invasives/ (scroll down to events)\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 +\n * \"SOLV\":http://www.solv.org/programs/invasives.asp\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"Invasives Watch Volunteers\":http://www.westerninvasivesnetwork.org/pages/nature_conserv.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        +\n * \"The Nature Conservancy in Oregon\":http://www.nature.org/wherewework/northamerica/states/oregon/about/art24312.html\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  +\n ",
+        "scientific_name": "Undaria pinnatifida",
+        "category": 2,
+        "name": "Asian Kelp",
+        "is_confidential": false
+    },
+    "pk": 339,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Lapsana communis",
+        "category": 3,
+        "name": "Nipplewort",
+        "is_confidential": false
+    },
+    "pk": 341,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Lotus corniculatus",
+        "category": 3,
+        "name": "Bird's-Foot Trefoil",
+        "is_confidential": false
+    },
+    "pk": 342,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "\"ODA Plant Division Profile of Ludwigia\":http://www.oregon.gov/ODA/PLANT/WEEDS/pages/weed_waterprimrose.aspx",
+        "scientific_name": "Ludwigia spp.",
+        "category": 2,
+        "name": "Water Primrose",
+        "is_confidential": false
+    },
+    "pk": 343,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Robinia pseudoacacia",
+        "category": 3,
+        "name": "Black Locust",
+        "is_confidential": false
+    },
+    "pk": 349,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "*Information on \"pokeweed\":http://www.emswcd.org/weeds/weeds-toknow/131-pokeweed-phytolacca-americana from East Multnomah Soil and Water Conservation District",
+        "scientific_name": "Phytolacca americana",
+        "category": 3,
+        "name": "Pokeweed, American",
+        "is_confidential": false
+    },
+    "pk": 350,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Solanum dulcamara",
+        "category": 3,
+        "name": "Nightshade, Bittersweet ",
+        "is_confidential": false
+    },
+    "pk": 352,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Potentilla recta",
+        "category": 3,
+        "name": "Sulphur cinquefoil ",
+        "is_confidential": false
+    },
+    "pk": 353,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 1,
+        "resources": "",
+        "scientific_name": "Taricha granulosa",
+        "category": 5,
+        "name": "Newt, Rough-Skinned",
+        "is_confidential": false
+    },
+    "pk": 355,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 1,
+        "resources": "",
+        "scientific_name": "Dicamptodon ensatus",
+        "category": 5,
+        "name": "Salamander, Pacific Giant",
+        "is_confidential": false
+    },
+    "pk": 356,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 1,
+        "resources": "",
+        "scientific_name": "Mahonia nervosa",
+        "category": 3,
+        "name": "Low Oregon Grape",
+        "is_confidential": false
+    },
+    "pk": 360,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Myriophyllum spicatum",
+        "category": 2,
+        "name": "Watermilfoil, Eurasian",
+        "is_confidential": false
+    },
+    "pk": 361,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Aegopodium podagraria variegata",
+        "category": 3,
+        "name": "Snow on the Mountain",
+        "is_confidential": false
+    },
+    "pk": 363,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Streptopelia decaocto",
+        "category": 8,
+        "name": "Dove, Eurasian Collared",
+        "is_confidential": false
+    },
+    "pk": 366,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Lepidium latifolium",
+        "category": 3,
+        "name": "Perennial Pepperweed",
+        "is_confidential": false
+    },
+    "pk": 367,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Petasites japonicus",
+        "category": 3,
+        "name": "Japanese Butterbur",
+        "is_confidential": false
+    },
+    "pk": 368,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 1,
+        "resources": "",
+        "scientific_name": "Aralia californica",
+        "category": 3,
+        "name": "Elk clover",
+        "is_confidential": false
+    },
+    "pk": 372,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "\"USGS Fact Sheet\":http://nas.er.usgs.gov/queries/factsheet.aspx?SpeciesID=1012",
+        "scientific_name": "Radix auricularia",
+        "category": 4,
+        "name": "Snail, European Ear ",
+        "is_confidential": false
+    },
+    "pk": 373,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Vitus sp.",
+        "category": 3,
+        "name": "Grape",
+        "is_confidential": false
+    },
+    "pk": 374,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "ODA's Noxious Weed Profile: (http://www.oregon.gov/ODA/PLANT/WEEDS/profile_commonreed.shtml)\\r                                                                                                                                                                                                                                                                                       +\n ODA's Phragmites Identification Page (http://www.oregon.gov/ODA/PLANT/WEEDS/phragmitesidentification.shtml)",
+        "scientific_name": "Phragmites australis ssp. australis",
+        "category": 3,
+        "name": "Common Reed",
+        "is_confidential": false
+    },
+    "pk": 375,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"More Information from the Colorado Weed Management Association\":http://www.cwma.org/bouncingbet.html",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Saponaria officinalis",
+        "category": 3,
+        "name": "Bouncingbet, Soapwort",
+        "is_confidential": false
+    },
+    "pk": 377,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Butomus umbellatus",
+        "category": 2,
+        "name": "Flowering Rush",
+        "is_confidential": false
+    },
+    "pk": 379,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Pavo cristatus",
+        "category": 8,
+        "name": "Peacock",
+        "is_confidential": false
+    },
+    "pk": 380,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 1,
+        "resources": "",
+        "scientific_name": "Tellima grandiflora",
+        "category": 3,
+        "name": "Fringe cup",
+        "is_confidential": false
+    },
+    "pk": 381,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Notemigonus crysoleucas",
+        "category": 7,
+        "name": "Golden shiner",
+        "is_confidential": false
+    },
+    "pk": 382,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Centaurea melitensis",
+        "category": 3,
+        "name": "Starthistle, Maltese ",
+        "is_confidential": false
+    },
+    "pk": 383,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Impatiens capensis",
+        "category": 3,
+        "name": "Orange Jewelweed",
+        "is_confidential": false
+    },
+    "pk": 385,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Eichhornia crassipes",
+        "category": 2,
+        "name": "Water Hyacinth",
+        "is_confidential": false
+    },
+    "pk": 387,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Crataegus monogyna",
+        "category": 3,
+        "name": "Hawthorn, Common or Single-seed",
+        "is_confidential": false
+    },
+    "pk": 388,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Cyclamen hederifolium",
+        "category": 3,
+        "name": "Cyclamen",
+        "is_confidential": false
+    },
+    "pk": 391,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 1,
+        "resources": "",
+        "scientific_name": "Aralia californica",
+        "category": 3,
+        "name": "Aralia",
+        "is_confidential": false
+    },
+    "pk": 392,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 1,
+        "resources": "",
+        "scientific_name": "Lepas anatifera",
+        "category": 4,
+        "name": "Barnacles, Gooseneck",
+        "is_confidential": false
+    },
+    "pk": 393,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 1,
+        "resources": "",
+        "scientific_name": "Echinocystis lobata",
+        "category": 3,
+        "name": "Wild Cucumber ",
+        "is_confidential": false
+    },
+    "pk": 394,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 1,
+        "resources": "",
+        "scientific_name": "Hydrophyllum tenuipes",
+        "category": 3,
+        "name": "Pacific waterleaf",
+        "is_confidential": false
+    },
+    "pk": 395,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Aegopodium podagraria",
+        "category": 3,
+        "name": "Goutweed",
+        "is_confidential": false
+    },
+    "pk": 396,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Phalaris arundinacea",
+        "category": 3,
+        "name": "Reed Canarygrass",
+        "is_confidential": false
+    },
+    "pk": 397,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Myriophyllum aquaticum",
+        "category": 2,
+        "name": "Watermilfoil, Parrot feather",
+        "is_confidential": false
+    },
+    "pk": 398,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Cenchrus spinefex",
+        "category": 3,
+        "name": "Field Sandbur",
+        "is_confidential": false
+    },
+    "pk": 399,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Vicia sativa",
+        "category": 3,
+        "name": "Vetch, Common",
+        "is_confidential": false
+    },
+    "pk": 400,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 1,
+        "resources": "",
+        "scientific_name": "Pugettia spp.",
+        "category": 4,
+        "name": "Crab, Kelp",
+        "is_confidential": false
+    },
+    "pk": 405,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Vinca major",
+        "category": 3,
+        "name": "Periwinkle",
+        "is_confidential": false
+    },
+    "pk": 406,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Ornithogalum umbellatum",
+        "category": 3,
+        "name": "Star-of-Bethlehem",
+        "is_confidential": false
+    },
+    "pk": 408,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "Myrtle Spurge is a escaped garden ornamental that does well in typically dry and disturbed areas. Like most members of the spurge family, the white milky sap can cause severe dermatitis if improperly handled. If you are working on this plant, you should be sure to wear long sleeves, pants, and shoes, as well as rubber gloves and eye protection to prevent exposure to the sap.\\r                 +\n \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n In terms of controlling and preventing the spread of Myrtle Spurge, manual removal can be quite effective. Plants can be dug up in the spring, when the ground is soft. You want to make sure to get as much of the root system as possible and follow up with removal on any regrowth. Myrtle spurge spreads primarily by seed, so you want to prevent seed production and control plants before or as soon as they bloom.\\r                                                                                                                                                                            +\n \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n You can also treat Myrtle Spurge using herbicides, but I recommend this only for very large patches. For these large patches, research out of Colorado suggests that herbicide products containing 2,4-D and dicamba can be effective at controlling Myrtle Spurge. You should check with a local vendor for safe handling and availability. \\r                                                                                                                                                                                                                                                          +\n \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n If after reviewing this documentation, you choose to use chemical control options I strongly recommend that you carefully review the labels for whatever herbicide product you decide to use. As with all herbicides, the Label is the Law. Follow label recommendations and restrictions at all times. The label is designed to reduce harm to you and your property. If any information provided contradicts the label, the label takes precedence. Always follow the label.",
+        "severity": 3,
+        "resources": "For more information about Myrtle Spurge you can check the following resources:\\r                               +\n \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n http://www.oregon.gov/ODA/PLANT/WEEDS/pages/profile_myrtlespurge.aspx\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  +\n http://www.colorado.gov/cs/Satellite?blobcol=urldata&blobheader=application%2Fpdf&blobkey=id&blobtable=MungoBlobs&blobwhere=1231572928498&ssbinary=true\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                +\n http://www.weeds.slco.org/pdf/MyrtleSpurge.pdf\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         +\n http://www.cwma.org/myrtlespurge.html",
+        "scientific_name": "Euphorbia myrsinites",
+        "category": 3,
+        "name": "Spurge, Myrtle",
+        "is_confidential": false
+    },
+    "pk": 409,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Impatiens capensis",
+        "category": 3,
+        "name": "Spotted jewelweed",
+        "is_confidential": false
+    },
+    "pk": 412,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Pectinatella magnifica",
+        "category": 4,
+        "name": "Bryozoan, Magnificent",
+        "is_confidential": false
+    },
+    "pk": 413,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Orconectes neglectus",
+        "category": 4,
+        "name": "Crayfish, Ringed",
+        "is_confidential": false
+    },
+    "pk": 415,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"Blackberry information from King County, WA\":http://www.kingcounty.gov/environment/animalsAndPlants/noxious-weeds/weed-identification/blackberry.aspx",
+        "severity": 3,
+        "resources": "Want to join forces with your community to fight invasives? There are lots of people involved in this effort already! The links below can connect you with opportunities:\\r                                                            +\n * \"Association of Soil and Water Conservation Districts Directory\":http://oacd.org/conservation-districts/directory\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n * \"SOLV\":http://www.solv.org/\\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          +\n * \"The Nature Conservancy in Oregon\":http://www.nature.org/ourinitiatives/regions/northamerica/unitedstates/oregon/index.htm",
+        "scientific_name": "Rubus laciniatus",
+        "category": 3,
+        "name": "Blackberry, Cut-leaf",
+        "is_confidential": false
+    },
+    "pk": 416,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "This species is native to the Pacific Northwest, but some recently discovered populations have shown invasive characteristics. Research is ongoing, and locations from this site will be useful in determining the status of these populations.",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Hydrocotyle ranunculoides",
+        "category": 2,
+        "name": "Floating Marsh-Pennywort",
+        "is_confidential": false
+    },
+    "pk": 420,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Solanum carolinense",
+        "category": 3,
+        "name": "Horse nettle",
+        "is_confidential": false
+    },
+    "pk": 423,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Ludwigia hexapetala",
+        "category": 2,
+        "name": "Water Primrose, Six Petal",
+        "is_confidential": false
+    },
+    "pk": 424,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Ludwigia peploides",
+        "category": 2,
+        "name": "Water Primrose, Floating",
+        "is_confidential": false
+    },
+    "pk": 425,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Ludwigia peploides ssp. peploides",
+        "category": 2,
+        "name": "Water Primrose, Floating (ssp. peploides)",
+        "is_confidential": false
+    },
+    "pk": 426,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Ludwigia peploides ssp. montevidensis",
+        "category": 2,
+        "name": "Water Primrose, Floating (ssp. montevidensis)",
+        "is_confidential": false
+    },
+    "pk": 427,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "\"Washington Noxious Weed Board information\":http://www.nwcb.wa.gov/detail.asp?weed=89",
+        "severity": 3,
+        "resources": "\"King County weed profile\":http://www.kingcounty.gov/environment/animalsAndPlants/noxious-weeds/weed-identification/garden-loosestrife.aspx",
+        "scientific_name": "Lysimachia vulgaris",
+        "category": 3,
+        "name": "Loosestrife, Garden",
+        "is_confidential": false
+    },
+    "pk": 428,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "* \"Management Information from the California Invasive Plant Council\":http://www.cal-ipc.org/ip/management/plant_profiles/Retama_monosperma.php",
+        "severity": 3,
+        "resources": "",
+        "scientific_name": "Retama monosperma",
+        "category": 3,
+        "name": "Broom, Bridal Veil",
+        "is_confidential": false
+    },
+    "pk": 429,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 3,
+        "resources": "http://www.invasive.org/browse/subthumb.cfm?sub=57527\\r                                                                                                                                                                                                                                                                                                                                             +\n http://www.dcnr.state.pa.us/cs/groups/public/documents/document/dcnr_010233.pdf",
+        "scientific_name": "Saccharum ravennae",
+        "category": 3,
+        "name": "Ravenna grass",
+        "is_confidential": false
+    },
+    "pk": 433,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "http://en.wikipedia.org/wiki/Helleborus_foetidus\\r                                                                                                                                                                                                                                                                                                                                           +\n \\r                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       +\n ",
+        "scientific_name": "Helleborus foetidus",
+        "category": 3,
+        "name": "Hellebore, Stinking",
+        "is_confidential": false
+    },
+    "pk": 435,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "http://en.wikipedia.org/wiki/Helleborus_argutifolius",
+        "scientific_name": "Helleborus argutifolius",
+        "category": 3,
+        "name": "Hellebore, Holly-Leaved",
+        "is_confidential": false
+    },
+    "pk": 436,
+    "model": "species.species"
+},
+{
+    "fields": {
+        "remedy": "",
+        "severity": 2,
+        "resources": "",
+        "scientific_name": "Pentaglottis sempervirens",
+        "category": 3,
+        "name": "Evergreen bugloss",
+        "is_confidential": false
+    },
+    "pk": 442,
+    "model": "species.species"
+}
+]

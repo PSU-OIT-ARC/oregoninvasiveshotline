@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block head %}
+{{ form.media }}
+{% endblock %}
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <fieldset>
+        <legend>Location</legend>
+        {{ form.location|bootstrap }}
+        {{ form.point|bootstrap }}
+    </fieldset>
+
+    <fieldset>
+        <legend>Identification</legend>
+        {{ form.reported_category|bootstrap }}
+        <div id="reported-species">
+            {{ form.reported_species|bootstrap }}
+        </div>
+        {{ form.description|bootstrap }}
+        {{ form.questions|bootstrap }}
+    </fieldset>
+
+    <fieldset>
+        <legend>Your Contact Info</legend>
+        {{ form.prefix|bootstrap }}
+        {{ form.first_name|bootstrap }}
+        {{ form.last_name|bootstrap }}
+        {{ form.suffix|bootstrap }}
+        {{ form.email|bootstrap }}
+    </fieldset>
+    {{ form.images }}
+    <div id="previews"></div>
+    <input type="submit" name="submit" value="Submit" />
+</form>
+<script>
+var category_id_to_species_id = {{ category_id_to_species_id|safe }};
+$(document).ready(function(){
+    $('#id_images').change(function(){
+        var files = $(this).get(0).files;
+        $('#previews').html("");
+        for(var i = 0; i < files.length; i++){
+            var file = files[i];
+            if(file){
+                var reader  = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onloadend = function () {
+                    var preview = $("<img width='100' />");
+                    $('#previews').append(preview);
+                    preview.attr('src', this.result);
+                }
+            }
+
+        }
+    })
+    // when a category is selected, we need to change up the species field
+    $('#id_reported_category').change(function(){
+        var category_id = $(this).val();
+        if(category_id){
+            $('#reported-species').show()
+
+            // hide all the species and then foreach species in that category, show it
+            var species_ids = category_id_to_species_id[category_id];
+            $('#id_reported_species option').hide()
+            for(var i = 0; i < species_ids.length; i++){
+                $('#id_reported_species option[value="' + species_ids[i] + '"]').show();
+            }
+
+            // the first option is the "Unknown" option, so it should always be visible
+            $('#id_reported_species option:first').show()
+            // if the species that was selected was hidden, reset to the "Unknown" option
+            if(!$('#id_reported_species option:selected').is(":visible")){
+                $('#id_reported_species').val("");
+            }
+        } else {
+            $('#reported-species').hide()
+        }
+    }).change();
+});
+</script>
+{% endblock %}

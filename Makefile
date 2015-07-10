@@ -25,7 +25,7 @@ init:
 	$(MANAGE) migrate
 	$(MANAGE) check
 	# create a dummy user
-	$(MANAGE) loaddata dummy_user.json
+	$(MANAGE) loaddata dummy_user.json category.json severity.json species.json
 
 clean:
 	find . -iname "*.pyc" -delete

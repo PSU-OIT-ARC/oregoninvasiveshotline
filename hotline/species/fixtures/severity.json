@@ -1,0 +1,23 @@
+[
+{
+    "pk": 1,
+    "model": "species.severity",
+    "fields": {
+        "name": "native"
+    }
+},
+{
+    "pk": 2,
+    "model": "species.severity",
+    "fields": {
+        "name": "non-native"
+    }
+},
+{
+    "pk": 3,
+    "model": "species.severity",
+    "fields": {
+        "name": "invasive"
+    }
+}
+]

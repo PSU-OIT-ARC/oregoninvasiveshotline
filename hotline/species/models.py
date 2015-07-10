@@ -40,7 +40,7 @@ class Species(models.Model):
     remedy = models.TextField()
     resources = models.TextField()
 
-    confidential = models.BooleanField(default=False, help_text="""
+    is_confidential = models.BooleanField(default=False, help_text="""
         A species can be marked as confidential if making a report about it public would cause harm
     """)
 

@@ -125,3 +125,17 @@ class UserTest(TestCase):
 
         user = prepare(User, is_staff=True)
         self.assertTrue(user.has_module_perms("foo"), user)
+
+    def test_is_elevated(self):
+        user = prepare(User, is_staff=True)
+        self.assertTrue(user.is_elevated)
+        user = prepare(User, is_manager=True)
+        self.assertTrue(user.is_elevated)
+        user = prepare(User, is_manager=False, is_staff=False)
+        self.assertFalse(user.is_elevated)
+
+    def test_get_proper_name(self):
+        user = prepare(User, prefix="Mr.", first_name="Foo", last_name="Bar", suffix="PHD")
+        self.assertEqual(user.get_proper_name(), "Mr. Foo Bar PHD")
+        user = prepare(User, first_name="Foo", last_name="Bar", prefix="", suffix="")
+        self.assertEqual(user.get_proper_name(), "Foo Bar")

@@ -11,10 +11,11 @@ class Report(models.Model):
 
     description = models.TextField(verbose_name="Please provide a description of your find")
     location = models.TextField(verbose_name="Please provide a description of the area where species was found")
+    has_specimen = models.BooleanField(default=False)
 
     point = models.PointField(srid=4326)
 
-    reported_by = models.ForeignKey("users.User", related_name="reports")
+    created_by = models.ForeignKey("users.User", related_name="reports")
     created_on = models.DateTimeField(auto_now_add=True)
 
     claimed_by = models.ForeignKey("users.User", null=True, default=None, related_name="claimed_reports")
@@ -28,7 +29,7 @@ class Report(models.Model):
         (4, 'Population treated',),
         (5, 'Ongoing monitoring',),
         (6, 'Controlled at site'),
-    ])
+    ], default=0)
 
     # the actual species confirmed by an expert
     actual_species = models.ForeignKey("species.Species", null=True, default=None, related_name="reports")
@@ -41,27 +42,26 @@ class Report(models.Model):
     class Meta:
         db_table = "report"
 
+    @property
+    def species(self):
+        """
+        Returns the actual species if it exists, and falls back on the reported_species
+        """
+        return self.actual_species or self.reported_species
 
-class Comment(models.Model):
-    """
-    Comments can be left on reports
-    """
-    comment_id = models.AutoField(primary_key=True)
-    body = models.TextField()
-    created_on = models.DateField(auto_now_add=True)
-    edited_on = models.DateField(auto_now=True)
+    @property
+    def category(self):
+        """
+        Returns the Category of the actual species, falling back to the reported_category
+        """
+        return self.actual_species.category if self.actual_species else self.reported_category
 
-    visibility = models.IntegerField([
-        (0, "Private"),  # only managers/admins/invited experts can see
-        (1, "Protected"),  # private + the person reporting it can see
-        (2, "Public"),  # the public can see (on a public report)
-    ], default=0)
-
-    created_by = models.ForeignKey("users.User")
-    report = models.ForeignKey(Report)
-
-    class Meta:
-        db_table = "comment"
+    @property
+    def is_misidentified(self):
+        """
+        Returns True if the reported_species differs from the actual species (and both fields are filled out)
+        """
+        return bool(self.reported_species and self.actual_species and self.reported_species != self.actual_species)
 
 
 class Invite(models.Model):
@@ -71,8 +71,8 @@ class Invite(models.Model):
     invite_id = models.AutoField(primary_key=True)
     # the person invited (a User object will be created for them)
     user = models.ForeignKey("users.User", related_name="invites")
-    invited_on = models.DateTimeField(auto_now_add=True)
-    invited_by = models.ForeignKey("users.User", related_name="+")
+    created_on = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey("users.User", related_name="+")
     report = models.ForeignKey(Report)
 
     class Meta:

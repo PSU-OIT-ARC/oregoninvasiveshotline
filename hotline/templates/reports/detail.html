@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load permissions %}
+{% block content %}
+
+<div class="row">
+    <div class="col-md-8">
+        <h3><img src="holder.js/20x20" /> {{ report.species.name|default:report.reported_category }} <small>{% if report.species.scientific_name %}({{ report.species.scientific_name }}){% endif %}</small> on {{ report.created_on|date:"M j, Y" }}</h3>
+        <p><em>Reporter's Description:</em> {{ report.description|linebreaksbr }}</p>
+
+        {% if report.is_misidentified %}
+            <p class="misidentified">(mistakenly reported as {{ report.reported_species }})</p>
+        {% endif %}
+
+        <div class="pictures clearfix">
+            <div class="pictures-main pull-left">
+                <img src="holder.js/400x300" />
+            </div>
+
+            <div class="pictures-gallery pull-left">
+                <img src="holder.js/65x64" />
+                <img src="holder.js/64x64" />
+                <img src="holder.js/64x64" />
+                <img src="holder.js/64x64" />
+                <img src="holder.js/64x64" />
+                <img src="holder.js/64x64" />
+            </div>
+        </div>
+
+        <h3>Commentary</h3>
+        {% for comment in comments %}
+            <div class="media">
+                <div class="media-left">
+                    <img src="holder.js/60x60" class="pull-left" />
+                </div>
+                <div class="media-body">
+                    {{ comment.body }}
+                    <p class="text-right">
+                        <cite>{{ comment.created_by }}</cite>
+                        &ndash; {{ comment.created_on }}
+                        {% if user|can_edit_comment:comment %}
+                            <a href="{% url 'comments-edit' %}">Edit</a>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        {% empty %}
+            <em>None</em>
+        {% endfor %}
+
+        {% if user|can_create_comment:report %}
+            <hr />
+            <form method="post">
+                {% csrf_token %}
+                {{ form.body|bootstrap }}
+                <div class="row">
+                    {% if form.visibility %}
+                        <div class="col-md-4">
+                            {{ form.visibility|bootstrap }}
+                        </div>
+                    {% endif %}
+                    <div class="col-md-8">
+                        {{ form.images|bootstrap }}
+                    </div>
+                </div>
+                <input type="submit" value="Submit" name="submit" />
+            </form>
+        {% endif %}
+    </div>
+
+    <div class="col-md-4 sidebar">
+        {% if report.claimed_by %}
+            <div class="credit">
+                <h4>Expert Reviewer</h4>
+                <img src="holder.js/60x60" class="pull-left" />
+                <p><strong><a href="#">{{ report.claimed_by.get_proper_name }}</a></strong> <br />{{ report.claimed_by.affiliations|linebreaksbr }}</p>
+            </div>
+        {% endif %}
+
+        <div class="location">
+            <h4>Location</h4>
+            <img src="holder.js/350x200" />
+            {{ report.location }}
+        </div>
+
+        <div class="related">
+            <h4>Related Reports</h4>
+            <ul>
+                <li>asdf</li>
+                <li>asdfasdf</li>
+                <li>asdfasdf</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
