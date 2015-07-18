@@ -11,36 +11,33 @@
             <p class="misidentified">(mistakenly reported as {{ report.reported_species }})</p>
         {% endif %}
 
-        <div class="pictures clearfix">
-            <div class="pictures-main pull-left">
-                <img src="holder.js/400x300" />
+        {% if images %}
+            <div class="galleria">
+                {% for image in images %}
+                    <img src="{{ image.image.url }}" alt="{{ image.name }}" />
+                {% endfor %}
             </div>
+        {% else %}
 
-            <div class="pictures-gallery pull-left">
-                <img src="holder.js/65x64" />
-                <img src="holder.js/64x64" />
-                <img src="holder.js/64x64" />
-                <img src="holder.js/64x64" />
-                <img src="holder.js/64x64" />
-                <img src="holder.js/64x64" />
-            </div>
-        </div>
+        {% endif %}
 
         <h3>Commentary</h3>
         {% for comment in comments %}
-            <div class="media">
-                <div class="media-left">
-                    <img src="holder.js/60x60" class="pull-left" />
-                </div>
-                <div class="media-body">
-                    {{ comment.body }}
-                    <p class="text-right">
-                        <cite>{{ comment.created_by }}</cite>
-                        &ndash; {{ comment.created_on }}
-                        {% if user|can_edit_comment:comment %}
-                            <a href="{% url 'comments-edit' %}">Edit</a>
-                        {% endif %}
-                    </p>
+            <div class="comment-list">
+                <div class="media">
+                    <div class="media-left">
+                        <img src="holder.js/60x60" class="pull-left" />
+                    </div>
+                    <div class="media-body">
+                        {{ comment.body }}
+                        <p class="text-right">
+                            <cite>{{ comment.created_by }}</cite>
+                            &ndash; {{ comment.created_on }}
+                            {% if user|can_edit_comment:comment %}
+                                <a href="{% url 'comments-edit' comment.pk %}">Edit</a>
+                            {% endif %}
+                        </p>
+                    </div>
                 </div>
             </div>
         {% empty %}
@@ -48,41 +45,116 @@
         {% endfor %}
 
         {% if user|can_create_comment:report %}
-            <hr />
-            <form method="post">
-                {% csrf_token %}
-                {{ form.body|bootstrap }}
-                <div class="row">
-                    {% if form.visibility %}
-                        <div class="col-md-4">
-                            {{ form.visibility|bootstrap }}
-                        </div>
-                    {% endif %}
-                    <div class="col-md-8">
-                        {{ form.images|bootstrap }}
-                    </div>
-                </div>
-                <input type="submit" value="Submit" name="submit" />
-            </form>
+            <p id="add-comment"><a href="#">Add a Comment</a></p>
+            {% include "comments/_edit.html" with form=comment_form formset=image_formset %}
         {% endif %}
     </div>
 
     <div class="col-md-4 sidebar">
+        {% if report.claimed_by and report.claimed_by == user %}
+            <div class="report-management clearfix sidebar-block">
+                <h4>Report Management</h4>
+                <ul class="nav nav-tabs report-management-icons" id="management-tabs">
+                    <li class="active"><a data-toggle="tab" href="#confirm"><span class="glyphicon glyphicon-ok"></span></a></li>
+                    <li><a data-toggle="tab" href="#public"><span class="glyphicon glyphicon-eye-open"></span></a></li>
+                    <li><a data-toggle="tab" href="#invite"><span class="glyphicon glyphicon-phone-alt"></span> {% if invites %}<small>({{ invites|length }})</small>{% endif %}</a></li>
+                    <li><a data-toggle="tab" href="#archive"><span class="glyphicon glyphicon-oil"></span></a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="confirm-form tab-pane active" id="confirm">
+                        <form method="post">
+                            {% csrf_token %}
+                            {% if confirm_form.errors %}
+                                <div class="alert alert-danger">
+                                    Please correct the errors below
+                                    {% if confirm_form.non_field_errors %}
+                                        {{ confirm_form.non_field_errors }}
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                            {{ confirm_form.category|bootstrap }}
+                            <div id="reported-species">
+                                {{ confirm_form.actual_species|bootstrap }}
+                                <p>&mdash; or &mdash; create a new species</p>
+                                <table>
+                                    <tr>
+                                        <td>{{ confirm_form.new_species|bootstrap }}</td>
+                                        <td>&nbsp;</td>
+                                        <td>{{ confirm_form.severity|bootstrap }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <input type="hidden" name="submit_flag" value="{{ confirm_form.SUBMIT_FLAG }}" />
+                            <input type="submit" value="Submit" name="submit" />
+                        </form>
+                    </div>
+                    <div class="public-form tab-pane" id="public">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ public_form|bootstrap }}
+                            <input type="hidden" name="submit_flag" value="{{ public_form.SUBMIT_FLAG }}" />
+                            <input type="submit" value="Submit" name="submit" />
+                        </form>
+                    </div>
+                    <div class="public-form tab-pane" id="invite">
+                        {% if invites %}
+                            <p>You have already invited: {{ invites|join:", " }}</p>
+                        {% endif %}
+                        <form method="post">
+                            {% if invite_form.errors %}
+                                <div class="alert alert-danger">
+                                    Please correct the errors below
+                                    {% if invite_form.non_field_errors %}
+                                        {{ invite_form.non_field_errors }}
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                            {% csrf_token %}
+                            {{ invite_form|bootstrap }}
+                            <input type="hidden" name="submit_flag" value="{{ invite_form.SUBMIT_FLAG }}" />
+                            <input type="submit" value="Submit" name="submit" />
+                        </form>
+                    </div>
+                    <div class="archive-form tab-pane" id="archive">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ archive_form|bootstrap }}
+                            <input type="hidden" name="submit_flag" value="{{ archive_form.SUBMIT_FLAG }}" />
+                            <input type="submit" value="Submit" name="submit" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% elif user|can_claim_report:report %}
+            <div class="alert alert-warning text-center sidebar-block">
+                <form method="post" action="{% url 'reports-claim' report.pk %}" style="display:inline">
+                    {% csrf_token %}
+                    {% if report.claimed_by %}
+                        This report is claimed...
+                        <button class="btn btn-warning btn-xs" type="submit">steal it!</button>
+                    {% else %}
+                        This report is unclaimed...
+                        <button class="btn btn-warning btn-xs" type="submit">Claim it!</button>
+                    {% endif %}
+                </form>
+            </div>
+        {% endif %}
         {% if report.claimed_by %}
-            <div class="credit">
+            <div class="credit clearfix sidebar-block">
                 <h4>Expert Reviewer</h4>
                 <img src="holder.js/60x60" class="pull-left" />
                 <p><strong><a href="#">{{ report.claimed_by.get_proper_name }}</a></strong> <br />{{ report.claimed_by.affiliations|linebreaksbr }}</p>
             </div>
         {% endif %}
 
-        <div class="location">
+        <div class="location sidebar-block">
             <h4>Location</h4>
             <img src="holder.js/350x200" />
             {{ report.location }}
         </div>
 
-        <div class="related">
+        <div class="related sidebar-block">
             <h4>Related Reports</h4>
             <ul>
                 <li>asdf</li>
@@ -93,4 +165,28 @@
     </div>
 </div>
 
+<script>
+var category_id_to_species_id = {{ category_id_to_species_id|safe }};
+</script>
+<script src="{{ STATIC_URL }}js/species_selector.js"></script>
+<script src="{{ STATIC_URL }}galleria/galleria-1.4.2.min.js"></script>
+<script>
+Galleria.loadTheme('{{ STATIC_URL }}galleria/themes/classic/galleria.classic.min.js');
+Galleria.run('.galleria');
+
+$('#add-comment a').click(function(e){
+    e.preventDefault();
+    $(this).parent().remove();
+    $('#create-comment').slideDown();
+});
+
+$('#management-tabs a').click(function (e) {
+    e.preventDefault()
+    $(this).tab('show')
+})
+
+{% if comment_form.is_bound %}
+    $('#add-comment a').click()
+{% endif %}
+</script>
 {% endblock %}

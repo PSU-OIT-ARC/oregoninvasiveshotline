@@ -1,5 +1,7 @@
 from django.contrib.gis.db import models
 
+from hotline.users.models import User
+
 
 class Report(models.Model):
     report_id = models.AutoField(primary_key=True)
@@ -82,5 +84,20 @@ class Invite(models.Model):
     def create(cls, *, email, report, inviter, message):
         """
         Create and send an invitation to the person with the given email address
+
+        Returns True if the invite was sent, otherwise False (meaning the user
+        has already been invited before)
         """
-        pass
+        try:
+            user = User.objects.get(email__iexact=email)
+        except User.DoesNotExist:
+            user = User(email=email, is_active=False)
+            user.save()
+
+        if Invite.objects.filter(user=user, report=report).exists():
+            return False
+
+        invite = Invite(user=user, created_by=inviter, report=report)
+        # todo send email
+        invite.save()
+        return True

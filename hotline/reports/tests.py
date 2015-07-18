@@ -1,18 +1,17 @@
 import json
-import tempfile
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
-from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.exceptions import NON_FIELD_ERRORS
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from model_mommy.mommy import make, prepare
 
+from hotline.comments.forms import CommentForm
 from hotline.comments.models import Comment
-from hotline.images.models import Image
-from hotline.species.models import Category, Species
+from hotline.species.models import Category, Severity, Species
 from hotline.users.models import User
 
-from .forms import ReportForm
+from .forms import ArchiveForm, ConfirmForm, InviteForm, PublicForm, ReportForm
 from .models import Invite, Report
 
 
@@ -71,6 +70,10 @@ class CreateViewTest(TestCase):
             "last_name": "Evil",
             "suffix": "PHD",
             "email": "john@example.com",
+            "form-TOTAL_FORMS": "0",
+            "form-INITIAL_FORMS": "0",
+            "form-MIN_NUM_FORMS": "0",
+            "form-MAX_NUM_FORMS": "1000",
         }
 
         response = self.client.post(reverse("reports-create"), data)
@@ -102,19 +105,40 @@ class DetailViewTest(TestCase):
         response = self.client.get(reverse("reports-detail", args=[report.pk]))
         self.assertRedirects(response, reverse("login") + "?next=" + reverse("reports-detail", args=[report.pk]))
 
+    def test_invited_experts_cannot_see_every_report(self):
+        report = make(Report, is_public=False)
+        # we set is_active to True just so self.client.login works, but we have
+        # to set it back to False
+        invited_expert = prepare(User, is_active=True)
+        invited_expert.set_password("foo")
+        invited_expert.save()
+        self.client.login(email=invited_expert.email, password="foo")
+        invited_expert.is_active = False
+        invited_expert.save()
+
+        # the expert hasn't been invited to this report, so it should trigger
+        # permission denied
+        response = self.client.get(reverse("reports-detail", args=[report.pk]))
+        self.assertEqual(response.status_code, 403)
+
+        # once we invite the expert, it should be ok
+        make(Invite, user=invited_expert, report=report)
+        response = self.client.get(reverse("reports-detail", args=[report.pk]))
+        self.assertEqual(response.status_code, 200)
+
     def test_comment_form_dependent_on_the_can_create_comment_check(self):
         report = make(Report, is_public=True)
         with patch("hotline.reports.views.can_create_comment", return_value=True) as perm_check:
             with patch("hotline.reports.views.CommentForm"):
                 response = self.client.get(reverse("reports-detail", args=[report.pk]))
         self.assertTrue(perm_check.called)
-        self.assertNotEqual(None, response.context['form'])
+        self.assertNotEqual(None, response.context['comment_form'])
 
         with patch("hotline.reports.views.can_create_comment", return_value=False) as perm_check:
             with patch("hotline.reports.views.CommentForm"):
                 response = self.client.get(reverse("reports-detail", args=[report.pk]))
         self.assertTrue(perm_check.called)
-        self.assertEqual(None, response.context['form'])
+        self.assertEqual(None, response.context['comment_form'])
 
     def test_display_of_comments_for_each_permission_level(self):
         report = make(Report, is_public=True, created_by__is_active=False)
@@ -168,10 +192,75 @@ class DetailViewTest(TestCase):
         data = {
             "body": "foo",
             "visibility": Comment.PUBLIC,
+            "form-TOTAL_FORMS": "0",
+            "form-INITIAL_FORMS": "0",
+            "form-MIN_NUM_FORMS": "0",
+            "form-MAX_NUM_FORMS": "1000",
+            "submit_flag": CommentForm.SUBMIT_FLAG
         }
         response = self.client.post(reverse("reports-detail", args=[report.pk]), data)
         self.assertRedirects(response, reverse("reports-detail", args=[report.pk]))
         self.assertEqual(1, Comment.objects.filter(report=report).count())
+
+    def test_forms_are_none_for_anonymous_users(self):
+        report = make(Report, is_public=True)
+        response = self.client.get(reverse("reports-detail", args=[report.pk]))
+        forms = [
+            "comment_form",
+            "image_formset",
+            "invite_form",
+            "confirm_form",
+            "archive_form",
+            "public_form"
+        ]
+        for form in forms:
+            self.assertEqual(None, response.context[form])
+
+    def test_forms_are_initialized_for_managers(self):
+        user = prepare(User, is_staff=True)
+        user.set_password("foo")
+        user.save()
+        self.client.login(email=user.email, password="foo")
+        report = make(Report)
+        response = self.client.get(reverse("reports-detail", args=[report.pk]))
+        forms = [
+            "comment_form",
+            "image_formset",
+            "invite_form",
+            "confirm_form",
+            "archive_form",
+            "public_form"
+        ]
+        for form in forms:
+            self.assertNotEqual(None, response.context[form])
+
+    def test_forms_filled_out(self):
+        report = make(Report)
+        user = prepare(User, is_staff=True)
+        user.set_password("foo")
+        user.save()
+        self.client.login(email=user.email, password="foo")
+
+        form_classes = [ConfirmForm, ArchiveForm, PublicForm]
+        for form_class in form_classes:
+            with patch("hotline.reports.views.%s" % form_class.__name__, SUBMIT_FLAG="foo") as m:
+                data = {
+                    "submit_flag": ["foo"],
+                }
+                response = self.client.post(reverse("reports-detail", args=[report.pk]), data)
+                m.assert_called_once_with(data, instance=report)
+                self.assertTrue(m().save.called)
+                self.assertRedirects(response, reverse("reports-detail", args=[report.pk]))
+
+        # the InviteForm is slightly more complicated, so we need a special case for that
+        with patch("hotline.reports.views.InviteForm", SUBMIT_FLAG="foo", save=Mock(return_value=Mock(already_invited=1))) as m:
+            data = {
+                "submit_flag": ["foo"],
+            }
+            response = self.client.post(reverse("reports-detail", args=[report.pk]), data)
+            self.assertEqual(1, m.call_count)
+            m().save.assert_called_once_with(user=user, report=report)
+            self.assertRedirects(response, reverse("reports-detail", args=[report.pk]))
 
 
 class ReportFormTest(TestCase):
@@ -216,22 +305,6 @@ class ReportFormTest(TestCase):
         self.assertEqual(User.objects.count(), pre_count)
         self.assertEqual(user.pk, form.instance.created_by.pk)
 
-    def test_images_are_saved_to_report(self):
-        form = ReportForm({
-            "email": "foo@example.com",
-            "first_name": "Foo",
-            "last_name": "Bar",
-        })
-        self.assertFalse(form.is_valid())
-        report = make(Report)
-        form.instance = report
-        with tempfile.NamedTemporaryFile() as f:
-            form.cleaned_data['images'] = [SimpleUploadedFile(f.name, f.read())]
-            with patch("hotline.reports.forms.forms.ModelForm.save"):
-                form.save()
-
-        self.assertEqual(Image.objects.filter(report=report).count(), 1)
-
     def test_comment_is_added(self):
         form = ReportForm({
             "email": "foo@example.com",
@@ -246,3 +319,141 @@ class ReportFormTest(TestCase):
             form.save()
 
         self.assertEqual(Comment.objects.get(report=report).body, "hello world")
+
+
+class ConfirmFormTest(TestCase):
+    def test_species_and_category_initialized(self):
+        species = make(Species)
+        report = make(Report, reported_species=species, reported_category=species.category)
+        form = ConfirmForm(instance=report)
+        self.assertEqual(form.initial['category'], species.category)
+        self.assertEqual(form.initial['actual_species'], species)
+
+    def test_field_widget_ids_match_expected_id_from_javascript(self):
+        """
+        The javascript for the category/species selector expects the ids for
+        the category and species fields to be something particular
+        """
+        report = make(Report)
+        form = ConfirmForm(instance=report)
+        self.assertEqual(form.fields['category'].widget.attrs['id'], 'id_reported_category')
+        self.assertEqual(form.fields['actual_species'].widget.attrs['id'], 'id_reported_species')
+
+    def test_either_a_new_species_is_entered_xor_an_existing_species_is_selected(self):
+        report = make(Report)
+        data = {
+            "new_species": "Yeti",
+            "actual_species": make(Species).pk
+        }
+        form = ConfirmForm(data, instance=report)
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.has_error(NON_FIELD_ERRORS, code="species_contradiction"))
+
+        data = {
+            "new_species": "Yeti",
+        }
+        form = ConfirmForm(data, instance=report)
+        self.assertFalse(form.is_valid())
+        self.assertFalse(form.has_error(NON_FIELD_ERRORS, code="species_contradiction"))
+
+    def test_if_new_species_is_entered_severity_is_required(self):
+        report = make(Report)
+        data = {
+            "new_species": "Yeti",
+        }
+        form = ConfirmForm(data, instance=report)
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.has_error("severity", code="required"))
+
+    def test_new_species_is_saved(self):
+        report = make(Report)
+        category = make(Category)
+        severity = make(Severity)
+        data = {
+            "new_species": "Yeti",
+            "category": category.pk,
+            "severity": severity.pk
+        }
+        form = ConfirmForm(data, instance=report)
+        self.assertTrue(form.is_valid())
+        form.save()
+        species = Species.objects.get(name="Yeti", category=category)
+        self.assertEqual(report.actual_species, species)
+
+
+class InviteFormTest(TestCase):
+    def test_clean_emails(self):
+        # test a few valid emails
+        form = InviteForm({
+            "emails": "foo@pdx.edu,bar@pdx.edu  ,  fog@pdx.edu,foo@pdx.edu"
+        })
+        self.assertTrue(form.is_valid())
+        self.assertEqual(sorted(form.cleaned_data['emails']), sorted(["foo@pdx.edu", "bar@pdx.edu", "fog@pdx.edu"]))
+
+        # test blank
+        form = InviteForm({
+            "emails": ""
+        })
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.has_error("emails"))
+
+        # test invalid email
+        form = InviteForm({
+            "emails": "invalid@@pdx.ads"
+        })
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.has_error("emails"))
+
+        # test valid and invalid
+        form = InviteForm({
+            "emails": "valid@pdx.edu, invalid@@pdx.ads"
+        })
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.has_error("emails"))
+        self.assertIn("invalid@@", str(form.errors))
+
+    def test_save(self):
+        """
+        Ensure the Invite.create method is called, and that the InviteReport we
+        get back is correct
+        """
+        form = InviteForm({
+            "emails": "already_invited@pdx.edu,foo@pdx.edu",
+            "body": "foo",
+        })
+        self.assertTrue(form.is_valid())
+        with patch("hotline.reports.forms.Invite.create", side_effect=lambda *args, **kwargs: kwargs['email'] == "foo@pdx.edu") as m:
+            user = make(User)
+            report = make(Report)
+            invite_report = form.save(user=user, report=report)
+            self.assertTrue(m.call_count, 2)
+            m.assert_any_call(email="foo@pdx.edu", report=report, inviter=user, message="foo")
+
+            self.assertEqual(invite_report.invited, ["foo@pdx.edu"])
+            self.assertEqual(invite_report.already_invited, ["already_invited@pdx.edu"])
+
+
+class ClaimViewTest(TestCase):
+    def setUp(self):
+        user = prepare(User, is_manager=True)
+        user.set_password("foo")
+        user.save()
+        self.client.login(email=user.email, password="foo")
+        self.user = user
+
+    def test_claim_unclaimed_report_immediately_claims_it(self):
+        report = make(Report, claimed_by=None)
+        response = self.client.post(reverse("reports-claim", args=[report.pk]))
+        self.assertEqual(Report.objects.get(claimed_by=self.user), report)
+        self.assertRedirects(response, reverse("reports-detail", args=[report.pk]))
+
+    def test_already_claimed_report_renders_confirmation_page(self):
+        report = make(Report, claimed_by=make(User))
+        response = self.client.post(reverse("reports-claim", args=[report.pk]))
+        self.assertIn("Are you sure you want to steal", response.content.decode())
+
+    def test_stealing_already_claimed_report(self):
+        report = make(Report, claimed_by=make(User))
+        response = self.client.post(reverse("reports-claim", args=[report.pk]), {"steal": 1})
+        self.assertEqual(Report.objects.get(claimed_by=self.user), report)
+        self.assertRedirects(response, reverse("reports-detail", args=[report.pk]))

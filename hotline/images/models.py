@@ -1,17 +1,15 @@
 from django.db import models
 
+from hotline.visibility import Visibility
 
-class Image(models.Model):
+
+class Image(Visibility, models.Model):
     image_id = models.AutoField(primary_key=True)
     image = models.ImageField(upload_to="images")
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, blank=True)
     created_by = models.ForeignKey("users.User")
     created_on = models.DateTimeField(auto_now_add=True)
-    visibility = models.IntegerField(choices=[
-        (0, "Private"),  # only managers/admins/invited experts can see
-        (1, "Protected"),  # private + the person reporting it can see
-        (2, "Public"),  # the public can see (on a public report)
-    ], default=1)
+    visibility = models.IntegerField(choices=Visibility.choices, default=Visibility.PROTECTED)
 
     # create a nullable FK to every object that can have images
     report = models.ForeignKey("reports.Report", null=True, default=None)
@@ -20,3 +18,4 @@ class Image(models.Model):
 
     class Meta:
         db_table = "image"
+        ordering = ['pk']

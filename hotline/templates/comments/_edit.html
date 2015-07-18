@@ -1,0 +1,24 @@
+<form method="post" enctype="multipart/form-data" id="create-comment">
+    <fieldset>
+        <legend>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Comment</legend>
+        {% if form.errors or formset.errors %}
+            <div class="alert alert-danger">Please correct the errors below before submitting</div> 
+        {% endif %}
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-8">
+                {{ form.body|bootstrap }}
+            </div>
+            <div class="col-md-4">
+                {% if form.visibility %}
+                    {{ form.visibility|bootstrap }}
+                {% endif %}
+            </div>
+        </div>
+
+        {% include '_images.html' %}
+
+        <input type="hidden" name="submit_flag" value="{{ form.SUBMIT_FLAG }}" />
+        <input type="submit" value="Submit" name="submit" />
+    </fieldset>
+</form>

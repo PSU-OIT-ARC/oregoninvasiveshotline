@@ -1,0 +1,3 @@
+[run]
+source = hotline
+omit = */migrations/*,hotline/wsgi.py

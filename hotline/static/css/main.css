@@ -91,24 +91,90 @@ body {
     color:#ff8800;
 }
 
-.pictures {
-    margin:auto;
-}
-
-.pictures-gallery {
-    height:300px;
-    overflow:auto;
-    width:90px;
-}
-
-.pictures-gallery img {
-    display:block;
-}
-
-.location, .related, .credit {
+.sidebar-block {
     margin-top:50px;
+}
+
+.report-management-icons {
+    font-size:18px;
+}
+
+.report-management a {
+    color:#aaa;
+    text-align:center;
 }
 
 .sidebar div:first-child {
     margin-top:0;
+}
+
+.galleria {
+    height:400px;
+}
+
+#add-comment {
+    margin-top:10px;
+}
+
+#create-comment {
+    display:none;
+}
+
+#images input[type='file'] {
+    display:inline;
+}
+
+.formset-row-deleted {
+    opacity:0.2;
+    filter: alpha(opacity = 20);
+}
+
+.formset-row td {
+    vertical-align:middle !important;
+    white-space:nowrap
+}
+
+.comment-list .media {
+    padding:10px;
+}
+
+.comment-list:nth-child(2n+1) .media {
+    background-color:#F9F9F9;
+}
+
+#images {
+    margin-bottom:20px;
+}
+
+#images table {
+    margin-bottom:0;
+}
+
+#create-comment > fieldset {
+    border: 1px solid #E5E5E5;
+    padding: 10px;
+}
+
+#create-comment > fieldset > legend {
+    border-bottom:none;
+    display:inline;
+    width:auto;
+    padding:5px;
+    margin-bottom:0;
+}
+
+#create-comment #images legend {
+    font-size:16px;
+    font-weight:bold;
+    margin-bottom:5px;
+}
+
+.visibility-selector select {
+    width:150px;
+}
+
+.tab-pane {
+    border:1px solid #ddd;
+    border-top:none;
+    padding:10px;
 }

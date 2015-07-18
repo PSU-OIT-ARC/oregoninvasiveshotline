@@ -33,10 +33,10 @@ clean:
 	find . -iname "__pycache__" -delete
 
 coverage:
-	coverage run ./manage.py test && coverage html
+	coverage run ./manage.py test --keepdb && coverage html && cd htmlcov && python -m http.server 9000
 
 test:
-	$(MANAGE) test && flake8 && isort -rc --diff $(PROJECT_NAME)
+	$(MANAGE) test --keepdb && flake8 && isort -rc --diff $(PROJECT_NAME)
 
 reload:
 	$(MANAGE) migrate

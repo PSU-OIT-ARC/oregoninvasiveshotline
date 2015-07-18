@@ -43,6 +43,7 @@ urlpatterns = patterns(
     
     url(r'^reports/create/?$', reports.create, name='reports-create'),
     url(r'^reports/detail/(?P<report_id>\d+)?$', reports.detail, name='reports-detail'),
+    url(r'^reports/claim/(?P<report_id>\d+)?$', reports.claim, name='reports-claim'),
 
     url(r'^comments/edit/(?P<comment_id>\d+)?$', comments.edit, name='comments-edit'),
 
@@ -64,6 +65,6 @@ urlpatterns = patterns(
     url(r'^cloak/', include('cloak.urls'))
 )
 
-if settings.DEBUG:
+if settings.DEBUG:  # pragma: no cover
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static("htmlcov", document_root="htmlcov", show_indexes=True)
