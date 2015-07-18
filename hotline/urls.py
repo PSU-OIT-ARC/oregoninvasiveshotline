@@ -19,12 +19,28 @@ urlpatterns = patterns(
 
     # the django admin interface is always nice to have
     url(r'^admin/', include(admin.site.urls)),
-
+    
     # the homepage goes straight to a template. But you may want to change this
     # into a normal view function
     url(r'^$', TemplateView.as_view(template_name="home.html"), name='home'),
     url(r'^adminpanel/?$', species.admin_panel, name='admin_panel'),
+    url(r'^adminpanel/species-list/?$', species.SpeciesList.as_view(), name='species_list'),
+    url(r'^adminpanel/species-detail/(?P<pk>[0-9]+)/$', species.SpeciesDetailView.as_view(), name='species_detail'),
+    url(r'^adminpanel/species-delete/(?P<pk>[0-9]+)/$', species.SpeciesDeleteView.as_view(), name='species_delete'),
+    url(r'^adminpanel/species-create/?$', species.SpeciesCreateView.as_view(), name='species_create'),
 
+    url(r'^adminpanel/category-list/?$', species.CategoryList.as_view(), name='category_list'),
+    url(r'^adminpanel/category-detail/(?P<pk>[0-9]+)/$', species.CategoryDetailView.as_view(), name='category_detail'),
+    url(r'^adminpanel/category-delete/(?P<pk>[0-9]+)/$', species.CategoryDeleteView.as_view(), name='category_delete'),
+    url(r'^adminpanel/category-create/?$', species.CategoryCreateView.as_view(), name='category_create'),
+
+    url(r'^adminpanel/severity-list/?$', species.SeverityList.as_view(), name='severity_list'),
+    url(r'^adminpanel/severity-detail/(?P<pk>[0-9]+)/$', species.SeverityDetailView.as_view(), name='severity_detail'),
+    url(r'^adminpanel/severity-delete/(?P<pk>[0-9]+)/$', species.SeverityDeleteView.as_view(), name='severity_delete'),
+    url(r'^adminpanel/severity-create/?$', species.SeverityCreateView.as_view(), name='severity_create'),
+
+    
+    
     url(r'^reports/create/?$', reports.create, name='reports-create'),
     url(r'^reports/detail/(?P<report_id>\d+)?$', reports.detail, name='reports-detail'),
 

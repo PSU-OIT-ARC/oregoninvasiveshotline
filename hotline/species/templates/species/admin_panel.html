@@ -2,15 +2,9 @@
 
 
 {% block content %}
-<form action="" method="post">
-    {% csrf_token %}
-    {{ species_form.species_name|bootstrap }}
-    <input type="submit" class="btn btn-primary" value="Submit" />
-</form>
 
-<form action="" method="post">
-    {% csrf_token %}
-    {{ category_form.category_name|bootstrap }}
-    <input type="submit" class="btn btn-primary" value="Submit" />
-</form>
+    <p><a href="{% url 'species_list' %}">Species list</a></p>
+    <p><a href="{% url 'category_list' %}">Categories list</a></p>
+    <p><a href="{% url 'severity_list' %}">Severities list</a></p>
+
 {% endblock %}
