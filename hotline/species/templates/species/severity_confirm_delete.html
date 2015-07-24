@@ -6,7 +6,7 @@
         <p>Are you sure you want to delete "{{ object }}"?</p>
         <p>Deleting this severity will also cause the following to be deleted:</p>
         <ul>
-            {% for cls, items in object.will_be_deleted_with %}
+            {% for cls, items in will_be_deleted_with %}
                 <li><strong>{{ cls|model_name }}</strong></li>
                 <ul>
                 {% for x in items %}
