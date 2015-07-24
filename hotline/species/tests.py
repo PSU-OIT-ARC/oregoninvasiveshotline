@@ -5,6 +5,7 @@ from model_mommy.mommy import make
 from .models import Category, Severity, Species
 from .views import SpeciesCreateView, SpeciesDeleteView, SpeciesDetailView, CategoryCreateView, CategoryDeleteView, CategoryDetailView, SeverityCreateView, SeverityDeleteView, SeverityDetailView
 
+
 class CategoryTest(TestCase):
     def test_str(self):
         self.assertEqual(str(make(Category, name="foo")), "foo")
@@ -18,13 +19,14 @@ class SeverityTest(TestCase):
 class SpeciesTest(TestCase):
     def test_str(self):
         self.assertEqual(str(make(Species, name="foo", scientific_name="bar")), "foo (bar)")
-        
-#View tests
+
+# View tests
+
 
 class SpeciesCreateViewTest(TestCase):
 
     def test_get_success_url(self):
-        
+
         self.factory = RequestFactory()
         request = self.factory.get(reverse("species_create"))
         view = SpeciesCreateView()
@@ -33,12 +35,10 @@ class SpeciesCreateViewTest(TestCase):
         self.assertEqual(full_path, request.get_full_path())
 
 
-
-
 class SpeciesDetailViewTest(TestCase):
 
     def test_get_success_url(self):
-    
+
         new_species = make(Species)
         self.factory = RequestFactory()
         request = self.factory.get(reverse("species_detail", args=[new_species.pk]))
@@ -46,13 +46,12 @@ class SpeciesDetailViewTest(TestCase):
         view.request = request
         full_path = view.get_success_url()
         self.assertEqual(full_path, request.get_full_path())
-       
 
-        
+
 class SpeciesDeleteViewTest(TestCase):
 
     def test_get_context_data(self):
-        
+
         new_species = make(Species)
         self.factory = RequestFactory()
         request = self.factory.get(reverse("species_delete", args=[new_species.pk]))
@@ -64,12 +63,10 @@ class SpeciesDeleteViewTest(TestCase):
         self.assertTrue(view.context['will_be_deleted_with'])
 
 
-        
-
 class CategoryCreateViewTest(TestCase):
 
     def test_get_success_url(self):
-        
+
         self.factory = RequestFactory()
         request = self.factory.get(reverse("category_create"))
         view = CategoryCreateView()
@@ -81,7 +78,7 @@ class CategoryCreateViewTest(TestCase):
 class CategoryDetailViewTest(TestCase):
 
     def test_get_success_url(self):
-        
+
         new_category = make(Category)
         self.factory = RequestFactory()
         request = self.factory.get(reverse("category_detail", args=[new_category.pk]))
@@ -90,11 +87,11 @@ class CategoryDetailViewTest(TestCase):
         full_path = view.get_success_url()
         self.assertEqual(full_path, request.get_full_path())
 
-        
+
 class CategoryDeleteViewTest(TestCase):
 
     def test_get_context_data(self):
-        
+
         new_species = make(Species)
         self.factory = RequestFactory()
         request = self.factory.get(reverse("category_delete", args=[new_species.category.pk]))
@@ -104,7 +101,7 @@ class CategoryDeleteViewTest(TestCase):
         view.object = view.get_object()
         view.context = view.get_context_data()
         self.assertTrue(view.context['will_be_deleted_with'])
-     
+
 
 class SeverityCreateViewTest(TestCase):
 
@@ -130,11 +127,11 @@ class SeverityDetailViewTest(TestCase):
         full_path = view.get_success_url()
         self.assertEqual(full_path, request.get_full_path())
 
-        
+
 class SeverityDeleteViewTest(TestCase):
 
     def test_get_context_data(self):
-        
+
         new_species = make(Species)
         self.factory = RequestFactory()
         request = self.factory.get(reverse("severity_delete", args=[new_species.severity.pk]))
@@ -144,4 +141,3 @@ class SeverityDeleteViewTest(TestCase):
         view.object = view.get_object()
         view.context = view.get_context_data()
         self.assertTrue(view.context['will_be_deleted_with'])
-
