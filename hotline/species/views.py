@@ -41,7 +41,7 @@ class SpeciesDeleteView(SuccessMessageMixin, DeleteView):
         obj = super(DeleteView, self).get_object()
         context = super(SpeciesDeleteView, self).get_context_data(**kwargs)
         context['will_be_deleted_with'] = will_be_deleted_with(obj)
-        
+
         return context
 
 
@@ -64,12 +64,12 @@ class CategoryDeleteView(SuccessMessageMixin, DeleteView):
     model = Category
     success_message = "Category deleted successfully."
     success_url = reverse_lazy('category_list')
-        
+
     def get_context_data(self, **kwargs):
         obj = super(DeleteView, self).get_object()
         context = super(CategoryDeleteView, self).get_context_data(**kwargs)
         context['will_be_deleted_with'] = will_be_deleted_with(obj)
-        
+
         return context
 
 
@@ -108,8 +108,9 @@ class SeverityDeleteView(SuccessMessageMixin, DeleteView):
         obj = super(DeleteView, self).get_object()
         context = super(SeverityDeleteView, self).get_context_data(**kwargs)
         context['will_be_deleted_with'] = will_be_deleted_with(obj)
-        
+
         return context
+
 
 class SeverityDetailView(SuccessMessageMixin, UpdateView):
     model = Severity
