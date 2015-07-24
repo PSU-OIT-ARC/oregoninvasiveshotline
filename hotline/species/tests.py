@@ -51,9 +51,19 @@ class SpeciesDetailViewTest(TestCase):
         
 class SpeciesDeleteViewTest(TestCase):
 
-    def test_get_object(self):
+    def test_get_context_data(self):
+        
+        new_species = make(Species)
+        self.factory = RequestFactory()
+        request = self.factory.get(reverse("species_delete", args=[new_species.pk]))
+        view = SpeciesDeleteView()
+        view.request = request
+        view.kwargs = {'pk': new_species.pk}
+        view.object = view.get_object()
+        view.context = view.get_context_data()
+        self.assertTrue(view.context['will_be_deleted_with'])
 
-        test = "test"
+
         
 
 class CategoryCreateViewTest(TestCase):
@@ -83,9 +93,18 @@ class CategoryDetailViewTest(TestCase):
         
 class CategoryDeleteViewTest(TestCase):
 
-    def test_get_object(self):
-        test = "test"
+    def test_get_context_data(self):
         
+        new_species = make(Species)
+        self.factory = RequestFactory()
+        request = self.factory.get(reverse("category_delete", args=[new_species.category.pk]))
+        view = CategoryDeleteView()
+        view.request = request
+        view.kwargs = {'pk': new_species.category.pk}
+        view.object = view.get_object()
+        view.context = view.get_context_data()
+        self.assertTrue(view.context['will_be_deleted_with'])
+     
 
 class SeverityCreateViewTest(TestCase):
 
@@ -114,6 +133,15 @@ class SeverityDetailViewTest(TestCase):
         
 class SeverityDeleteViewTest(TestCase):
 
-    def test_get_object(self):
-        test = "test"
+    def test_get_context_data(self):
+        
+        new_species = make(Species)
+        self.factory = RequestFactory()
+        request = self.factory.get(reverse("severity_delete", args=[new_species.severity.pk]))
+        view = SeverityDeleteView()
+        view.request = request
+        view.kwargs = {'pk': new_species.severity.pk}
+        view.object = view.get_object()
+        view.context = view.get_context_data()
+        self.assertTrue(view.context['will_be_deleted_with'])
 
