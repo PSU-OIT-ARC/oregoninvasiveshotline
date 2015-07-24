@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.db import models
 
 from hotline.visibility import Visibility
@@ -19,3 +20,6 @@ class Comment(Visibility, models.Model):
 
     class Meta:
         db_table = "comment"
+
+    def get_absolute_url(self):
+        return reverse("reports-detail", args=[self.report_id]) + "#comment-" + str(self.pk)

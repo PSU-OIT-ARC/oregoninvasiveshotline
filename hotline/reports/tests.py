@@ -166,6 +166,9 @@ class DetailViewTest(TestCase):
         user.set_password("foo")
         user.save()
         self.client.login(email=user.email, password="foo")
+        session = self.client.session
+        session['report_ids'] = []
+        session.save()
         response = self.client.get(reverse("reports-detail", args=[report.pk]))
         self.assertIn(public.body, response.content.decode())
         self.assertIn(protected.body, response.content.decode())
@@ -259,7 +262,7 @@ class DetailViewTest(TestCase):
             }
             response = self.client.post(reverse("reports-detail", args=[report.pk]), data)
             self.assertEqual(1, m.call_count)
-            m().save.assert_called_once_with(user=user, report=report)
+            m().save.assert_called_once_with(user=user, report=report, request=response.wsgi_request)
             self.assertRedirects(response, reverse("reports-detail", args=[report.pk]))
 
 
@@ -279,13 +282,17 @@ class ReportFormTest(TestCase):
             "suffix": "PHD",
         })
         self.assertFalse(form.is_valid())
+        report = prepare(Report, pk=1)
         pre_count = User.objects.count()
+        request = Mock(build_absolute_uri=Mock(return_value=""))
+
         with patch("hotline.reports.forms.forms.ModelForm.save") as save:
-            form.save()
+            form.instance = report
+            form.save(request=request)
             self.assertTrue(save.called)
 
         self.assertEqual(User.objects.count(), pre_count+1)
-        user = User.objects.last()
+        user = User.objects.order_by("-pk").first()
         self.assertEqual(user.email, "foo@example.com")
         self.assertEqual(user.is_active, False)
         self.assertEqual(user.last_name, "Bar")
@@ -299,7 +306,8 @@ class ReportFormTest(TestCase):
         self.assertFalse(form.is_valid())
         pre_count = User.objects.count()
         with patch("hotline.reports.forms.forms.ModelForm.save") as save:
-            form.save()
+            form.instance = report
+            form.save(request=request)
             self.assertTrue(save.called)
 
         self.assertEqual(User.objects.count(), pre_count)
@@ -316,7 +324,7 @@ class ReportFormTest(TestCase):
         report = make(Report)
         form.instance = report
         with patch("hotline.reports.forms.forms.ModelForm.save"):
-            form.save()
+            form.save(request=Mock(build_absolute_uri=Mock(return_value="")))
 
         self.assertEqual(Comment.objects.get(report=report).body, "hello world")
 
@@ -425,9 +433,10 @@ class InviteFormTest(TestCase):
         with patch("hotline.reports.forms.Invite.create", side_effect=lambda *args, **kwargs: kwargs['email'] == "foo@pdx.edu") as m:
             user = make(User)
             report = make(Report)
-            invite_report = form.save(user=user, report=report)
+            request = Mock()
+            invite_report = form.save(user=user, report=report, request=request)
             self.assertTrue(m.call_count, 2)
-            m.assert_any_call(email="foo@pdx.edu", report=report, inviter=user, message="foo")
+            m.assert_any_call(email="foo@pdx.edu", report=report, inviter=user, message="foo", request=request)
 
             self.assertEqual(invite_report.invited, ["foo@pdx.edu"])
             self.assertEqual(invite_report.already_invited, ["already_invited@pdx.edu"])

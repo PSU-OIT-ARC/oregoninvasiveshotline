@@ -1,23 +1,62 @@
 from arcutils import will_be_deleted_with
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.core.signing import BadSignature
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
+
+from hotline.reports.models import Invite, Report
 
 from .forms import UserForm
 from .models import User
 from .perms import can_list_users, permissions
 
 
-@login_required
+def authenticate(request):
+    sig = request.GET.get("sig", "")
+    try:
+        user = User.authenticate(sig)
+    except BadSignature:
+        messages.error(request, "Bad Signature")
+        return redirect("home")
+
+    if user.is_active or Invite.objects.filter(user=user).exists():
+        user.backend = settings.AUTHENTICATION_BACKENDS[0]
+        login(request, user)
+
+    # populate the report_ids session variable with all the reports the user made
+    request.session['report_ids'] = list(Report.objects.filter(created_by=user).values_list('pk', flat=True))
+
+    return redirect(request.GET.get("next") or settings.LOGIN_REDIRECT_URL)
+
+
 def home(request):
     """
     Just redirect to the detail view for the user. This page exists solely
     because settings.LOGIN_REDIRECT_URL needs to redirect to a "simple" URL
     (i.e. we can't use variables in the URL)
     """
-    return redirect("users-detail", request.user.pk)
+    user = request.user
+    if user.is_anonymous() and not request.session.get('report_ids'):
+        messages.error(request, "You are not allowed to be here")
+        return redirect("home")
+
+    invited_to = [invite.report for invite in Invite.objects.filter(user_id=user.pk).select_related("report")]
+    reported = Report.objects.filter(Q(pk__in=request.session.get("report_ids", [])) | Q(created_by_id=user.pk))
+    open_and_claimed = Report.objects.filter(claimed_by_id=user.pk, is_public=False, is_archived=False).exclude(claimed_by=None)
+
+    unclaimed_reports = []
+    if user.is_authenticated() and user.is_elevated:
+        unclaimed_reports = Report.objects.filter(claimed_by=None, is_public=False, is_archived=False)
+
+    return render(request, "users/home.html", {
+        "invited_to": invited_to,
+        "reported": reported,
+        "open_and_claimed": open_and_claimed,
+        "unclaimed_reports": unclaimed_reports,
+    })
 
 
 @permissions.can_view_user

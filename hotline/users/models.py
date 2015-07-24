@@ -1,4 +1,8 @@
+from urllib.parse import urlencode
+
 from django.contrib.auth.models import AbstractBaseUser, UserManager
+from django.core.signing import Signer
+from django.core.urlresolvers import reverse
 from django.db import models
 
 
@@ -28,6 +32,21 @@ class User(AbstractBaseUser):
             return self.get_full_name()
         else:
             return self.email
+
+    def get_authentication_url(self, request, next=None):
+        signer = Signer("user-authentication")
+        sig = signer.sign(self.email)
+        querystring = urlencode({
+            "sig": sig,
+            "next": next or '',
+        })
+        return request.build_absolute_uri(reverse("users-authenticate")) + "?" + querystring
+
+    @classmethod
+    def authenticate(cls, sig):
+        signer = Signer("user-authentication")
+        email = signer.unsign(sig)
+        return cls.objects.get(email=email)
 
     @property
     def is_elevated(self):

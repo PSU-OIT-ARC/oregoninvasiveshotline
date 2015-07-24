@@ -30,6 +30,13 @@ $(document).ready(function(){
     });
     $('.formset-row:has(.delete-field input[type=checkbox]:checked)').addClass("formset-row-deleted")
 
+    // tab handling stuff
+
+    $('.nav-tabs a').click(function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+    })
+
     $('.nav-tabs a').click(function(){
         Cookies.set('tab', $(this).attr('href'), {path: window.location.pathname})
     });

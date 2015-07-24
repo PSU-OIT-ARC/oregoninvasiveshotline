@@ -27,12 +27,11 @@ def create(request):
         form = ReportForm(request.POST, request.FILES)
         formset = ImageFormSet(request.POST, request.FILES, queryset=Image.objects.none())
         if form.is_valid() and formset.is_valid():
-            report = form.save()
+            report = form.save(request=request)
             formset.save(user=report.created_by, fk=report)
             messages.success(request, "Report submitted successfully")
             request.session.setdefault("report_ids", []).append(report.pk)
             request.session.modified = True
-            # TODO send email
             return redirect("reports-detail", report.pk)
     else:
         formset = ImageFormSet(queryset=Image.objects.none())
@@ -55,30 +54,18 @@ def detail(request, report_id):
     """
     report = get_object_or_404(Report, pk=report_id)
 
-    # this is the logic to determine authorization
-    if request.user.is_anonymous():
-        # We first check to see if the report is in their session. If it is, we
-        # make sure the user who created the report isn't a "real" user,
-        # otherwise, this would allow anonymous people to submit reports using
-        # the email addresses of real users, and masquerade as them
-        if report.pk in request.session.get("report_ids", []):
-            if report.created_by.is_active:
-                # if the user is active, we force them to login to prevent
-                # anonymous users from masquerading as real users
-                return login_required(lambda request: None)(request)
-            else:
-                # otherwise, we let the anonymous user masquerade as the user
-                # who submitted this report
-                request.user = report.created_by
-        elif report.is_public:
-            # if the report is public, there are no other permission checks required
-            pass
-        else:
-            raise PermissionDenied()
-    else:
-        # the user is authenticated. If they aren't allowed to view this
-        # report, that's a PermissionDenied
-        if not can_view_private_report(request.user, report):
+    if report.pk in request.session.get("report_ids", []) and report.created_by.is_active and report.created_by_id != request.user.pk:
+        # if the report was created by an active user and they aren't logged in
+        # as that user, force them to re-login
+        return login_required(lambda request: None)(request)
+
+    if report.pk in request.session.get("report_ids", []) and not report.created_by.is_active and report.created_by_id != request.user.pk:
+        # if the user submitted the report, allow them to masquerade as that
+        # user for the life of this request
+        request.user = report.created_by
+
+    if not report.is_public:
+        if request.user.is_anonymous() or not can_view_private_report(request.user, report):
             raise PermissionDenied()
 
     # there are a bunch of forms that can be filled out on this page, by
@@ -100,7 +87,7 @@ def detail(request, report_id):
             image_formset = ImageFormSet(request.POST, request.FILES, queryset=Image.objects.none())
             comment_form = PartialCommentForm(request.POST, request.FILES)
             if comment_form.is_valid() and image_formset.is_valid():
-                comment = comment_form.save()
+                comment = comment_form.save(request=request)
                 image_formset.save(user=comment.created_by, fk=comment)
                 messages.success(request, "Comment Added!")
                 return redirect(request.get_full_path())
@@ -144,7 +131,7 @@ def detail(request, report_id):
         if request.POST and submit_flag == InviteForm.SUBMIT_FLAG:
             invite_form = InviteForm(request.POST)
             if invite_form.is_valid():
-                invite_report = invite_form.save(report=report, user=request.user)
+                invite_report = invite_form.save(report=report, user=request.user, request=request)
                 message = "%d invited" % (len(invite_report.invited))
                 if invite_report.already_invited:
                     message += " (%d already invited)" % len(invite_report.already_invited)

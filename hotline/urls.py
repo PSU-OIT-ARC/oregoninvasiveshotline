@@ -56,6 +56,7 @@ urlpatterns = patterns(
     url(r'^users/create/?$', users.create, name='users-create'),
     url(r'^users/edit/(?P<user_id>\d+)/?$', users.edit, name='users-edit'),
     url(r'^users/delete/(?P<user_id>\d+)/?$', users.delete, name='users-delete'),
+    url(r'^users/authenticate/?$', users.authenticate, name='users-authenticate'),
 
     # these url routes are useful for password reset functionality and logging in and out
     # https://github.com/django/django/blob/master/django/contrib/auth/urls.py

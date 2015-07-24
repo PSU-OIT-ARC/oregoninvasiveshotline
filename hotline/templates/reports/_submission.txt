@@ -1,0 +1,6 @@
+Dear {{ user }},
+
+Thank you for your submission to the Oregon Invasive Species Online Hotline. An
+invasive species expert will review your submission and respond via email.
+
+You can view your Hotline Report here: {{ url }}

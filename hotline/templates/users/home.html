@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+
+<ul class="nav nav-tabs">
+    {% if invited_to %}
+        <li class="active"><a href="#invited-to-review">Invited To ({{ invited_to|length }})</a></li>
+    {% endif %}
+    {% if reported %}
+        <li><a href="#reported">Reported ({{ reported|length }})</a></li>
+    {% endif %}
+    {% if open_and_claimed %}
+        <li><a href="#open-and-claimed">Open and Claimed ({{ open_and_claimed|length }})</a></li>
+    {% endif %}
+    {% if unclaimed_reports %}
+        <li><a href="#unclaimed">Unclaimed ({{ unclaimed_reports|length }})</span></a></li>
+    {% endif %}
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane active" id="invited-to-review">
+        <h3>Reports You've Been Invited to Review</h3>
+        {% include "users/_report_table.html" with reports=invited_to %}
+    </div>
+
+    <div class="tab-pane" id="reported">
+        <h3>Reports You've Made </h3>
+        {% include "users/_report_table.html" with reports=reported %}
+    </div>
+
+    <div class="tab-pane" id="open-and-claimed">
+        <h3>Open and Claimed By You</h3>
+        <p>These reports are neither public nor archived, and are claimed by you.</p>
+        {% include "users/_report_table.html" with reports=open_and_claimed %}
+    </div>
+
+    <div class="tab-pane" id="unclaimed">
+        <h3>Unclaimed Reports</h3>
+        {% include "users/_report_table.html" with reports=unclaimed_reports %}
+    </div>
+</div>
+
+{% endblock %}

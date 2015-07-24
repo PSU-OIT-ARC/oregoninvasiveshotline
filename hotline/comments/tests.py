@@ -1,9 +1,12 @@
+from unittest.mock import Mock
+
+from django.core import mail
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from model_mommy.mommy import make
 
 from hotline.images.models import Image
-from hotline.reports.models import Report
+from hotline.reports.models import Invite, Report
 from hotline.users.models import User
 
 from .forms import CommentForm
@@ -24,6 +27,88 @@ class CommentFormTest(TestCase):
         form = CommentForm(user=user, report=report)
         self.assertNotIn("visibility", form.fields)
         self.assertEqual(form.instance.visibility, Comment.PROTECTED)
+
+    def test_emails_sent_out_for_new_comments_notifies_managers_and_staffers_who_commented(self):
+        user = make(User, is_manager=False, is_staff=False)
+        report = make(Report)
+
+        should_be_notified = make(Comment, report=report, created_by__is_staff=True).created_by.email
+        should_not_be_notified = make(Comment, report=report, created_by__is_staff=False, created_by__is_manager=False).created_by.email
+        form = CommentForm({
+            'body': "foo",
+        }, user=user, report=report)
+        self.assertTrue(form.is_valid())
+        form.save(request=Mock(build_absolute_uri=Mock(return_value="")))
+
+        self.assertIn(should_be_notified, [email.to[0] for email in mail.outbox])
+        self.assertNotIn(should_not_be_notified, [email.to for email in mail.outbox])
+
+    def test_email_sent_out_for_new_comment_to_user_who_claimed_report(self):
+        user = make(User, is_manager=False, is_staff=False)
+        report = make(Report, claimed_by=make(User))
+
+        form = CommentForm({
+            'body': "foo",
+        }, user=user, report=report)
+        self.assertTrue(form.is_valid())
+        form.save(request=Mock(build_absolute_uri=Mock(return_value="")))
+
+        self.assertIn(report.claimed_by.email, [email.to[0] for email in mail.outbox])
+
+    def test_email_sent_out_for_new_comment_to_all_invited_experts(self):
+        user = make(User, is_manager=False, is_staff=False)
+        report = make(Report)
+        invite = make(Invite, report=report)
+
+        form = CommentForm({
+            'body': "foo",
+        }, user=user, report=report)
+        self.assertTrue(form.is_valid())
+        form.save(request=Mock(build_absolute_uri=Mock(return_value="")))
+
+        self.assertIn(invite.user.email, [email.to[0] for email in mail.outbox])
+
+    def test_email_not_sent_to_person_submitting_comment(self):
+        report = make(Report)
+        invite = make(Invite, report=report)
+
+        form = CommentForm({
+            'body': "foo",
+            'visibility': Comment.PUBLIC,
+        }, user=invite.user, report=report)
+        self.assertTrue(form.is_valid())
+        form.save(request=Mock(build_absolute_uri=Mock(return_value="")))
+
+        self.assertNotIn(invite.user.email, [email.to[0] for email in mail.outbox])
+
+    def test_email_only_sent_to_submitter_if_comment_is_PUBLIC_or_PROTECTED(self):
+        user = make(User, is_manager=False, is_staff=False)
+        report = make(Report, created_by=user)
+        invite = make(Invite, report=report)
+
+        form = CommentForm({
+            'body': "foo",
+            'visibility': Comment.PUBLIC,
+        }, user=invite.user, report=report)
+        self.assertTrue(form.is_valid())
+        form.save(request=Mock(build_absolute_uri=Mock(return_value="")))
+
+        self.assertIn(user.email, [email.to[0] for email in mail.outbox])
+
+        mail.outbox = []
+        # if the comment is PRIVATE, they don't get notified
+        user = make(User, is_manager=False, is_staff=False)
+        report = make(Report, created_by=user)
+        invite = make(Invite, report=report)
+
+        form = CommentForm({
+            'body': "foo",
+            'visibility': Comment.PRIVATE,
+        }, user=invite.user, report=report)
+        self.assertTrue(form.is_valid())
+        form.save(request=Mock(build_absolute_uri=Mock(return_value="")))
+
+        self.assertNotIn(user.email, [email.to[0] for email in mail.outbox])
 
 
 class CommentEditViewTest(TestCase):

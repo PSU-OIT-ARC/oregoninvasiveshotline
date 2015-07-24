@@ -1,0 +1,5 @@
+{{ user }} left a comment on a report you're involved with:
+
+{{ body }}
+
+To view it, click here: {{ url }}

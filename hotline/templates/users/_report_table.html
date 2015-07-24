@@ -1,0 +1,7 @@
+<table class="table table-striped">
+    {% for report in reports %}
+        <tr>
+            <td><a href="{% url 'reports-detail' report.pk %}">{{ report.species|default:report.category }}</a> on {{ report.created_on }}</td>
+        </tr>
+    {% endfor %}
+</table>

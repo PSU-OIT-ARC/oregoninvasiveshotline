@@ -1,0 +1,12 @@
+Your assistance is requested in identifying a potential invasive
+species that was recently submitted to the Oregon Invasive Species
+Online Hotline.
+
+{% if message %}
+Note from {{ inviter }}:
+------------------------
+{{ message }}
+------------------------
+{% endif %}
+
+You can review the Hotline Report here: {{ url }}

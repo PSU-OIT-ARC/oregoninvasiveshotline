@@ -23,7 +23,7 @@
 
         <h3>Commentary</h3>
         {% for comment in comments %}
-            <div class="comment-list">
+            <div class="comment-list" id="comment-{{ comment.pk }}">
                 <div class="media">
                     <div class="media-left">
                         <img src="holder.js/60x60" class="pull-left" />
@@ -171,19 +171,16 @@ var category_id_to_species_id = {{ category_id_to_species_id|safe }};
 <script src="{{ STATIC_URL }}js/species_selector.js"></script>
 <script src="{{ STATIC_URL }}galleria/galleria-1.4.2.min.js"></script>
 <script>
-Galleria.loadTheme('{{ STATIC_URL }}galleria/themes/classic/galleria.classic.min.js');
-Galleria.run('.galleria');
+if($('.galleria').length){
+    Galleria.loadTheme('{{ STATIC_URL }}galleria/themes/classic/galleria.classic.min.js');
+    Galleria.run('.galleria');
+}
 
 $('#add-comment a').click(function(e){
     e.preventDefault();
     $(this).parent().remove();
     $('#create-comment').slideDown();
 });
-
-$('#management-tabs a').click(function (e) {
-    e.preventDefault()
-    $(this).tab('show')
-})
 
 {% if comment_form.is_bound %}
     $('#add-comment a').click()

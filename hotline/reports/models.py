@@ -1,4 +1,7 @@
 from django.contrib.gis.db import models
+from django.core.mail import send_mail
+from django.core.urlresolvers import reverse
+from django.template.loader import render_to_string
 
 from hotline.users.models import User
 
@@ -81,7 +84,7 @@ class Invite(models.Model):
         db_table = "invite"
 
     @classmethod
-    def create(cls, *, email, report, inviter, message):
+    def create(cls, *, email, report, inviter, message, request):
         """
         Create and send an invitation to the person with the given email address
 
@@ -98,6 +101,17 @@ class Invite(models.Model):
             return False
 
         invite = Invite(user=user, created_by=inviter, report=report)
-        # todo send email
+
+        send_mail(
+            "Invasive Species Hotline Submission Review Request",
+            render_to_string("reports/_invite_expert.txt", {
+                "inviter": inviter,
+                "message": message,
+                "url": user.get_authentication_url(request, next=reverse("reports-detail", args=[report.pk]))
+            }),
+            "noreply@pdx.edu",
+            [email]
+        )
+
         invite.save()
         return True

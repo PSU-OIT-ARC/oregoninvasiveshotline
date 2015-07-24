@@ -1,7 +1,152 @@
+html, body {
+    background-color:#3a7a16;
+    font-family: Verdana, Geneva, sans-serif;
+}
+
 body {
-    background-color:#E5E6DE;
-    background-image: url('../img/header.jpg');
-    background-repeat: repeat-x;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#577716+0,3a7a16+100 */
+    background: #577716; /* Old browsers */
+    background: -moz-linear-gradient(top,  #577716 0%, #3a7a16 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#577716), color-stop(100%,#3a7a16)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #577716 0%,#3a7a16 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #577716 0%,#3a7a16 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #577716 0%,#3a7a16 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #577716 0%,#3a7a16 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#577716', endColorstr='#3a7a16',GradientType=0 ); /* IE6-9 */
+}
+
+body.white {
+    background:#fff;
+    filter:none;
+}
+
+.container {
+    background-color:#fff;
+}
+
+#header {
+    text-align:center;
+    padding-bottom:20px;
+    margin-bottom:5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+
+/* the element right after the header should have a top border radius */
+#header + * {
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    padding-top:20px;
+}
+
+#header-links {
+    padding-top:40px;
+    text-align:center;
+}
+
+#header-links a {
+    font-size:16px;
+    padding:6px 12px;
+}
+
+#header-links a.btn {
+    margin-left:5px;
+}
+
+
+#header img {
+    width:100%;
+    max-width:500px;
+}
+
+#footer {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding-top:10px;
+}
+
+.arrow {
+}
+
+#headline {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#577716+0,3a7a16+100 */
+    background: #577716; /* Old browsers */
+    background: -moz-linear-gradient(top,  #577716 0%, #3a7a16 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#577716), color-stop(100%,#3a7a16)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #577716 0%,#3a7a16 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #577716 0%,#3a7a16 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #577716 0%,#3a7a16 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #577716 0%,#3a7a16 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#577716', endColorstr='#3a7a16',GradientType=0 ); /* IE6-9 */
+}
+
+#headline-info {
+    color:#fff;
+    font-size:18px;
+}
+
+#headline-buttons {
+    margin-top:30px;
+    text-align:center;
+}
+
+#headline-buttons a {
+    margin-right:5px;
+    margin-left:5px;
+    margin-bottom:10px;
+}
+
+#headline-buttons-info {
+    background:none;
+    border:1px solid white;
+}
+
+#headline-buttons-info:hover {
+    text-decoration:underline;
+}
+
+#sponsors {
+    background-color:#F8F8F8;
+    padding:30px;
+}
+
+#sponsors a {
+    display:inline-block;
+    width:33%;
+    text-align:center;
+}
+
+#midline {
+    padding-top:50px;
+    padding-bottom:50px;
+}
+
+#midline h1 {
+    font-size:22px;
+    text-align:center;
+    margin-bottom:50px;
+}
+
+.midline-block {
+    width:29%;
+    min-width:200px;
+    margin-left:2%;
+    margin-right:2%;
+    display:inline-block;
+    vertical-align:top;
+    padding-top:15px;
+    padding-bottom:15px;
+    margin-top:50px;
+}
+
+.midline-block.longest {
+    border-right:1px solid #ddd;
+    border-left:1px solid #ddd;
+    padding-left:2%;
+    padding-right:2%;
+    margin-left:0;
+    margin-right:0;
 }
 
 .formset-row-deleted {
@@ -19,63 +164,6 @@ body {
 
 .cloak-pushdown {
     margin-top:60px;
-}
-
-#header {
-    padding-top:24px;
-    padding-bottom:24px;
-}
-
-#upper-info {
-    float: right;
-    color: #fff;
-    font-size: 12px;
-    padding-top:5px;
-    margin-top:-24px; /* these needs to be the negative of #header padding-top */
-}
-
-#upper-info a {
-    color:#fff;
-}
-
-#brand {
-    color:#ffffff;
-    font-size:22px;
-    margin-left:24px;
-}
-
-.navbar {
-    border-radius:0;
-    border-left:none;
-    border-right:none;
-}
-
-.navbar-default {
-    background-color: #6a7f10;
-    border-color: #B4BF88;
-}
-
-.navbar-default .navbar-nav>li>a, .navbar-default .navbar-brand {
-    color:#fff;
-}
-
-.navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
-    color:#cdcdcd;
-}
-
-.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus {
-    background-color:#ffffff;
-    color:#6a7f10;
-}
-
-.navbar-nav .open .dropdown-menu {
-    background-color:#ffffff;
-}
-
-#main {
-    background-color:#ffffff;
-    padding-bottom:16px;
-    padding-top:16px;
 }
 
 #mask-alert {
@@ -122,6 +210,7 @@ body {
 
 #images input[type='file'] {
     display:inline;
+    width:225px;
 }
 
 .formset-row-deleted {
@@ -138,7 +227,7 @@ body {
     padding:10px;
 }
 
-.comment-list:nth-child(2n+1) .media {
+.comment-list:nth-child(2n) .media {
     background-color:#F9F9F9;
 }
 

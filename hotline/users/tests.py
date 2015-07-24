@@ -1,8 +1,12 @@
-from unittest.mock import patch
+import urllib.parse
+from unittest.mock import Mock, patch
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from model_mommy.mommy import make, prepare
+
+from hotline.reports.models import Invite, Report
 
 from .forms import UserForm
 from .models import User
@@ -23,6 +27,54 @@ class DetailViewTest(TestCase):
         user.save()
         self.client.login(email=user.email, password="foobar")
         self.client.get(reverse("users-detail", args=[user.pk]))
+
+
+class AuthenticateViewTest(TestCase):
+    def test_bad_signature_redirects_to_home(self):
+        response = self.client.get(reverse("users-authenticate") + "?sig=asfd")
+        self.assertRedirects(response, reverse("home"))
+
+    def test_active_or_invited_users_are_logged_in(self):
+        # test for an invited user
+        invite = make(Invite)
+        url = invite.user.get_authentication_url(request=Mock(build_absolute_uri=lambda a: a))
+        response = self.client.get(url)
+        self.assertRedirects(response, str(settings.LOGIN_REDIRECT_URL))
+
+        # test for an active user
+        user = make(User, is_active=True)
+        url = user.get_authentication_url(request=Mock(build_absolute_uri=lambda a: a))
+        response = self.client.get(url)
+        self.assertRedirects(response, str(settings.LOGIN_REDIRECT_URL))
+
+    def test_report_ids_session_variable_is_populated(self):
+        user = make(User, is_active=False)
+        report = make(Report, created_by=user)
+        url = user.get_authentication_url(request=Mock(build_absolute_uri=lambda a: a))
+        response = self.client.get(url)
+        self.assertRedirects(response, str(settings.LOGIN_REDIRECT_URL))
+        self.assertIn(report.pk, self.client.session['report_ids'])
+
+
+class UserHomeViewTest(TestCase):
+    def test_fully_anonymous_users_sent_away(self):
+        response = self.client.get(reverse("users-home"))
+        self.assertRedirects(response, reverse("home"))
+
+    def test_anonymous_user_with_report_ids_session_variable(self):
+        # they should be able to see the reports they submitted that are in the
+        # session var
+        r1 = make(Report)
+        r2 = make(Report)
+        r3 = make(Report)
+        session = self.client.session
+        session['report_ids'] = [r1.pk, r2.pk]
+        session.save()
+
+        response = self.client.get(reverse("users-home"))
+        self.assertIn(reverse("reports-detail", args=[r1.pk]), response.content.decode())
+        self.assertIn(reverse("reports-detail", args=[r2.pk]), response.content.decode())
+        self.assertNotIn(reverse("reports-detail", args=[r3.pk]), response.content.decode())
 
 
 class UserFormTest(TestCase):
@@ -139,3 +191,16 @@ class UserTest(TestCase):
         self.assertEqual(user.get_proper_name(), "Mr. Foo Bar PHD")
         user = prepare(User, first_name="Foo", last_name="Bar", prefix="", suffix="")
         self.assertEqual(user.get_proper_name(), "Foo Bar")
+
+    def test_get_authentication_url_and_authenticate(self):
+        u = make(User)
+
+        def build_absolute_uri(arg):
+            return "http://example.com" + arg
+
+        url = u.get_authentication_url(request=Mock(build_absolute_uri=build_absolute_uri), next="lame")
+        parts = urllib.parse.urlparse(url)
+        self.assertEqual(parts.path, reverse("users-authenticate"))
+        query = urllib.parse.parse_qs(parts.query)
+        self.assertEqual(query['next'][0], "lame")
+        self.assertEqual(u, User.authenticate(query['sig'][0]))

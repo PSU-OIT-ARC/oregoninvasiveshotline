@@ -17,6 +17,7 @@ run:
 	$(MANAGE) runserver $(HOST):$(PORT)
 
 init:
+	mkdir -p media
 	rm -rf $(VENV_DIR)
 	@$(MAKE) $(VENV_DIR)
 	dropdb --if-exists $(PROJECT_NAME)

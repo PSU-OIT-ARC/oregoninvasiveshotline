@@ -1,7 +1,10 @@
 from collections import namedtuple
 
 from django import forms
+from django.core.mail import send_mail
+from django.core.urlresolvers import reverse
 from django.core.validators import validate_email
+from django.template.loader import render_to_string
 
 from hotline.comments.models import Comment
 from hotline.species.models import Category, Severity, Species
@@ -26,7 +29,7 @@ class ReportForm(forms.ModelForm):
         self.fields['reported_species'].empty_label = "Unknown"
         self.fields['reported_species'].required = False
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, request, **kwargs):
         # first thing we need to do is create or find the right User object
         try:
             user = User.objects.get(email__iexact=self.cleaned_data['email'])
@@ -48,6 +51,16 @@ class ReportForm(forms.ModelForm):
         if self.cleaned_data.get("questions"):
             c = Comment(report=self.instance, created_by=user, body=self.cleaned_data['questions'], visibility=Comment.PROTECTED)
             c.save()
+
+        send_mail(
+            "OregonInvasivesHotline.org - Thank you for your submission",
+            render_to_string("reports/_submission.txt", {
+                "user": user,
+                "url": user.get_authentication_url(request, next=reverse("reports-detail", args=[self.instance.pk]))
+            }),
+            "noreply@pdx.edu",
+            [user.email]
+        )
 
         return self.instance
 
@@ -102,11 +115,11 @@ class InviteForm(forms.Form):
 
         return emails
 
-    def save(self, user, report):
+    def save(self, user, report, request):
         invited = []
         already_invited = []
         for email in self.cleaned_data['emails']:
-            if Invite.create(email=email, report=report, inviter=user, message=self.cleaned_data.get('body')):
+            if Invite.create(email=email, report=report, inviter=user, message=self.cleaned_data.get('body'), request=request):
                 invited.append(email)
             else:
                 already_invited.append(email)
