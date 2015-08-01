@@ -17,7 +17,9 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=True, blank=True, help_text="Inactive users cannot login")
     is_manager = models.BooleanField(default=False, blank=True)
     is_staff = models.BooleanField(default=False, blank=True)
-    affiliations = models.TextField()
+    affiliations = models.TextField(null=True, blank=True, default=None)
+    biography = models.TextField(null=True, blank=True, default=None)
+    photo = models.ImageField(null=True, blank=True, default=None)
 
     USERNAME_FIELD = 'email'
 
