@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+    <h3>Details</h3>
+    <p>Name: {{ object.prefix }} {{ object.first_name }} {{ object.last_name }} {{ object.suffix }}</p>
+    <p>Date joined: {{ object.date_joined }}</p>
+    <p>Photo: {{ object.photo }}</p>
+    <p>Biography: {{ object.biography }}</p>
+    <p>Affiliations: {{ object.affiliations }}</p>
+    
+    {% if current_user.is_staff or current_uiser.is_manager %}
+        <p>Email: {{ object.email }}</p>
+        <p>Active: {{ object.is_active }}</p>
+        <p>Staff: {{ object.is_staff }}</p>
+        <p>Manager: {{ object.is_manager }}</p>
+    {% endif %}
+{% endblock %}
