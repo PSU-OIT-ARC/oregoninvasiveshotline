@@ -6,7 +6,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.core.signing import BadSignature
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
-
+from django.views.generic import DetailView
 from hotline.reports.models import Invite, Report
 
 from .forms import UserForm
@@ -59,23 +59,18 @@ def home(request):
     })
 
 
-@permissions.can_view_user
-def detail(request, user_id):
-    """
-    A nice homepage for user the user. By passing the user_id as a parameter,
-    this allows admins to view the user's detail page, without having to
-    masquerade as them.
-    """
-    user = get_object_or_404(User, pk=user_id)
+class detail(DetailView):
+    
+    model = User
+    fields = ["email", "first_name", "last_name", "prefix", "suffix", "is_manager", "is_staff", 
+             "is_active", "date_joined", "affiliations", "biography", "photo"]
+    
+    def get_context_data(self, **kwargs):
+        obj = super(DetailView, self).get_object()
+        context = super(detail, self).get_context_data(**kwargs)
+        context['current_user'] = self.request.user
 
-    return render(request, "users/detail.html", {
-        # we use the name "the_user" to avoid clashing with the authentication
-        # context processor which populates the "user" template variable
-        "the_user": user,
-        # we hide the masquerade button if the user can't do it, or they are
-        # looking at their own detail page
-        "can_cloak": request.user.can_cloak_as(user) and user.pk != request.user.pk
-    })
+        return context
 
 
 @permissions.can_list_users
