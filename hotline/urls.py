@@ -51,7 +51,7 @@ urlpatterns = patterns(
     # could put these routes in the app itself, but for non-reusable apps, we
     # keep them in the main urlconfs file
     url(r'^users/home/?$', users.home, name='users-home'),
-    url(r'^users/detail/(?P<user_id>\d+)?$', users.detail, name='users-detail'),
+    url(r'^users/detail/(?P<pk>[0-9]+)/$', users.detail.as_view(), name='users-detail'),
     url(r'^users/list/?$', users.list_, name='users-list'),
     url(r'^users/create/?$', users.create, name='users-create'),
     url(r'^users/edit/(?P<user_id>\d+)/?$', users.edit, name='users-edit'),
