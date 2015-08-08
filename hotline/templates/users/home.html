@@ -2,6 +2,9 @@
 {% block content %}
 
 <div class="pull-right">
+    <a class="btn btn-success" href="{% url 'users-home' %}">Home</a>
+    <a class="btn btn-success" href="{% url 'users-detail' user.pk %}">View Profile</a>
+    <a class="btn btn-success" href="{% url 'users-edit' user.pk %}">Edit Profile</a>
     <a class="btn btn-success" href="{% url 'reports-list' %}">Search Reports</a>
     <a class="btn" href="{% url 'logout' %}">Logout</a>
 </div>
