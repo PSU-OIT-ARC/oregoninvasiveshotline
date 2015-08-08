@@ -5,3 +5,8 @@ permissions = PermissionsRegistry()
 
 # you can put "project level" permissions in here. For app specific
 # permissions, put them in app_dir/perms.py
+
+
+@permissions.register
+def is_active(user):
+    return user.is_active

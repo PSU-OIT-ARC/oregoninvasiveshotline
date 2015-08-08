@@ -2,13 +2,14 @@ import urllib.parse
 from unittest.mock import Mock, patch
 
 from django.conf import settings
+from django.core import mail
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from model_mommy.mommy import make, prepare
 
 from hotline.reports.models import Invite, Report
 
-from .forms import UserForm
+from .forms import LoginForm, UserForm
 from .models import User
 from .perms import permissions
 from .views import detail
@@ -178,14 +179,6 @@ class UserTest(TestCase):
         user = prepare(User, is_staff=True)
         self.assertTrue(user.has_module_perms("foo"), user)
 
-    def test_is_elevated(self):
-        user = prepare(User, is_staff=True)
-        self.assertTrue(user.is_elevated)
-        user = prepare(User, is_manager=True)
-        self.assertTrue(user.is_elevated)
-        user = prepare(User, is_manager=False, is_staff=False)
-        self.assertFalse(user.is_elevated)
-
     def test_get_proper_name(self):
         user = prepare(User, prefix="Mr.", first_name="Foo", last_name="Bar", suffix="PHD")
         self.assertEqual(user.get_proper_name(), "Mr. Foo Bar PHD")
@@ -204,3 +197,38 @@ class UserTest(TestCase):
         query = urllib.parse.parse_qs(parts.query)
         self.assertEqual(query['next'][0], "lame")
         self.assertEqual(u, User.authenticate(query['sig'][0]))
+
+
+class LoginFormTest(TestCase):
+    def test_clean_email_raises_validation_error_for_non_existing_user(self):
+        form = LoginForm({
+            "email": "foo@pdx.edu"
+        })
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.has_error("email"))
+
+    def test_save_sends_email_to_user_with_login_link(self):
+        user = make(User)
+        form = LoginForm({
+            "email": user.email
+        })
+        self.assertTrue(form.is_valid())
+        with patch("hotline.users.forms.User.get_authentication_url", return_value="foobarius"):
+            form.save(request=Mock())
+            self.assertTrue(len(mail.outbox), 1)
+            self.assertIn("foobarius", mail.outbox[0].body)
+
+
+class LoginViewTest(TestCase):
+    def test_get(self):
+        response = self.client.get(reverse("login"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_logging_in_via_email_sends_an_email(self):
+        user = make(User)
+        response = self.client.post(reverse("login"), {
+            "email": user.email,
+            "form": "OTHER_LOGIN",
+        })
+        self.assertTrue(len(mail.outbox), 1)
+        self.assertRedirects(response, reverse("login"))

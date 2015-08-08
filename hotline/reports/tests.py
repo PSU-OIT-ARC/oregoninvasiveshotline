@@ -1,17 +1,24 @@
+import base64
 import json
+import os
+import re
 from unittest.mock import Mock, patch
 
+from django.conf import settings
 from django.core.exceptions import NON_FIELD_ERRORS
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.test import TestCase
+from elasticmodels import ESTestCase
 from model_mommy.mommy import make, prepare
 
 from hotline.comments.forms import CommentForm
 from hotline.comments.models import Comment
+from hotline.images.models import Image
 from hotline.species.models import Category, Severity, Species
 from hotline.users.models import User
 
-from .forms import ArchiveForm, ConfirmForm, InviteForm, PublicForm, ReportForm
+from .forms import ConfirmForm, InviteForm, ReportForm, SettingsForm
 from .models import Invite, Report
 
 
@@ -44,6 +51,67 @@ class ReportTest(TestCase):
         self.assertEqual(make(Report, actual_species=actual_species, reported_species=actual_species).is_misidentified, False)
         # if the species differ, then it is misidentified
         self.assertEqual(make(Report, actual_species=actual_species, reported_species=reported_species).is_misidentified, True)
+
+    def test_str(self):
+        self.assertEqual("Foo", str(make(Report, actual_species=None, reported_species=None, reported_category=make(Category, name="Foo"))))
+        self.assertEqual("Bar (Foo)", str(make(Report, actual_species=None, reported_species=make(Species, name="Bar", scientific_name="Foo"))))
+
+    def test_image_url(self):
+        report = make(Report)
+        # it's a private image, so it shouldn't be the image_url
+        image = make(Image, report=report, visibility=Image.PRIVATE)
+        self.assertEqual(None, report.image_url())
+        # this public image should be the image_url
+        image = make(Image, report=report, visibility=Image.PUBLIC)
+        self.assertEqual(settings.MEDIA_URL + "generated_thumbnails/" + str(image.pk) + ".png", report.image_url())
+
+        Image.objects.all().delete()
+
+        # private images on comments shouldn't be used for the image_url
+        make(Image, comment=make(Comment, report=report), visibility=Image.PRIVATE, _quantity=2)
+        self.assertEqual(None, report.image_url())
+        # public images on comments can be used for the image_url
+        image = make(Image, comment=make(Comment, report=report), visibility=Image.PUBLIC)
+        self.assertEqual(settings.MEDIA_URL + "generated_thumbnails/" + str(image.pk) + ".png", report.image_url())
+
+        # make sure the file got created
+        self.assertTrue(os.path.exists(os.path.join(settings.MEDIA_ROOT, "generated_thumbnails", str(image.pk) + ".png")))
+
+    def test_icon_url_generates_image(self):
+        f = SimpleUploadedFile(
+            "foo.png",
+            base64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNg+P+/HgAFfwJ+BSYS9wAAAABJRU5ErkJggg==")
+        )
+        report = make(
+            Report,
+            actual_species__severity__color="#ff8800",
+            actual_species__category__icon=f
+        )
+        # make sure imagemagick gets called with the right args
+        with patch("hotline.reports.models.hashlib.md5", return_value=Mock(hexdigest=Mock(return_value="foo"))):
+            with patch("hotline.reports.models.subprocess.call") as call:
+                report.icon_url()  # trigger the image generation
+                self.assertTrue(re.match(r"convert -background none -crop 30x45\+0\+0 /tmp/.*?\.svg .*?generated_icons/foo\.png", " ".join(call.call_args[0][0])))  # noqa
+
+        # ensure the file actually gets created
+        with patch("hotline.reports.models.hashlib.md5", return_value=Mock(hexdigest=Mock(return_value="foo"))):
+            report.icon_url()  # trigger the report generation
+        self.assertTrue(os.path.exists(os.path.join(settings.MEDIA_ROOT, "generated_icons", "foo.png")))
+        # remove the garbage we created
+        os.unlink(os.path.join(settings.MEDIA_ROOT, "generated_icons", "foo.png"))
+
+    def test_icon_when_no_category_icon_set(self):
+        report = make(
+            Report,
+            actual_species__severity__color="#ff8800",
+            actual_species__category__icon=None
+        )
+
+        # make sure imagemagick gets called with the right args
+        with patch("hotline.reports.models.hashlib.md5", return_value=Mock(hexdigest=Mock(return_value="foo"))):
+            with patch("hotline.reports.models.subprocess.call") as call:
+                report.icon_url()  # trigger the report generation
+                self.assertTrue(re.match(r"convert -background none -crop 30x45\+0\+0 /tmp/.*?\.svg .*?generated_icons/foo\.png", " ".join(call.call_args[0][0])))  # noqa
 
 
 class CreateViewTest(TestCase):
@@ -162,7 +230,7 @@ class DetailViewTest(TestCase):
         self.assertNotIn(private.body, response.content.decode())
 
         # staffers should see everything
-        user = prepare(User, is_manager=True)
+        user = prepare(User, is_active=True)
         user.set_password("foo")
         user.save()
         self.client.login(email=user.email, password="foo")
@@ -176,10 +244,12 @@ class DetailViewTest(TestCase):
 
         # invited experts should see everything
         self.client.logout()
-        user = prepare(User, is_manager=False, is_staff=False, is_active=True)
+        user = prepare(User, is_active=True, is_staff=False)
         user.set_password("foo")
         user.save()
         self.client.login(email=user.email, password="foo")
+        user.is_active = False  # we just had to set this to True to make self.client.login work
+        user.save()
         make(Invite, user=user, report=report)
         response = self.client.get(reverse("reports-detail", args=[report.pk]))
         self.assertIn(public.body, response.content.decode())
@@ -188,7 +258,7 @@ class DetailViewTest(TestCase):
 
     def test_create_comment(self):
         report = make(Report)
-        user = prepare(User, is_manager=True)
+        user = prepare(User, is_active=True)
         user.set_password("foo")
         user.save()
         self.client.login(email=user.email, password="foo")
@@ -213,8 +283,7 @@ class DetailViewTest(TestCase):
             "image_formset",
             "invite_form",
             "confirm_form",
-            "archive_form",
-            "public_form"
+            "settings_form"
         ]
         for form in forms:
             self.assertEqual(None, response.context[form])
@@ -231,8 +300,7 @@ class DetailViewTest(TestCase):
             "image_formset",
             "invite_form",
             "confirm_form",
-            "archive_form",
-            "public_form"
+            "settings_form"
         ]
         for form in forms:
             self.assertNotEqual(None, response.context[form])
@@ -244,7 +312,7 @@ class DetailViewTest(TestCase):
         user.save()
         self.client.login(email=user.email, password="foo")
 
-        form_classes = [ConfirmForm, ArchiveForm, PublicForm]
+        form_classes = [ConfirmForm, SettingsForm]
         for form_class in form_classes:
             with patch("hotline.reports.views.%s" % form_class.__name__, SUBMIT_FLAG="foo") as m:
                 data = {
@@ -444,7 +512,7 @@ class InviteFormTest(TestCase):
 
 class ClaimViewTest(TestCase):
     def setUp(self):
-        user = prepare(User, is_manager=True)
+        user = prepare(User, is_active=True)
         user.set_password("foo")
         user.save()
         self.client.login(email=user.email, password="foo")
@@ -466,3 +534,29 @@ class ClaimViewTest(TestCase):
         response = self.client.post(reverse("reports-claim", args=[report.pk]), {"steal": 1})
         self.assertEqual(Report.objects.get(claimed_by=self.user), report)
         self.assertRedirects(response, reverse("reports-detail", args=[report.pk]))
+
+
+class ReportListView(ESTestCase, TestCase):
+    def test_get(self):
+        reports = make(Report, _quantity=3)
+        user = prepare(User, is_active=True)
+        user.set_password("foo")
+        user.save()
+        self.client.login(email=user.email, password="foo")
+        with patch("hotline.reports.models.Report.icon_url", return_value="foo.png"):
+            response = self.client.get(reverse("reports-list"))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(str(reports[0]), response.content.decode())
+
+    def test_search(self):
+        other_reports = make(Report, _quantity=3)
+        make(Report, reported_category__name="Foobarius Foobar")
+
+        user = prepare(User, is_active=True)
+        user.set_password("foo")
+        user.save()
+        self.client.login(email=user.email, password="foo")
+        response = self.client.get(reverse("reports-list") + "?querystring=category:foobarius&sort_by=category")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Foobarius Foobar", response.content.decode())
+        self.assertNotIn(str(other_reports[0]), response.content.decode())

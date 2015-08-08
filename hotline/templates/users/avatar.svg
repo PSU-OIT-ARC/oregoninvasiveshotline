@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="64px" height="64px">
+    <rect x="0" y="0" width="64" height="64" fill="{{ background_color }}" />
+    <!--
+        it's very important that the </text> is immediately after the text,
+        otherwise, IE will think there is an extra space character, and the
+        alignment will be off
+    -->
+    <text x="32" y="42" font-family="courier new" font-size="36" text-anchor="middle" fill="{{ text_color }}" stroke="#000" stroke-width="1" font-weight="bold">
+        {{ user.first_name.0.upper }}{{ user.last_name.0.upper }}</text>
+</svg>

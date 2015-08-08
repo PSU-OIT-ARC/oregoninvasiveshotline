@@ -1,17 +1,17 @@
-# Project Template
+# Oregon Invasives Species Hotline
 
-## Introduction
+This project allows members of the public to submit reports of invasive species for experts to review. Experts can login and review the reports, comment on them, and make a final determination about the species that was reported
 
-Quick Start Template for ARC projects.
-No need to download! Just follow the instructions below.
+# To Install
 
-## Installation
-
-Start a new Django project using this template
-
-    project_name="lame"
-    django-admin.py startproject --name=README.md,Makefile,MANIFEST.in --extension=template,py --template=https://github.com/PSU-OIT-ARC/project_template/archive/master.zip $project_name
-
-    cd $project_name
-    chmod +x ./manage.py
     make init
+
+You can login with an email of "foobar@example.com" with a password of "foobar"
+
+# Tech Used
+
+- Django
+- Postgres
+- Elasticsearch
+- Google Maps
+- Imagemagick (to make thumbnails and to convert SVGs to PNGs)

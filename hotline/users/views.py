@@ -1,7 +1,10 @@
+import random
+
 from arcutils import will_be_deleted_with
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import login
+from django.contrib.auth import login as django_login
+from django.contrib.auth.views import login as django_login_view
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.core.signing import BadSignature
 from django.db.models import Q
@@ -9,9 +12,39 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import DetailView
 from hotline.reports.models import Invite, Report
 
-from .forms import UserForm
+from .forms import LoginForm, UserForm
 from .models import User
 from .perms import can_list_users, permissions
+
+
+def login(request, *args, **kwargs):
+    """
+    This delegates most of the work to `django.contrib.auth.views.login`, but
+    we need to display an extra form, that allows users to login with just an
+    email address. To do that without rewriting all the django login code, we
+    tap into the TemplateResponse.context_data and add the extra form
+    """
+    response = django_login_view(request, *args, **kwargs)
+    # if our special "OTHER_LOGIN" flag is present, we process our login form
+    if request.method == "POST" and request.POST.get("form") == "OTHER_LOGIN":
+        # make it look like the django login form wasn't filled out
+        response.context_data['form'] = response.context_data['form'].__class__(request)
+        # now do the regular form processing stuff...
+        other_form = LoginForm(request.POST)
+        if other_form.is_valid():
+            other_form.save(request=request)
+            messages.success(request, "Check your email! You have been sent the login link.")
+            return redirect(request.get_full_path())
+    else:
+        other_form = LoginForm()
+
+    # patch in the other_form variable, so the template can render it.
+    # Sometimes the django_login_view returns an HttpResponseRedirect, which
+    # doesn't have context_data, hence the check
+    if hasattr(response, "context_data"):
+        response.context_data['other_form'] = other_form
+
+    return response
 
 
 def authenticate(request):
@@ -24,12 +57,27 @@ def authenticate(request):
 
     if user.is_active or Invite.objects.filter(user=user).exists():
         user.backend = settings.AUTHENTICATION_BACKENDS[0]
-        login(request, user)
+        django_login(request, user)
 
     # populate the report_ids session variable with all the reports the user made
     request.session['report_ids'] = list(Report.objects.filter(created_by=user).values_list('pk', flat=True))
 
     return redirect(request.GET.get("next") or settings.LOGIN_REDIRECT_URL)
+
+
+def avatar(request, user_id, colors="AliceBlue AntiqueWhite Aqua Aquamarine Azure Beige Bisque Black BlanchedAlmond Blue BlueViolet Brown BurlyWood CadetBlue Chartreuse Chocolate Coral CornflowerBlue Cornsilk Crimson Cyan DarkBlue DarkCyan DarkGoldenRod DarkGray DarkGreen DarkKhaki DarkMagenta DarkOliveGreen DarkOrange DarkOrchid DarkRed DarkSalmon DarkSeaGreen DarkSlateBlue DarkSlateGray DarkTurquoise DarkViolet DeepPink DeepSkyBlue DimGray DodgerBlue FireBrick FloralWhite ForestGreen Fuchsia Gainsboro GhostWhite Gold GoldenRod Gray Green GreenYellow HoneyDew HotPink IndianRed Indigo Ivory Khaki Lavender LavenderBlush LawnGreen LemonChiffon LightBlue LightCoral LightCyan LightGoldenRodYellow LightGray LightGreen LightPink LightSalmon LightSeaGreen LightSkyBlue LightSlateGray LightSteelBlue LightYellow Lime LimeGreen Linen Magenta Maroon MediumAquaMarine MediumBlue MediumOrchid MediumPurple MediumSeaGreen MediumSlateBlue MediumSpringGreen MediumTurquoise MediumVioletRed MidnightBlue MintCream MistyRose Moccasin NavajoWhite Navy OldLace Olive OliveDrab Orange OrangeRed Orchid PaleGoldenRod PaleGreen PaleTurquoise PaleVioletRed PapayaWhip PeachPuff Peru Pink Plum PowderBlue Purple RebeccaPurple Red RosyBrown RoyalBlue SaddleBrown Salmon SandyBrown SeaGreen SeaShell Sienna Silver SkyBlue SlateBlue SlateGray Snow SpringGreen SteelBlue Tan Teal Thistle Tomato Turquoise Violet Wheat White WhiteSmoke Yellow YellowGreen".split(" ")):  # noqa
+    """
+    Generates an SVG to use as the user's default avatar, using some random
+    colors based on the user's PK
+    """
+    user = get_object_or_404(User, pk=user_id)
+    background_color, text_color = random.Random(user.pk).sample(colors, 2)
+
+    return render(request, "users/avatar.svg", {
+        "user": user,
+        "background_color": background_color,
+        "text_color": text_color,
+    }, content_type="image/svg+xml")
 
 
 def home(request):
@@ -48,7 +96,7 @@ def home(request):
     open_and_claimed = Report.objects.filter(claimed_by_id=user.pk, is_public=False, is_archived=False).exclude(claimed_by=None)
 
     unclaimed_reports = []
-    if user.is_authenticated() and user.is_elevated:
+    if user.is_authenticated() and user.is_active:
         unclaimed_reports = Report.objects.filter(claimed_by=None, is_public=False, is_archived=False)
 
     return render(request, "users/home.html", {

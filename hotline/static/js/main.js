@@ -42,3 +42,41 @@ $(document).ready(function(){
     });
     $('.nav-tabs a:first, .nav-tabs a[href="' + Cookies.get('tab') + '"]').click();
 });
+
+/* This exists solely to avoid duplicating the icon dimension information
+ * everywhere. If you are to change this make sure you update
+ * `hotline/reports/views.py:icon`
+ */
+function generateIcon(url){
+    return {
+        url: url,
+        size: new google.maps.Size(30, 45),
+        origin: new google.maps.Point(0,0),
+        anchor: new google.maps.Point(15,45),
+    }
+}
+
+/*Just DRY up the Google map option stuff */
+function getDefaultMapOptions(){
+    var mapOptions = {
+        center: {
+            // this is approximately the center of oregon, and looks good at zoom level 7
+            lat: 44, lng: -120.578333
+        },
+        zoom: 7,
+        streetViewControl: false,
+    };
+
+    // if the zoom and center have been defined in a cookie, use that for the
+    // initial map options
+    if(Cookies.get("zoom") != undefined){
+        mapOptions.zoom = parseInt(Cookies.get("zoom"), 10)
+    }
+    if(Cookies.get("center") != undefined){
+        var parts = Cookies.get("center").split(",")
+        mapOptions.center.lat = parseFloat(parts[0])
+        mapOptions.center.lng = parseFloat(parts[1])
+    }
+
+    return mapOptions;
+}

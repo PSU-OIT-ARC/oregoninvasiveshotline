@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 
+<div class="pull-right">
+    <a class="btn btn-success" href="{% url 'reports-list' %}">Search Reports</a>
+    <a class="btn" href="{% url 'logout' %}">Logout</a>
+</div>
 <ul class="nav nav-tabs">
     {% if invited_to %}
         <li class="active"><a href="#invited-to-review">Invited To ({{ invited_to|length }})</a></li>

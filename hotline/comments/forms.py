@@ -1,6 +1,5 @@
 from django import forms
 from django.core.mail import send_mass_mail
-from django.db.models import Q
 from django.template.loader import render_to_string
 
 from hotline.reports.models import Invite
@@ -43,9 +42,7 @@ class CommentForm(forms.ModelForm):
             # people
             # any managers or staff who commented on this should get notified
             to_notify = set(
-                Comment.objects.filter(report=self.instance.report).filter(
-                    Q(created_by__is_staff=True) | Q(created_by__is_manager=True)
-                ).values_list(
+                Comment.objects.filter(report=self.instance.report, created_by__is_active=True).values_list(
                     "created_by__email",
                     flat=True
                 )

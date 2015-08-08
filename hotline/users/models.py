@@ -14,8 +14,7 @@ class User(AbstractBaseUser):
     prefix = models.CharField(max_length=255)
     suffix = models.CharField(max_length=255)
     date_joined = models.DateTimeField(auto_now_add=True)
-    is_active = models.BooleanField(default=True, blank=True, help_text="Inactive users cannot login")
-    is_manager = models.BooleanField(default=False, blank=True)
+    is_active = models.BooleanField(default=True, blank=True, help_text="Inactive users cannot login and cannot manage reports")
     is_staff = models.BooleanField(default=False, blank=True)
     affiliations = models.TextField(null=True, blank=True, default=None)
     biography = models.TextField(null=True, blank=True, default=None)
@@ -35,6 +34,9 @@ class User(AbstractBaseUser):
         else:
             return self.email
 
+    def get_avatar_url(self):
+        return reverse("users-avatar", args=[self.pk])
+
     def get_authentication_url(self, request, next=None):
         signer = Signer("user-authentication")
         sig = signer.sign(self.email)
@@ -49,10 +51,6 @@ class User(AbstractBaseUser):
         signer = Signer("user-authentication")
         email = signer.unsign(sig)
         return cls.objects.get(email=email)
-
-    @property
-    def is_elevated(self):
-        return self.is_manager or self.is_staff
 
     # These methods are required to work with Django's admin
     def get_full_name(self):

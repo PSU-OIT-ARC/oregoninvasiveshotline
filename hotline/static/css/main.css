@@ -20,6 +20,22 @@ body.white {
     filter:none;
 }
 
+small {
+    font-weight:normal;
+}
+
+.comma-list .comma:after {
+    content:","
+}
+
+.comma-list .comma:last-of-type:after {
+    content:""
+}
+
+.strong {
+    font-weight:bold;
+}
+
 .container {
     background-color:#fff;
 }
@@ -70,20 +86,16 @@ body.white {
 }
 
 #headline {
-    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#577716+0,3a7a16+100 */
-    background: #577716; /* Old browsers */
-    background: -moz-linear-gradient(top,  #577716 0%, #3a7a16 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#577716), color-stop(100%,#3a7a16)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  #577716 0%,#3a7a16 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  #577716 0%,#3a7a16 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  #577716 0%,#3a7a16 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  #577716 0%,#3a7a16 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#577716', endColorstr='#3a7a16',GradientType=0 ); /* IE6-9 */
+    background: #577716;
 }
 
 #headline-info {
     color:#fff;
     font-size:18px;
+}
+
+#headline-map {
+    padding-right:0px;
 }
 
 #headline-buttons {
@@ -149,6 +161,17 @@ body.white {
     margin-right:0;
 }
 
+@media (max-width: 992px){
+    .midline-block, .midline-block.longest {
+        width:100%;
+        display:block;
+        margin-left:0;
+        margin-right:0;
+        border:none;
+        padding:0;
+    }
+}
+
 .formset-row-deleted {
     opacity:0.2;
     filter: alpha(opacity = 20);
@@ -176,15 +199,11 @@ body.white {
 
 .misidentified {
     font-size:14px;
-    color:#ff8800;
+    color:#999;
 }
 
 .sidebar-block {
     margin-top:50px;
-}
-
-.report-management-icons {
-    font-size:18px;
 }
 
 .report-management a {
@@ -225,9 +244,10 @@ body.white {
 
 .comment-list .media {
     padding:10px;
+    margin-top:0;
 }
 
-.comment-list:nth-child(2n) .media {
+.comment-list .media:nth-child(odd) {
     background-color:#F9F9F9;
 }
 
@@ -250,6 +270,8 @@ body.white {
     width:auto;
     padding:5px;
     margin-bottom:0;
+    font-size:16px;
+    font-weight:bold;
 }
 
 #create-comment #images legend {
@@ -266,4 +288,116 @@ body.white {
     border:1px solid #ddd;
     border-top:none;
     padding:10px;
+}
+
+.check-all {
+    display:none;
+}
+
+/* double-zebra is for zebra striping tables 2 rows at a time */
+.double-zebra tbody tr:nth-child(4n+1), .double-zebra tbody tr:nth-child(4n+2)  {
+    background: #F9F9F9;
+}
+
+.double-zebra tbody tr:nth-child(4n+4) td, .double-zebra tbody tr:nth-child(4n+2) td {
+    border:none;
+    padding-top:0;
+}
+
+.reports-table-title {
+    font-size:18px;
+    font-weight:bold;
+}
+
+.reports-table-form label {
+    display:block;
+}
+
+.reports-table-img {
+    width:1px;
+}
+
+.reports-table-sort, .reports-table-subscribe {
+    margin-top:10px;
+}
+
+.map-popover {
+    display:block;
+}
+
+.map-popover img {
+    float:left;
+    padding-right:5px;
+}
+
+@media (min-width: 992px){
+    #id_querystring {
+        min-width:350px;
+    }
+}
+
+.reports-search-species-list {
+    display:none;
+}
+
+.reports-search-species-list .check-all {
+    display:block;
+}
+
+.reports-search-species-list ul {
+    list-style-type:none;
+    padding-left:0;
+}
+
+.reports-search-species-list label {
+    font-weight:normal;
+}
+
+.reports-search-species-list-field {
+    max-height:300px;
+    overflow:auto;
+}
+
+fieldset.reports-search-species-list {
+    border: 1px solid #E5E5E5;
+    padding: 10px;
+}
+
+fieldset.reports-search-species-list legend {
+    border-bottom:none;
+    display:inline;
+    width:auto;
+    padding:5px;
+    margin-bottom:0;
+    font-size:14px;
+    font-style:italic;
+    line-height:0;
+}
+
+blockquote {
+    font-style:normal;
+    font-size:14px;
+}
+
+.report-heading img {
+    padding-right:10px;
+    float:left;
+}
+
+.report-heading h3 {
+    margin-top:0;
+}
+
+.report-heading {
+    margin-bottom:20px;
+}
+
+.location blockquote {
+    margin-top:5px;
+    font-size:12px;
+}
+
+.report-status-info {
+    float:right;
+    padding-left:10px;
 }

@@ -1,0 +1,12 @@
+<a href="{% url 'reports-detail' report.pk %}" class="map-popover">
+    {% if image_url %}
+        <img src="{{ image_url }}" />
+    {% endif %}
+    <strong>#{{ report.pk }}: {{ report.species.name|default:report.category }}
+        {% if report.species %}
+            ({{ report.category }})
+        {% endif %}
+        - {{ report.created_on|date:"F j, Y" }}</strong>
+    <br />
+    View Full Report
+</a>

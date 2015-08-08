@@ -13,18 +13,18 @@ def can_view_private_report(user, report):
     if report.created_by == user:
         return True
 
-    if user.is_elevated:
+    if user.is_active:
         return True
 
 
 @permissions.register(model=Report)
 def can_adjust_visibility(user, report):
-    return user.is_elevated or Invite.objects.filter(user=user, report=report).exists()
+    return user.is_active or Invite.objects.filter(user=user, report=report).exists()
 
 
 @permissions.register(model=Report)
 def can_claim_report(user, report):
-    return user.is_elevated
+    return user.is_active
 
 
 @permissions.register(model=Report)

@@ -17,6 +17,10 @@ class Category(models.Model):
     """Simply a container for species"""
     category_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
+    icon = models.ImageField(upload_to="icons", help_text="""
+        It is expected that you got the icon from http://mapicons.mapsmarker.com
+        and they have a transparent background, and a white foreground
+    """, null=True, blank=True)
 
     class Meta:
         db_table = "category"
@@ -33,6 +37,7 @@ class Severity(models.Model):
     """
     severity_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
+    color = models.CharField(max_length=7, help_text="An HTML color of the form '#rrggbb'")
 
     class Meta:
         db_table = "severity"

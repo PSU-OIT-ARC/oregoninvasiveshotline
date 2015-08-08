@@ -4,12 +4,28 @@
 
 <div class="row">
     <div class="col-md-8">
-        <h3><img src="holder.js/20x20" /> {{ report.species.name|default:report.reported_category }} <small>{% if report.species.scientific_name %}({{ report.species.scientific_name }}){% endif %}</small> on {{ report.created_on|date:"M j, Y" }}</h3>
-        <p><em>Reporter's Description:</em> {{ report.description|linebreaksbr }}</p>
+        <div class="report-heading clearfix">
+            <img src="{{ report.icon_url }}" title="{{ report.category.name }} - {{ report.species.severity }}" alt="{{ report.category.name }} - {{ report.species.severity }}" /> 
+            <h3>{{ report.species.name|default:report.reported_category }} <small>{% if report.species.scientific_name %}({{ report.species.scientific_name }}){% endif %}</small> on {{ report.created_on|date:"M j, Y" }}</h3>
+            {% if report.is_misidentified %}
+                <p class="misidentified">Mistakenly reported as {{ report.reported_species }}</p>
+            {% endif %}
+        </div>
 
-        {% if report.is_misidentified %}
-            <p class="misidentified">(mistakenly reported as {{ report.reported_species }})</p>
-        {% endif %}
+        <p class="report-status-info">
+            {% if report.has_specimen %}
+                <small><em>Submitter has sample</em></small>
+            {% else %}
+                <small><em>Submitter does not have a specimen</em></small>
+            {% endif %}
+
+            {% if report.edrr_status %}
+                <br />
+                <small title="Early Detection and Rapid Response"><strong>EDRR Status:</strong> {{ report.get_edrr_status_display }}</small>
+            {% endif %}
+        </p>
+        <h4>Description of specimen</h4>
+        <blockquote>{{ report.description|linebreaksbr }}</blockquote>
 
         {% if images %}
             <div class="galleria">
@@ -17,21 +33,26 @@
                     <img src="{{ image.image.url }}" alt="{{ image.name }}" />
                 {% endfor %}
             </div>
-        {% else %}
-
         {% endif %}
 
-        <h3>Commentary</h3>
-        {% for comment in comments %}
-            <div class="comment-list" id="comment-{{ comment.pk }}">
-                <div class="media">
+        <hr />
+        <h4>Commentary</h4>
+        <div class="comment-list">
+            {% for comment in comments %}
+                <div class="media" id="comment-{{ comment.pk }}">
                     <div class="media-left">
-                        <img src="holder.js/60x60" class="pull-left" />
+                        <img src="{{ comment.created_by.get_avatar_url }}" class="pull-left" />
                     </div>
                     <div class="media-body">
                         {{ comment.body }}
                         <p class="text-right">
-                            <cite>{{ comment.created_by }}</cite>
+                            {% if user.is_active %}
+                                <cite>{{ comment.created_by }}</cite>
+                            {% elif user|can_create_comment:report %}
+                                <cite>{{ comment.created_by }}</cite>
+                            {% else %}
+                                <cite>Reporter</cite>
+                            {% endif %}
                             &ndash; {{ comment.created_on }}
                             {% if user|can_edit_comment:comment %}
                                 <a href="{% url 'comments-edit' comment.pk %}">Edit</a>
@@ -39,10 +60,10 @@
                         </p>
                     </div>
                 </div>
-            </div>
-        {% empty %}
-            <em>None</em>
-        {% endfor %}
+            {% empty %}
+                <em>None</em>
+            {% endfor %}
+        </div>
 
         {% if user|can_create_comment:report %}
             <p id="add-comment"><a href="#">Add a Comment</a></p>
@@ -54,15 +75,21 @@
         {% if report.claimed_by and report.claimed_by == user %}
             <div class="report-management clearfix sidebar-block">
                 <h4>Report Management</h4>
-                <ul class="nav nav-tabs report-management-icons" id="management-tabs">
-                    <li class="active"><a data-toggle="tab" href="#confirm"><span class="glyphicon glyphicon-ok"></span></a></li>
-                    <li><a data-toggle="tab" href="#public"><span class="glyphicon glyphicon-eye-open"></span></a></li>
-                    <li><a data-toggle="tab" href="#invite"><span class="glyphicon glyphicon-phone-alt"></span> {% if invites %}<small>({{ invites|length }})</small>{% endif %}</a></li>
-                    <li><a data-toggle="tab" href="#archive"><span class="glyphicon glyphicon-oil"></span></a></li>
+                <ul class="nav nav-tabs" id="management-tabs">
+                    <li class="active"><a data-toggle="tab" href="#confirm"><span class="glyphicon glyphicon-grain"></span> Species</a></li>
+                    <li><a data-toggle="tab" href="#public"><span class="glyphicon glyphicon-pencil"></span> Settings</a></li>
+                    <li><a data-toggle="tab" href="#invite"><span class="glyphicon glyphicon-phone-alt"></span> Invite {% if invites %}<small>({{ invites|length }})</small>{% endif %}</a></li>
                 </ul>
 
                 <div class="tab-content">
                     <div class="confirm-form tab-pane active" id="confirm">
+                        <p>
+                            {% if report.actual_species %}
+                                <strong class="text-success">The species is confirmed</strong>
+                            {% else  %}
+                                <strong class="text-warning">The species is unconfirmed</strong>
+                            {% endif %}
+                        </p>
                         <form method="post">
                             {% csrf_token %}
                             {% if confirm_form.errors %}
@@ -73,6 +100,7 @@
                                     {% endif %}
                                 </div>
                             {% endif %}
+                            {{ confirm_form.edrr_status|bootstrap }}
                             {{ confirm_form.category|bootstrap }}
                             <div id="reported-species">
                                 {{ confirm_form.actual_species|bootstrap }}
@@ -91,16 +119,19 @@
                     </div>
                     <div class="public-form tab-pane" id="public">
                         <form method="post">
+                            <label>Change settings</label>
                             {% csrf_token %}
-                            {{ public_form|bootstrap }}
-                            <input type="hidden" name="submit_flag" value="{{ public_form.SUBMIT_FLAG }}" />
+                            {{ settings_form|bootstrap }}
+                            <input type="hidden" name="submit_flag" value="{{ settings_form.SUBMIT_FLAG }}" />
                             <input type="submit" value="Submit" name="submit" />
                         </form>
                     </div>
                     <div class="public-form tab-pane" id="invite">
-                        {% if invites %}
-                            <p>You have already invited: {{ invites|join:", " }}</p>
-                        {% endif %}
+                        <p>Invite an expert to review this report.
+                            {% if invites %}
+                                You have already invited: {{ invites|join:", " }}.
+                            {% endif %}
+                        </p>
                         <form method="post">
                             {% if invite_form.errors %}
                                 <div class="alert alert-danger">
@@ -113,14 +144,6 @@
                             {% csrf_token %}
                             {{ invite_form|bootstrap }}
                             <input type="hidden" name="submit_flag" value="{{ invite_form.SUBMIT_FLAG }}" />
-                            <input type="submit" value="Submit" name="submit" />
-                        </form>
-                    </div>
-                    <div class="archive-form tab-pane" id="archive">
-                        <form method="post">
-                            {% csrf_token %}
-                            {{ archive_form|bootstrap }}
-                            <input type="hidden" name="submit_flag" value="{{ archive_form.SUBMIT_FLAG }}" />
                             <input type="submit" value="Submit" name="submit" />
                         </form>
                     </div>
@@ -140,18 +163,20 @@
                 </form>
             </div>
         {% endif %}
-        {% if report.claimed_by %}
+        {% if report.claimed_by and report.claimed_by != user %}
             <div class="credit clearfix sidebar-block">
                 <h4>Expert Reviewer</h4>
-                <img src="holder.js/60x60" class="pull-left" />
+                <img src="{{ report.claimed_by.get_avatar_url }}" class="pull-left" />
                 <p><strong><a href="#">{{ report.claimed_by.get_proper_name }}</a></strong> <br />{{ report.claimed_by.affiliations|linebreaksbr }}</p>
             </div>
         {% endif %}
 
         <div class="location sidebar-block">
             <h4>Location</h4>
-            <img src="holder.js/350x200" />
-            {{ report.location }}
+            <div id="map-canvas" style="height:200px"></div>
+            {% if report.location %}
+                <blockquote>{{ report.location|linebreaksbr }}</blockquote>
+            {% endif %}
         </div>
 
         <div class="related sidebar-block">
@@ -168,6 +193,7 @@
 <script>
 var category_id_to_species_id = {{ category_id_to_species_id|safe }};
 </script>
+<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=AIzaSyDRamH3fauUUQow07BOuep8gojIvCiGpm4"></script>
 <script src="{{ STATIC_URL }}js/species_selector.js"></script>
 <script src="{{ STATIC_URL }}galleria/galleria-1.4.2.min.js"></script>
 <script>
@@ -185,5 +211,18 @@ $('#add-comment a').click(function(e){
 {% if comment_form.is_bound %}
     $('#add-comment a').click()
 {% endif %}
+google.maps.event.addDomListener(window, 'load', function(){;
+    var mapOptions = getDefaultMapOptions();
+    mapOptions.center = {lat: {{ report.point.y }}, lng: {{ report.point.x }}}
+    var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+    var marker = new google.maps.Marker({
+        position: {
+            lat: {{ report.point.y }}, lng: {{ report.point.x }}
+        },
+        map: map,
+        icon: generateIcon('{{ report.icon_url }}')
+    });
+});
 </script>
 {% endblock %}

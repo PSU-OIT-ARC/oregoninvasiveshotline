@@ -107,6 +107,18 @@ DATABASES = {
 
 LOGGING_CONFIG = 'arcutils.logging.basic'
 
+
+#
+# Elaticsearch
+#
+
+ELASTICSEARCH_CONNECTIONS = {
+    'default': {
+        'hosts': [variable("ELASTICSEARCH_HOST", default='http://localhost:9200')],
+        'index_name': 'hotline',
+    }
+}
+
 #
 # UI
 #
@@ -132,12 +144,14 @@ INSTALLED_APPS = (
     'django.contrib.gis',
     'permissions',
     'arcutils',
+    'elasticmodels',
     'hotline.users',
     'hotline.species',
-    'hotline.regions',
     'hotline.reports',
     'hotline.images',
+    'hotline.notifications',
     'hotline.comments',
+    'hotline.counties',
 )
 
 MIDDLEWARE_CLASSES = (

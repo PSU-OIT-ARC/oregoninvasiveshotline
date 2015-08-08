@@ -1,0 +1,32 @@
+<p>
+    <br /><strong>Filter by category/species:</strong>
+    <span class="reports-search-category comma-list">
+        {% for category, field in form.iter_categories %}
+            <span class="comma"><a href="#" data-pk="{{ category.pk }}" class="{% if field.value %}strong{% endif %}">{{ category }}{% if field.value %} ({{ field.value|length }} selected){% endif %}</a></span>
+        {% endfor %}
+    </span>
+</p>
+{% for category, field in form.iter_categories %}
+    <fieldset class="reports-search-species-list" id="reports-search-category-{{ category.pk }}">
+        <legend>{{ category }}</legend>
+        <div class="reports-search-species-list-field">
+            {{ field|bootstrap }}
+        </div>
+    </fieldset>
+{% endfor %}
+
+<script>
+// shows and hides the category form fields
+$('.reports-search-category a').click(function(e){
+    e.preventDefault();
+    var pk = $(this).data("pk");
+    var div = $('#reports-search-category-' + pk);
+    if(div.is(":visible")){
+        div.hide();
+    } else {
+        $('.reports-search-species-list').hide();
+        div.show();
+    }
+});
+</script>
+

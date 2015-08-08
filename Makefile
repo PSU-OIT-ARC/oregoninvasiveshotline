@@ -17,16 +17,13 @@ run:
 	$(MANAGE) runserver $(HOST):$(PORT)
 
 init:
-	mkdir -p media
 	rm -rf $(VENV_DIR)
 	@$(MAKE) $(VENV_DIR)
 	dropdb --if-exists $(PROJECT_NAME)
 	createdb $(PROJECT_NAME)
 	psql -c "CREATE EXTENSION postgis" $(PROJECT_NAME)
-	$(MANAGE) migrate
-	$(MANAGE) check
-	# create a dummy user
-	$(MANAGE) loaddata dummy_user.json category.json severity.json species.json
+	@$(MAKE) reload
+	$(MANAGE) loaddata dummy_user.json category.json severity.json species.json counties.json
 
 clean:
 	find . -iname "*.pyc" -delete
@@ -42,6 +39,7 @@ test:
 reload:
 	$(MANAGE) migrate
 	$(MANAGE) collectstatic --noinput
+	$(MANAGE) rebuild_index --clopen --noinput
 	touch $(PROJECT_NAME)/wsgi.py
 
 $(VENV_DIR):

@@ -8,3 +8,7 @@ install:
   - make init
 # command to run tests
 script: make test
+services:
+  - elasticsearch
+before_script:
+  - sleep 10

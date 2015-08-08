@@ -13,3 +13,4 @@ flake8
 isort
 mommy_spatial_generators
 pillow
+git+https://github.com/PSU-OIT-ARC/elasticmodels.git#egg=elasticmodels

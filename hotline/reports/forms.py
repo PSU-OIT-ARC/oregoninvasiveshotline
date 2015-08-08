@@ -1,28 +1,210 @@
+import itertools
 from collections import namedtuple
 
 from django import forms
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.core.validators import validate_email
+from django.db.models import Q
 from django.template.loader import render_to_string
+from elasticmodels.forms import SearchForm
 
 from hotline.comments.models import Comment
+from hotline.counties.models import County
+from hotline.notifications.models import UserNotificationQuery
 from hotline.species.models import Category, Severity, Species
 from hotline.users.models import User
 
+from .indexes import ReportIndex
 from .models import Invite, Report
+
+
+class ReportSearchForm(SearchForm):
+    """
+    This form handles searching of reports by managers and anonymous users alike.
+
+    Form data that is submitted can be used to create a "UserNotificationQuery"
+    object in the database, which captures the input to this form as a
+    QueryDict string. So be careful if you start renaming fields, since that
+    will break any UserNotificationQuery rows that rely on that field.
+    """
+    q = None  # the default SearchForm has a q field with we don't want to use
+
+    querystring = forms.CharField(required=False, widget=forms.widgets.TextInput(attrs={
+        "placeholder": "county:Washington AND category:Aquatic"
+    }), label="Search")
+
+    sort_by = forms.ChoiceField(choices=[
+        ("_score", "Relevance"),
+        ("species.raw", "Species"),
+        ("category.raw", "Category"),
+        ("-created_on", "Date"),
+    ], required=False, widget=forms.widgets.RadioSelect)
+
+    is_archived = forms.ChoiceField(choices=[
+        ("", "Any"),
+        ("archived", "Archived"),
+        ("notarchived", "Not archived"),
+    ], required=False, initial="notarchived")
+
+    is_public = forms.ChoiceField(choices=[
+        ("", "Any"),
+        ("public", "Public"),
+        ("notpublic", "Not public"),
+    ], required=False)
+
+    claimed_by = forms.ChoiceField(choices=[
+        ("", "Any"),
+        ("me", "Me"),
+        ("nobody", "Nobody"),
+    ], required=False)
+
+    def __init__(self, *args, user, report_ids=(), **kwargs):
+        self.user = user
+        self.report_ids = report_ids
+        super().__init__(*args, index=ReportIndex, **kwargs)
+
+        # only certain fields on this form can be used by members of the public
+        public_fields = ['querystring', 'sort_by']
+        if not user.is_active:
+            for name in self.fields.keys():
+                if name not in public_fields:
+                    self.fields.pop(name)
+
+        # create a MultipleChoiceField listing the species, for each category
+        groups = itertools.groupby(
+            Species.objects.all().select_related("category").order_by("category__name", "category__pk", "name"),
+            key=lambda obj: obj.category
+        )
+        self.categories = []
+        for category, species in groups:
+            self.categories.append(category)
+            choices = [(s.pk, str(s)) for s in species]
+            self.fields['category-%d' % category.pk] = forms.MultipleChoiceField(
+                choices=choices,
+                required=False,
+                label="",
+                widget=forms.widgets.CheckboxSelectMultiple
+            )
+
+    def iter_categories(self):
+        """
+        Just makes it easier to look through the category fields
+        """
+        for category in self.categories:
+            yield category, self['category-%d' % category.pk]
+
+    def get_queryset(self):
+        # We do a monster join here so we get all the data we need on all the methods we
+        # call on the report
+        queryset = super().get_queryset().prefetch_related(
+            "image_set",
+            "comment_set__image_set"
+        ).select_related(
+            "reported_category",
+            "reported_species",
+            "actual_species",
+            "actual_species__severity",
+            "reported_species__severity",
+            "actual_species__category",
+            "reported_species__category"
+        )
+
+        if not self.user.is_active:
+            # only show public reports, or reports that they were invited to,
+            # or reports that are in their session variable
+            queryset = queryset.filter(
+                Q(is_public=True) |
+                Q(pk__in=Invite.objects.filter(user_id=self.user.pk)) |
+                Q(pk__in=self.report_ids)
+            )
+
+        # the is_archived field has an initial value on the form, which we want
+        # to pre-filter with
+        is_archived = self.cleaned_data.get("is_archived")
+        if is_archived == "archived":
+            queryset = queryset.filter(is_archived=True)
+        elif is_archived == "notarchived":
+            queryset = queryset.filter(is_archived=False)
+
+        return queryset
+
+    def search(self):
+        results = super().search()
+        if self.cleaned_data.get("querystring"):
+            query = results.query(
+                "query_string",
+                query=self.cleaned_data.get("querystring", ""),
+                lenient=True,
+            )
+
+            # if the query isn't valid, fall back on a simple_query_string
+            # query
+            if not self.is_valid_query(query):
+                results = results.query(
+                    "simple_query_string",
+                    query=self.cleaned_data.get("querystring", ""),
+                    lenient=True,
+                )
+            else:
+                results = query
+
+        sort_by = self.cleaned_data.get("sort_by")
+        if sort_by:
+            results = results.sort(sort_by)
+
+        # collect all the species and filter by that
+        species = []
+        for category in self.categories:
+            species.extend(map(int, self.cleaned_data.get("category-%d" % category.pk, [])))
+        if species:
+            results = results.filter("terms", species_id=species)
+
+        is_public = self.cleaned_data.get("is_public", "")
+        if is_public is not "":
+            results = results.filter("term", is_public=is_public == "public")
+
+        is_archived = self.cleaned_data.get("is_archived", "")
+        if is_archived is not "":
+            results = results.filter("term", is_archived=is_archived == "archived")
+
+        claimed_by = self.cleaned_data.get("claimed_by")
+        if claimed_by == "me":
+            results = results.filter("term", claimed_by=self.user.email)
+        elif claimed_by == "nobody":
+            results = results.filter("missing", field="claimed_by")
+
+        return results
 
 
 class ReportForm(forms.ModelForm):
     """
     Form for the public to submit reports
     """
-    questions = forms.CharField(label="Do you have additional questions for the invasive species expert who will review this report?", widget=forms.Textarea)
+    questions = forms.CharField(
+        label="Do you have additional questions for the invasive species expert who will review this report?",
+        widget=forms.Textarea,
+        required=False
+    )
     first_name = forms.CharField()
     last_name = forms.CharField()
     prefix = forms.CharField(required=False)
     suffix = forms.CharField(required=False)
     email = forms.EmailField()
+
+    class Meta:
+        model = Report
+        fields = [
+            'reported_category',
+            'reported_species',
+            'description',
+            'location',
+            'point',
+            'has_specimen',
+        ]
+        widgets = {
+            'point': forms.widgets.HiddenInput
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -45,6 +227,7 @@ class ReportForm(forms.ModelForm):
             user.save()
 
         self.instance.created_by = user
+        self.instance.county = County.objects.filter(the_geom__intersects=self.instance.point).first()
         super().save(*args, **kwargs)
 
         # if the submitter left a question, add it as a comment
@@ -62,37 +245,20 @@ class ReportForm(forms.ModelForm):
             [user.email]
         )
 
+        UserNotificationQuery.notify(self.instance, request)
+
         return self.instance
 
-    class Meta:
-        model = Report
-        fields = [
-            'reported_category',
-            'reported_species',
-            'description',
-            'location',
-            'point',
-            'has_specimen',
-        ]
 
-
-class PublicForm(forms.ModelForm):
-    SUBMIT_FLAG = "PUBLIC"
+class SettingsForm(forms.ModelForm):
+    SUBMIT_FLAG = "SETTINGS"
 
     class Meta:
         model = Report
         fields = [
-            'is_public'
-        ]
-
-
-class ArchiveForm(forms.ModelForm):
-    SUBMIT_FLAG = "ARCHIVE"
-
-    class Meta:
-        model = Report
-        fields = [
-            'is_archived'
+            'is_public',
+            'is_archived',
+            'edrr_status',
         ]
 
 
@@ -102,7 +268,7 @@ class InviteForm(forms.Form):
     """
     SUBMIT_FLAG = "INVITE"
 
-    emails = forms.CharField()
+    emails = forms.CharField(label="Email addresses (comma separated)")
     body = forms.CharField(widget=forms.Textarea, required=False)
 
     def clean_emails(self):

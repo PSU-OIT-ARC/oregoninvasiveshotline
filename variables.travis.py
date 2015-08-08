@@ -23,3 +23,5 @@ DB_PASSWORD = ''
 
 # the default is fine for dev
 DB_HOST = ''
+
+ELASTICSEARCH_HOST = 'http://localhost:9200'

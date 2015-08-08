@@ -1,0 +1,12 @@
+You are receiving this alert because you have subscribed to reports from the
+Oregon Invasives Hotline.
+
+The following report matches the search you subscribed to "{{ name }}":
+
+Reported Category: {{ report.category }}
+Reported Species: {{ report.species }}
+County: {{ report.county }}
+
+To login and view the report, click this link: {{ url }}
+
+You can manage your subscriptions by logging in, and clicking "My Account".

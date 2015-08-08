@@ -1,3 +1,5 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
@@ -12,9 +14,35 @@ from hotline.images.forms import get_image_formset
 from hotline.images.models import Image
 from hotline.species.models import category_id_to_species_id_json
 
-from .forms import ArchiveForm, ConfirmForm, InviteForm, PublicForm, ReportForm
+from .forms import (
+    ConfirmForm,
+    InviteForm,
+    ReportForm,
+    ReportSearchForm,
+    SettingsForm,
+)
 from .models import Invite, Report
 from .perms import can_manage_report, can_view_private_report, permissions
+
+
+def list_(request):
+    if request.user.is_active:
+        template = "reports/list.html"
+    else:
+        template = "reports/list_public.html"
+
+    form = ReportSearchForm(request.GET, user=request.user, report_ids=request.session.get("report_ids", []))
+    reports = form.results(request.GET.get("page", 1))
+
+    reports_json = []
+    for report in reports:
+        reports_json.append(report.to_json())
+
+    return render(request, template, {
+        "reports": reports,
+        "form": form,
+        "reports_json": json.dumps(reports_json)
+    })
 
 
 def create(request):
@@ -32,7 +60,13 @@ def create(request):
             messages.success(request, "Report submitted successfully")
             request.session.setdefault("report_ids", []).append(report.pk)
             request.session.modified = True
-            return redirect("reports-detail", report.pk)
+            response = redirect("reports-detail", report.pk)
+            # the template sets some cookies in JS that we want to clear when
+            # the report is submitted. This means the next time they go to this
+            # page, the map will be initialized with the defaults
+            response.delete_cookie("center", request.get_full_path())
+            response.delete_cookie("zoom", request.get_full_path())
+            return response
     else:
         formset = ImageFormSet(queryset=Image.objects.none())
         form = ReportForm()
@@ -59,7 +93,10 @@ def detail(request, report_id):
         # as that user, force them to re-login
         return login_required(lambda request: None)(request)
 
-    if report.pk in request.session.get("report_ids", []) and not report.created_by.is_active and report.created_by_id != request.user.pk:
+    if (report.pk in request.session.get("report_ids", []) and
+            not report.created_by.is_active and
+            report.created_by_id != request.user.pk and
+            not request.user.is_active):
         # if the user submitted the report, allow them to masquerade as that
         # user for the life of this request
         request.user = report.created_by
@@ -74,8 +111,7 @@ def detail(request, report_id):
     image_formset = None
     invite_form = None
     confirm_form = None
-    archive_form = None
-    public_form = None
+    settings_form = None
     # this tells us which form was filled out since there are many on the page
     submit_flag = request.POST.get("submit_flag")
 
@@ -107,25 +143,15 @@ def detail(request, report_id):
         else:
             confirm_form = ConfirmForm(instance=report)
 
-        # Marking the report as public...
-        if request.POST and submit_flag == PublicForm.SUBMIT_FLAG:
-            public_form = PublicForm(request.POST, instance=report)
-            if public_form.is_valid():
-                public_form.save()
+        # Marking the report settings
+        if request.POST and submit_flag == SettingsForm.SUBMIT_FLAG:
+            settings_form = SettingsForm(request.POST, instance=report)
+            if settings_form.is_valid():
+                settings_form.save()
                 messages.success(request, "Updated!")
                 return redirect(request.get_full_path())
         else:
-            public_form = PublicForm(instance=report)
-
-        # Marking the report as archived...
-        if request.POST and submit_flag == ArchiveForm.SUBMIT_FLAG:
-            archive_form = ArchiveForm(request.POST, instance=report)
-            if archive_form.is_valid():
-                archive_form.save()
-                messages.success(request, "Updated!")
-                return redirect(request.get_full_path())
-        else:
-            archive_form = ArchiveForm(instance=report)
+            settings_form = SettingsForm(instance=report)
 
         # Inviting experts...
         if request.POST and submit_flag == InviteForm.SUBMIT_FLAG:
@@ -146,7 +172,7 @@ def detail(request, report_id):
     if request.user.is_anonymous():
         comments = comments.filter(visibility=Comment.PUBLIC)
         images = images.filter(visibility=Image.PUBLIC)
-    elif request.user.is_elevated or Invite.objects.filter(user=request.user, report=report).exists():
+    elif request.user.is_active or Invite.objects.filter(user=request.user, report=report).exists():
         # no need to filter for these folks
         pass
     else:
@@ -165,8 +191,7 @@ def detail(request, report_id):
         # all the forms
         "image_formset": image_formset,
         "comment_form": comment_form,
-        "public_form": public_form,
-        "archive_form": archive_form,
+        "settings_form": settings_form,
         "invite_form": invite_form,
         "confirm_form": confirm_form,
     })

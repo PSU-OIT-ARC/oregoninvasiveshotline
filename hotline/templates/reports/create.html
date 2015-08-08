@@ -1,36 +1,58 @@
 {% extends "base.html" %}
 {% block head %}
-{{ form.media }}
 {% endblock %}
 {% block content %}
 <form method="post" enctype="multipart/form-data">
+    {% if form.errors or formset.errors %}
+        <div class="alert alert-danger">
+            Please correct the errors below.
+        </div>
+    {% endif %}
     {% csrf_token %}
     <fieldset>
+        <legend>Your Contact Info</legend>
+        <div class="row">
+            <div class="col-md-6">
+                {{ form.first_name|bootstrap }}
+            </div>
+            <div class="col-md-6">
+                {{ form.last_name|bootstrap }}
+            </div>
+        </div>
+        {{ form.email|bootstrap }}
+    </fieldset>
+
+
+    <fieldset>
         <legend>Location</legend>
+        <p>Drag the pin where you found the specimen. Zoom in to provide the most accurate location.</p>
+        {% if form.point.errors %}
+            <div class="alert alert-danger">
+                Please drag the pin to the location where the specimen was found.
+            </div>
+        {% endif %}
+        {{ form.point }}
+        <div id="map-canvas" style="height:500px"></div>
+        <br />
         {{ form.location|bootstrap }}
-        {{ form.point|bootstrap }}
     </fieldset>
 
     <fieldset>
         <legend>Identification</legend>
+        {{ form.has_specimen|bootstrap }}
         {{ form.reported_category|bootstrap }}
         <div id="reported-species">
             {{ form.reported_species|bootstrap }}
         </div>
         {{ form.description|bootstrap }}
-        {{ form.questions|bootstrap }}
-    </fieldset>
-
-    <fieldset>
-        <legend>Your Contact Info</legend>
-        {{ form.prefix|bootstrap }}
-        {{ form.first_name|bootstrap }}
-        {{ form.last_name|bootstrap }}
-        {{ form.suffix|bootstrap }}
-        {{ form.email|bootstrap }}
     </fieldset>
 
     {% include '_images.html' %}
+
+    <fieldset>
+        <legend>Questions?</legend>
+        {{ form.questions|bootstrap }}
+    </fieldset>
 
     <input type="submit" name="submit" value="Submit" id="submit" />
     <div id="previews"></div>
@@ -40,4 +62,47 @@
 var category_id_to_species_id = {{ category_id_to_species_id|safe }};
 </script>
 <script src="{{ STATIC_URL }}js/species_selector.js"></script>
+<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=AIzaSyDRamH3fauUUQow07BOuep8gojIvCiGpm4"></script>
+<script>
+google.maps.event.addDomListener(window, 'load', function(){;
+    var map = new google.maps.Map(document.getElementById('map-canvas'), getDefaultMapOptions());
+
+    // if the point field is filled out, we want to put the pin at that
+    // position, otherwise, just drop it in the center of the map
+    var point = $.trim($('#id_point').val());
+    // we need to match something like: POINT(-122.83053026562499 44.79282273106314)
+    // thanks: http://www.regular-expressions.info/floatingpoint.html
+    var parts = point.match(/([-+]?([0-9]*\.[0-9]+|[0-9]+)).+?([-+]?([0-9]*\.[0-9]+|[0-9]+))/)
+    if(!parts){
+        var position = {lat: map.getCenter().lat(), lng: map.getCenter().lng()}
+    } else {
+        var position = {lat: parseFloat(parts[3]), lng: parseFloat(parts[1])}
+    }
+
+    // Place a draggable marker on the map
+    var marker = new google.maps.Marker({
+        position: position,
+        map: map,
+        draggable: true,
+        title:"Drag me!"
+    });
+
+    // when the marker is moved, update the point field in the hidden field
+    // with the coordinates of the marker
+    google.maps.event.addListener(marker, 'drag', function() {
+        $("#id_point").val("POINT(" + this.position.lng() + " " + this.position.lat() + ")")
+    })
+
+
+    // when the map is moved or zoomed, saved those values in cookies, so when
+    // the page is reloaded (if the input was invalid) the map is exactly where
+    // the user had it before the page reloaded
+    var set_cookies = function(){
+        Cookies.set('center', map.getCenter().toUrlValue(), {path: window.location.pathname})
+        Cookies.set('zoom', map.getZoom(), {path: window.location.pathname})
+    }
+    google.maps.event.addListener(map, 'zoom_changed', set_cookies);
+    google.maps.event.addListener(map, 'center_changed', set_cookies);
+});
+</script>
 {% endblock %}

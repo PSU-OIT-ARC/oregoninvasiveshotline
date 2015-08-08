@@ -1,3 +1,11 @@
+import base64
+import hashlib
+import itertools
+import os
+import subprocess
+import tempfile
+
+from django.conf import settings
 from django.contrib.gis.db import models
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
@@ -16,9 +24,10 @@ class Report(models.Model):
 
     description = models.TextField(verbose_name="Please provide a description of your find")
     location = models.TextField(verbose_name="Please provide a description of the area where species was found")
-    has_specimen = models.BooleanField(default=False)
+    has_specimen = models.BooleanField(default=False, verbose_name="Do you have a physical specimen?")
 
     point = models.PointField(srid=4326)
+    county = models.ForeignKey('counties.County', null=True)
 
     created_by = models.ForeignKey("users.User", related_name="reports")
     created_on = models.DateTimeField(auto_now_add=True)
@@ -26,7 +35,7 @@ class Report(models.Model):
     claimed_by = models.ForeignKey("users.User", null=True, default=None, related_name="claimed_reports")
 
     # these are copied over from the original site
-    edrr_status = models.IntegerField(choices=[
+    edrr_status = models.IntegerField(verbose_name="EDDR Status", choices=[
         (0, '',),
         (1, 'No Response/Action Required',),
         (2, 'Local expert notified',),
@@ -46,6 +55,95 @@ class Report(models.Model):
 
     class Meta:
         db_table = "report"
+
+    def __str__(self):
+        if self.species:
+            return str(self.species)
+
+        return self.category.name
+
+    def to_json(self):
+        image_url = self.image_url()
+        return {
+            "lat": self.point.y,
+            "lng": self.point.x,
+            "icon": self.icon_url(),
+            "title": str(self),
+            "image_url": image_url,
+            "content": render_to_string("reports/_popover.html", {
+                "report": self,
+                "image_url": image_url,
+            }),
+        }
+
+    def icon_url(self):
+        """
+        This view generates on the fly a PNG image from a SVG, which can be used as
+        an icon on the Google map. The reason for this SVG to PNG business is that
+        SVGs are easily customized, but not all browsers support SVG on Google
+        maps, so we convert the SVG to a PNG.
+
+        The icon is composed of a background color based on the specie's severity,
+        and an image from the specie's category.
+
+        If you are going to change the design or size of the icon, you will need to
+        update `hotline/static/js/main.js:generateIcon` as well
+        """
+        # TODO caching so we don't hit the filesystem all the time
+        category = self.category
+        # figure out which color to use for the background
+        color = "#999" if self.species is None else self.species.severity.color
+        icon_size = "30x45"
+        # the file path for the generated icon will be based on the parameters that
+        # can change the appearance of the map icon
+        key = hashlib.md5("|".join(map(str, [category.icon.path if category.icon else "", color])).encode("utf8")).hexdigest()
+        icon_location = os.path.join(settings.MEDIA_ROOT, "generated_icons", key + ".png")
+        # if the PNG doesn't exist, create it
+        if not os.path.exists(icon_location):
+            with tempfile.NamedTemporaryFile("wt", suffix=".svg") as f:
+                f.write(render_to_string("reports/icon.svg", {
+                    # we encode the category PNG inside the SVG, to avoid file path
+                    # problems that come from generating the PNG from imagemagick
+                    "img": base64.b64encode(open(category.icon.path, "rb").read()) if category.icon else None,
+                    "color": color
+                }))
+                f.flush()
+                subprocess.call(["convert", "-background", "none", "-crop", icon_size + "+0+0", f.name, icon_location])
+
+        return settings.MEDIA_URL + "/generated_icons/%s.png" % key
+
+    def image_url(self):
+        """
+        Returns the URL to the thumbnail generated for the first public image
+        attached to this report or None.
+
+        If the thumbnail doesn't exist, it is created
+        """
+        for image in itertools.chain(self.image_set.all(), *(comment.image_set.all() for comment in self.comment_set.all())):
+            if image.visibility == image.PUBLIC:
+                output_path = os.path.join(settings.MEDIA_ROOT, "generated_thumbnails", str(image.pk) + ".png")
+                thumbnail_size = "64x64"
+                if not os.path.exists(output_path):
+                    subprocess.call([
+                        "convert",
+                        image.image.path,
+                        "-thumbnail",
+                        # the > below means don't enlarge images that fit in the 64x64 box
+                        thumbnail_size + ">",
+                        "-background",
+                        "transparent",
+                        "-gravity",
+                        "center",
+                        # fill the 64x64 box with the background color (which
+                        # is transparent) so all the thumbnails are exactly the
+                        # same size
+                        "-extent",
+                        thumbnail_size,
+                        output_path
+                    ])
+                return settings.MEDIA_URL + os.path.relpath(output_path, settings.MEDIA_ROOT)
+
+        return None
 
     @property
     def species(self):
@@ -115,3 +213,6 @@ class Invite(models.Model):
 
         invite.save()
         return True
+
+
+from .indexes import *  # noqa isort:skip

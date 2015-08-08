@@ -1,6 +1,38 @@
 from django import forms
+from django.core.mail import send_mail
+from django.core.urlresolvers import reverse
+from django.template.loader import render_to_string
 
 from .models import User
+
+
+class LoginForm(forms.Form):
+    """
+    This form allows users to login via the authentication_url
+    """
+    email = forms.EmailField()
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if not User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError("A user with that email address does not exist")
+
+        return email
+
+    def save(self, request):
+        """
+        Send an email to the user with a link that allows them to login
+        """
+        user = User.objects.get(email__iexact=self.cleaned_data['email'])
+        send_mail(
+            "OregonInvasivesHotline.org - Login Link",
+            render_to_string("users/_login.txt", {
+                "user": user,
+                "url": user.get_authentication_url(request, next=reverse("users-home"))
+            }),
+            "noreply@pdx.edu",
+            [user.email]
+        )
 
 
 class UserForm(forms.ModelForm):

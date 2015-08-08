@@ -12,15 +12,15 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Region',
+            name='County',
             fields=[
-                ('region_id', models.AutoField(primary_key=True, serialize=False)),
+                ('county_id', models.AutoField(primary_key=True, serialize=False)),
                 ('name', models.CharField(max_length=255)),
-                ('center', django.contrib.gis.db.models.fields.PointField(srid=4326)),
+                ('state', models.CharField(max_length=255)),
+                ('the_geom', django.contrib.gis.db.models.fields.MultiPolygonField(srid=4326)),
             ],
             options={
-                'ordering': ['name'],
-                'db_table': 'region',
+                'db_table': 'county',
             },
         ),
     ]

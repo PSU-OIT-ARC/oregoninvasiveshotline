@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Subscribe to a Search</h3>
+<p>Any <em>new</em> reports submitted to the Hotline that match the search you just performed will be emailed to you.</p>
+<form method="post">
+    {% csrf_token %}
+    {{ form.name|bootstrap }}
+    <input type="submit" name="submit" value="Subscribe" />
+    <a href="javascript:window.history.go(-1)">Back</a>
+</form>
+{% endblock %}
