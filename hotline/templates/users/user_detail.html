@@ -1,9 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
-
+<div class="pull-right">
+    <a class="btn btn-success" href="{% url 'users-home' %}">Home</a>
+    <a class="btn btn-success" href="{% url 'users-detail' user.pk %}">View Profile</a>
+    <a class="btn btn-success" href="{% url 'users-edit' user.pk %}">Edit Profile</a>
+    <a class="btn btn-success" href="{% url 'reports-list' %}">Search Reports</a>
+    <a class="btn" href="{% url 'logout' %}">Logout</a>
+</div>
 
     <h3>Details</h3>
-    <p>Name: {{ object.prefix }} {{ object.first_name }} {{ object.last_name }} {{ object.suffix }}</p>
+    <p>Name: {% if object.prefix != "None" %}
+                {{ object.prefix }} 
+             {% endif %}
+             {{ object.first_name }} {{ object.last_name }} 
+             {% if object.suffix != "None" %}
+                {{ object.suffix }}
+             {% endif %}
+             </p>
+             
     <p>Date joined: {{ object.date_joined }}</p>
     <p>Photo: {{ object.photo }}</p>
     <p>Biography: {{ object.biography }}</p>
