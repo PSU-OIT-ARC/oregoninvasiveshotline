@@ -9,24 +9,16 @@
 </div>
 
     <h3>Details</h3>
-    <p>Name: {% if object.prefix != "None" %}
-                {{ object.prefix }} 
-             {% endif %}
-             {{ object.first_name }} {{ object.last_name }} 
-             {% if object.suffix != "None" %}
-                {{ object.suffix }}
-             {% endif %}
-             </p>
+    <p>Name: {{ object.prefix }} {{ object.first_name }} {{ object.last_name }} {{ object.suffix }}</p>
              
     <p>Date joined: {{ object.date_joined }}</p>
     <p>Photo: {{ object.photo }}</p>
     <p>Biography: {{ object.biography }}</p>
     <p>Affiliations: {{ object.affiliations }}</p>
     
-    {% if current_user.is_staff or current_uiser.is_manager %}
+    {% if current_user.is_staff %}
         <p>Email: {{ object.email }}</p>
         <p>Active: {{ object.is_active }}</p>
         <p>Staff: {{ object.is_staff }}</p>
-        <p>Manager: {{ object.is_manager }}</p>
     {% endif %}
 {% endblock %}
