@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if form.instance.pk %}
+    <h3>Update Category</h3>
+{% else %}
+    <h3>Create Category</h3>
+{% endif %}
+    
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.name|bootstrap }}
+    <input type="submit" class="btn btn-primary" value="Update" />
+    </form>
+    
+{% endblock %}
