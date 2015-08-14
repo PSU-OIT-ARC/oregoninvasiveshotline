@@ -14,7 +14,7 @@ class SpeciesCreateView(SuccessMessageMixin, CreateView):
     model = Species
     fields = ['name', 'scientific_name', 'remedy', 'resources', 'is_confidential', 'category', 'severity']
     success_message = "Species created successfully."
-    template_name_suffix = '_create_form'
+    template_name_suffix = '_detail_form'
 
     def get_success_url(self):
         success_url = self.request.get_full_path()
@@ -52,7 +52,7 @@ class CategoryList(ListView):
 class CategoryCreateView(SuccessMessageMixin, CreateView):
     model = Category
     fields = ['name']
-    template_name_suffix = '_create_form'
+    template_name_suffix = '_detail_form'
     success_message = "Category created successfully."
 
     def get_success_url(self):
@@ -92,7 +92,7 @@ class SeverityCreateView(SuccessMessageMixin, CreateView):
     model = Severity
     fields = ['name']
     success_message = "Severity created successfully."
-    template_name_suffix = '_create_form'
+    template_name_suffix = '_detail_form'
 
     def get_success_url(self):
         success_url = self.request.get_full_path()
