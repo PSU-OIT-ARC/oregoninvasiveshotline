@@ -107,7 +107,7 @@ def home(request):
     })
 
 
-class detail(DetailView):
+class Detail(DetailView):
     
     model = User
     fields = ["email", "first_name", "last_name", "prefix", "suffix", "is_manager", "is_staff", 
@@ -115,7 +115,7 @@ class detail(DetailView):
     
     def get_context_data(self, **kwargs):
         obj = super(DetailView, self).get_object()
-        context = super(detail, self).get_context_data(**kwargs)
+        context = super(Detail, self).get_context_data(**kwargs)
         context['current_user'] = self.request.user
 
         return context
