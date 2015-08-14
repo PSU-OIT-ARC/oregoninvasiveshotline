@@ -9,12 +9,17 @@ from django.conf import settings
 from django.contrib.gis.db import models
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
-from django.template.loader import render_to_string
+from django.template import Context
+from django.template.loader import get_template, render_to_string
 
 from hotline.users.models import User
 
 
 class Report(models.Model):
+    # cache the template since Django is so slow at rendering templates and NFS
+    # makes it even worse
+    TEMPLATE = get_template("reports/_popover.html")
+
     report_id = models.AutoField(primary_key=True)
     # It may seem odd to have FKs to the species AND category, but in the case
     # where the user doesn't know what species it is, we fall back to just a
@@ -55,6 +60,7 @@ class Report(models.Model):
 
     class Meta:
         db_table = "report"
+        ordering = ['-pk']
 
     def __str__(self):
         if self.species:
@@ -70,10 +76,10 @@ class Report(models.Model):
             "icon": self.icon_url(),
             "title": str(self),
             "image_url": image_url,
-            "content": render_to_string("reports/_popover.html", {
+            "content": self.__class__.TEMPLATE.render(Context({
                 "report": self,
                 "image_url": image_url,
-            }),
+            })),
         }
 
     def icon_url(self):

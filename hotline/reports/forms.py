@@ -290,6 +290,8 @@ class InviteForm(forms.Form):
             else:
                 already_invited.append(email)
 
+        # make the invite into a comment
+        Comment(body=self.cleaned_data.get("body"), created_by=user, visibility=Comment.PRIVATE, report=report).save()
         return namedtuple("InviteReport", "invited already_invited")(invited, already_invited)
 
 

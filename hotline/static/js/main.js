@@ -33,13 +33,14 @@ $(document).ready(function(){
     // tab handling stuff
 
     $('.nav-tabs a').click(function (e) {
-        e.preventDefault()
-        $(this).tab('show')
+        if($(this).attr("href").substring(0, 1) == "#"){
+            console.log("here")
+            Cookies.set('tab', $(this).attr('href'), {path: window.location.pathname})
+            e.preventDefault()
+            $(this).tab('show')
+        }
     })
 
-    $('.nav-tabs a').click(function(){
-        Cookies.set('tab', $(this).attr('href'), {path: window.location.pathname})
-    });
     $('.nav-tabs a:first, .nav-tabs a[href="' + Cookies.get('tab') + '"]').click();
 });
 

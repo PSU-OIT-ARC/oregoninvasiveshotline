@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block title %}
+Report List
+{% endblock %}
 {% block content %}
 <form class="reports-table-form">
     <div class="form-inline">
@@ -19,13 +22,13 @@
     {% if reports %}
         <div class="row">
             <div class="col-md-12">
-                <div id="map-canvas" style="height:400px"></div>
+                <div id="map-canvas" style="height:550px"></div>
             </div>
             <div class="col-md-12">
                 <p class="pull-right reports-table-subscribe"><a href="{% url 'notifications-create' %}?{{ request.GET.urlencode }}">Subscribe to this search</a></p>
                 <p class="reports-table-sort comma-list">Sort By:
                     {% for subwidget in form.sort_by %}
-                        <span class="comma"><a href="{% add_get sort_by=subwidget.choice_value %}">{{ subwidget.choice_label }}</a></span>
+                        <span class="comma"><a class="{% if subwidget.choice_value == form.cleaned_data.sort_by %}strong{% endif %}" href="{% add_get sort_by=subwidget.choice_value %}">{{ subwidget.choice_label }}</a></span>
                     {% endfor %}
                 </p>
                 <table class="table reports-table double-zebra">
@@ -33,11 +36,9 @@
                         {% for report in reports %}
                             <tr>
                                 <td rowspan="2" class="reports-table-img">
-                                    {% if report.image_url %}
-                                        <a href="{% url 'reports-detail' report.pk %}">
-                                            <img src="{{ report.image_url }}" />
-                                        </a>
-                                    {% endif %}
+                                    <a href="#map-canvas" class="report-location-click" data-report-index="{{ forloop.counter0 }}">
+                                        <img src="{{ report.image_url|default:report.icon_url }}" />
+                                    </a>
                                 </td>
                                 <td colspan="3" class="reports-table-title">
                                     <a href="{% url 'reports-detail' report.pk %}">

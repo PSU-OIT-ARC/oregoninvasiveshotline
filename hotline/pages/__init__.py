@@ -1,0 +1,1 @@
+HIDDEN_PAGE_PREFIX = "/_"

@@ -14,14 +14,30 @@
 
         <p class="report-status-info">
             {% if report.has_specimen %}
-                <small><em>Submitter has sample</em></small>
+                <em>Submitter has sample</em><br />
             {% else %}
-                <small><em>Submitter does not have a specimen</em></small>
+                <em>Submitter does not have a specimen</em><br />
+            {% endif %}
+
+            {% if user|can_create_comment:report %}
+                <strong>Submitted by:</strong> {{ report.created_by.first_name }} {{ report.created_by.last_name }} ({{ report.created_by.email }})<br />
             {% endif %}
 
             {% if report.edrr_status %}
+                <strong title="Early Detection and Rapid Response">EDRR Status:</strong> {{ report.get_edrr_status_display }}
                 <br />
-                <small title="Early Detection and Rapid Response"><strong>EDRR Status:</strong> {{ report.get_edrr_status_display }}</small>
+            {% endif %}
+
+            {% if user.is_active %}
+                {% if report.is_public %}
+                    <span class="glyphicon glyphicon-eye-open" title="Public"></span>
+                {% endif %}
+                {% if report.actual_species %}
+                    <span class="glyphicon glyphicon-ok" title="Confirmed"></span>
+                {% endif %}
+                {% if report.is_archived %}
+                    <span class="glyphicon glyphicon-oil" title="Archived"></span>
+                {% endif %}
             {% endif %}
         </p>
         <h4>Description of specimen</h4>
@@ -44,16 +60,14 @@
                         <img src="{{ comment.created_by.get_avatar_url }}" class="pull-left" />
                     </div>
                     <div class="media-body">
-                        {{ comment.body }}
-                        <p class="text-right">
-                            {% if user.is_active %}
-                                <cite>{{ comment.created_by }}</cite>
-                            {% elif user|can_create_comment:report %}
-                                <cite>{{ comment.created_by }}</cite>
+                        {{ comment.body|linebreaksbr }}
+                        <p class="text-right comment-meta">
+                            {% if user.is_active or user|can_create_comment:report %}
+                                <cite>{{ comment.created_by }} {% if comment_form.visibility %}({{ comment.get_visibility_display.split.0|lower }}){% endif %}</cite>
                             {% else %}
                                 <cite>Reporter</cite>
                             {% endif %}
-                            &ndash; {{ comment.created_on }}
+                            <br /> {{ comment.created_on }}
                             {% if user|can_edit_comment:comment %}
                                 <a href="{% url 'comments-edit' comment.pk %}">Edit</a>
                             {% endif %}
@@ -72,6 +86,14 @@
     </div>
 
     <div class="col-md-4 sidebar">
+        <div class="location sidebar-block">
+            <h4>Location</h4>
+            <div id="map-canvas" style="height:200px"></div>
+            {% if report.location %}
+                <blockquote>{{ report.location|linebreaksbr }}</blockquote>
+            {% endif %}
+        </div>
+
         {% if report.claimed_by and report.claimed_by == user %}
             <div class="report-management clearfix sidebar-block">
                 <h4>Report Management</h4>
@@ -149,21 +171,15 @@
                     </div>
                 </div>
             </div>
-        {% elif user|can_claim_report:report %}
+        {% elif user|can_claim_report:report and not report.claimed_by %}
             <div class="alert alert-warning text-center sidebar-block">
                 <form method="post" action="{% url 'reports-claim' report.pk %}" style="display:inline">
                     {% csrf_token %}
-                    {% if report.claimed_by %}
-                        This report is claimed...
-                        <button class="btn btn-warning btn-xs" type="submit">steal it!</button>
-                    {% else %}
-                        This report is unclaimed...
-                        <button class="btn btn-warning btn-xs" type="submit">Claim it!</button>
-                    {% endif %}
+                    This report is unclaimed...
+                    <button class="btn btn-warning btn-xs" type="submit">Claim it!</button>
                 </form>
             </div>
-        {% endif %}
-        {% if report.claimed_by and report.claimed_by != user %}
+        {% elif report.claimed_by and report.claimed_by != user %}
             <div class="credit clearfix sidebar-block">
                 <h4>Expert Reviewer</h4>
                 <img src="{{ report.claimed_by.get_avatar_url }}" class="pull-left" />
@@ -171,22 +187,15 @@
             </div>
         {% endif %}
 
-        <div class="location sidebar-block">
-            <h4>Location</h4>
-            <div id="map-canvas" style="height:200px"></div>
-            {% if report.location %}
-                <blockquote>{{ report.location|linebreaksbr }}</blockquote>
-            {% endif %}
-        </div>
-
-        <div class="related sidebar-block">
-            <h4>Related Reports</h4>
-            <ul>
-                <li>asdf</li>
-                <li>asdfasdf</li>
-                <li>asdfasdf</li>
-            </ul>
-        </div>
+        {% if report.claimed_by and user|can_claim_report:report and report.claimed_by != user %}
+            <div class="alert alert-warning text-center sidebar-block">
+                <form method="post" action="{% url 'reports-claim' report.pk %}" style="display:inline">
+                    {% csrf_token %}
+                    This report is claimed...
+                    <button class="btn btn-warning btn-xs" type="submit">steal it!</button>
+                </form>
+            </div>
+        {% endif %}
     </div>
 </div>
 
@@ -199,7 +208,9 @@ var category_id_to_species_id = {{ category_id_to_species_id|safe }};
 <script>
 if($('.galleria').length){
     Galleria.loadTheme('{{ STATIC_URL }}galleria/themes/classic/galleria.classic.min.js');
-    Galleria.run('.galleria');
+    Galleria.run('.galleria', {
+        "lightbox": true
+    });
 }
 
 $('#add-comment a').click(function(e){

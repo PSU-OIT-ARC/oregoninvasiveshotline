@@ -1,10 +1,12 @@
-
 {% extends "base.html" %}
+{% block title %}
+Report List
+{% endblock %}
 {% block content %}
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-7">
         {% if reports %}
-            <div id="map-canvas" style="height:400px"></div>
+            <div id="map-canvas" style="height:550px"></div>
         {% else %}
             <div class="alert alert-warning">No matching reports found!</div>
         {% endif %}
@@ -17,7 +19,7 @@
 
         </form>
     </div>
-    <div class="col-md-4 {% if not reports %}hidden{% endif %}">
+    <div class="col-md-5 {% if not reports %}hidden{% endif %}">
         <p class="reports-table-sort comma-list">Sort By:
             {% for subwidget in form.sort_by %}
                 <span class="comma"><a href="{% add_get sort_by=subwidget.choice_value %}">{{ subwidget.choice_label }}</a></span>
@@ -27,16 +29,12 @@
             <tbody>
                 {% for report in reports %}
                     <tr>
-                        {% if report.image_url %}
-                            <td rowspan="2" class="reports-table-img">
-                                {% if report.image_url %}
-                                    <a href="{% url 'reports-detail' report.pk %}">
-                                        <img src="{{ report.image_url }}" />
-                                    </a>
-                                {% endif %}
-                            </td>
-                        {% endif %}
-                        <td colspan="{% if report.image_url %}2{% else %}3{% endif %}" style="vertical-align:bottom">
+                        <td rowspan="2" class="reports-table-img">
+                            <a href="#map-canvas" class="report-location-click" data-report-index="{{ forloop.counter0 }}">
+                                <img src="{{ report.image_url|default:report.icon_url }}" />
+                            </a>
+                        </td>
+                        <td colspan="2" style="vertical-align:bottom">
                             <a class="strong" href="{% url 'reports-detail' report.pk %}">
                                 <small>#{{ report.pk }}:</small>
                                 {{ report.species.name|default:report.category }}
@@ -48,20 +46,8 @@
                         </td>
                     </tr>
                     <tr>
-                        {% if report.image_url %}
-                            <td><em>Region:</em> {{ report.county|default:"?" }}</td>
-                            <td class="text-right"><em title="Early Detection and Rapid Response">EDRR Status:</em> {{ report.get_edrr_status_display|default:"None" }}</td>
-                        {% else %}
-                            <td colspan="3">
-                                <div class="pull-left">
-                                    <em>Region:</em> {{ report.county|default:"?" }}
-                                </div>
-                                <div class="pull-right">
-                                    <em title="Early Detection and Rapid Response">EDRR Status:</em> {{ report.get_edrr_status_display|default:"None" }}
-                                </div>
-                            </td>
-                        {% endif %}
-
+                        <td><em>Region:</em> {{ report.county|default:"?" }}</td>
+                        <td class="text-right"><em title="Early Detection and Rapid Response">EDRR Status:</em> {{ report.get_edrr_status_display|default:"None" }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

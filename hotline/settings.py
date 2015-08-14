@@ -107,6 +107,10 @@ DATABASES = {
 
 LOGGING_CONFIG = 'arcutils.logging.basic'
 
+#
+# Flatpages
+#
+SITE_ID = 1
 
 #
 # Elaticsearch
@@ -141,10 +145,13 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
     'django.contrib.gis',
     'permissions',
     'arcutils',
     'elasticmodels',
+    'hotline.pages',
     'hotline.users',
     'hotline.species',
     'hotline.reports',

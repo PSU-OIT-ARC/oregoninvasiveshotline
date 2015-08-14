@@ -1,79 +1,90 @@
 [
 {
-    "model": "species.category",
+    "pk": 1,
     "fields": {
+        "icon": "icons/snakes.png",
         "name": "Micro-Organisms"
     },
-    "pk": 1
+    "model": "species.category"
 },
 {
-    "model": "species.category",
+    "pk": 2,
     "fields": {
+        "icon": "icons/algae.png",
         "name": "Aquatic Plants"
     },
-    "pk": 2
+    "model": "species.category"
 },
 {
-    "model": "species.category",
+    "pk": 3,
     "fields": {
+        "icon": "icons/rice.png",
         "name": "Land Plants"
     },
-    "pk": 3
+    "model": "species.category"
 },
 {
-    "model": "species.category",
+    "pk": 4,
     "fields": {
+        "icon": "icons/lobster.png",
         "name": "Aquatic Invertebrates"
     },
-    "pk": 4
+    "model": "species.category"
 },
 {
-    "model": "species.category",
+    "pk": 5,
     "fields": {
+        "icon": "icons/turtle.png",
         "name": "Aquatic Vertebrates"
     },
-    "pk": 5
+    "model": "species.category"
 },
 {
-    "model": "species.category",
+    "pk": 6,
     "fields": {
+        "icon": "icons/ant.png",
         "name": "Insects"
     },
-    "pk": 6
+    "model": "species.category"
 },
 {
-    "model": "species.category",
+    "pk": 7,
     "fields": {
+        "icon": "icons/shark.png",
         "name": "Fish"
     },
-    "pk": 7
+    "model": "species.category"
 },
 {
-    "model": "species.category",
+    "pk": 8,
     "fields": {
+        "icon": "icons/birds.png",
         "name": "Birds"
     },
-    "pk": 8
+    "model": "species.category"
 },
 {
-    "model": "species.category",
+    "pk": 9,
     "fields": {
+        "icon": "icons/deer.png",
         "name": "Mammals"
     },
-    "pk": 9
+    "model": "species.category"
 },
 {
-    "model": "species.category",
+    "pk": 10,
     "fields": {
+        "icon": "icons/oyster.png",
         "name": "Land Mollusks"
     },
-    "pk": 10
+    "model": "species.category"
 },
 {
-    "model": "species.category",
+    "pk": 13,
     "fields": {
+        "icon": "icons/alligator.png",
         "name": "Reptiles"
     },
-    "pk": 13
+    "model": "species.category"
 }
 ]

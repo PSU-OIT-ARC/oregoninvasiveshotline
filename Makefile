@@ -23,7 +23,7 @@ init:
 	createdb $(PROJECT_NAME)
 	psql -c "CREATE EXTENSION postgis" $(PROJECT_NAME)
 	@$(MAKE) reload
-	$(MANAGE) loaddata dummy_user.json category.json severity.json species.json counties.json
+	$(MANAGE) loaddata dummy_user.json category.json severity.json species.json counties.json pages.json
 
 clean:
 	find . -iname "*.pyc" -delete
@@ -34,7 +34,7 @@ coverage:
 	coverage run ./manage.py test --keepdb && coverage html && cd htmlcov && python -m http.server 9000
 
 test:
-	$(MANAGE) test --keepdb && flake8 && isort -rc --diff $(PROJECT_NAME)
+	$(MANAGE) test --keepdb && flake8 && isort -rc --diff --check-only $(PROJECT_NAME)
 
 reload:
 	$(MANAGE) migrate

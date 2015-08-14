@@ -1,23 +1,26 @@
 [
 {
     "pk": 1,
-    "model": "species.severity",
     "fields": {
-        "name": "native"
-    }
+        "name": "native",
+        "color": "#999999"
+    },
+    "model": "species.severity"
 },
 {
     "pk": 2,
-    "model": "species.severity",
     "fields": {
-        "name": "non-native"
-    }
+        "name": "non-native",
+        "color": "#E99A2B"
+    },
+    "model": "species.severity"
 },
 {
     "pk": 3,
-    "model": "species.severity",
     "fields": {
-        "name": "invasive"
-    }
+        "name": "invasive",
+        "color": "#7C2416"
+    },
+    "model": "species.severity"
 }
 ]

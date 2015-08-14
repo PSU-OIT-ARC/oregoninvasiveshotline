@@ -44,7 +44,7 @@ We need to load the permissions template library so we can access the permission
                         <a href="{% url 'home' %}"><img src="http://oregoninvasiveshotline.org/presentation/chrome/hotline_banner.png"></a>
                     </div>
                     <div class="col-md-7" id="header-links">
-                        <a href="#">Learn</a>
+                        <a href="/pages/learn/">Learn</a>
                         <a href="{% url 'reports-list' %}">Browse Map</a>
                         <a class="btn btn-warning" href="{% url 'reports-create' %}">Report Now</a>
                         {% if user.is_authenticated and user.is_active %}

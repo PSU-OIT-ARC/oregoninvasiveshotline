@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="alert alert-danger">
+    <h4>Are you sure you want to delete '{{ page }}'?</h4>
+
+    <p><strong><em>This action cannot be undone!</em></strong></p>
+
+    <hr />
+    <form method="post" id="delete-form">
+        {% csrf_token %}
+        <button class="btn btn-default" onclick="window.history.go(-1); return false">Cancel</button>
+        <button type="submit" name="finish" class="pull-right btn btn-danger" onclick="return confirm('Click OK if you are really sure')">Permanently Delete this Page</button>
+    </form>
+</div>
+{% endblock %}

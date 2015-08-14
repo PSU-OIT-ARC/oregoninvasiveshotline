@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load markdown %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/flatpages.css' %}" />
+{% endblock %}
+{% block title %}{{ flatpage.title }}{% endblock %}
+{% block content %}
+<div class="pull-left">
+    <h3 class="flatpage-header">{{ flatpage.title }}</h3>
+    {% if user.is_authenticated and user.is_staff %}
+        <a href="{% url 'pages-edit' flatpage.id %}" class="btn btn-warning btn-xs flatpage-edit">Edit</a>
+    {% endif %}
+</div>
+<ul class="nav nav-tabs clearfix">
+    <li class="pull-right {% if request.path == "/pages/report/" %}active{% endif %}"><a href="/pages/report">Reporting</a></li>
+    <li class="pull-right {% if request.path == "/pages/look/" %}active{% endif %}"><a href="/pages/look">Look</a></li>
+    <li class="pull-right {% if request.path == "/pages/learn/" %}active{% endif %}"><a href="/pages/learn/">Learn</a></li>
+</ul>
+<br />
+<div class="flatpage-content">
+    {{ flatpage.content|md|safe }}
+</div>
+{% endblock %}

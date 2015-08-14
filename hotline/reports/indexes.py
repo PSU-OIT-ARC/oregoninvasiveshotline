@@ -52,6 +52,7 @@ class ReportIndex(Index):
     claimed_by = StringField(index="not_analyzed", attr="claimed_by.email")
     claimed_by_id = IntegerField(attr="claimed_by.pk")
 
+    created_by_id = IntegerField(attr="created_by_id")
     created_on = DateField()
 
     def get_queryset(self, *args, **kwargs):

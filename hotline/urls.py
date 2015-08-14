@@ -49,6 +49,9 @@ urlpatterns = patterns(
 
     url(r'^notifications/create/?$', notifications.create, name='notifications-create'),
 
+    # Here we define all the URL routes for the users app. Technically, you
+    # could put these routes in the app itself, but for non-reusable apps, we
+    # keep them in the main urlconfs file
     url(r'^users/home/?$', users.home, name='users-home'),
     url(r'^users/detail/(?P<pk>[0-9]+)/$', users.Detail.as_view(), name='users-detail'),
     url(r'^users/list/?$', users.list_, name='users-list'),
@@ -63,6 +66,8 @@ urlpatterns = patterns(
     url(r'^login/$', users.login, name='login'),
     url(r'', include('django.contrib.auth.urls')),
 
+    url(r'pages/', include('hotline.pages.urls')),
+
     # these routes allow you to masquerade as a user, and login as them from the command line
     url(r'^cloak/', include('cloak.urls'))
 )
@@ -70,3 +75,5 @@ urlpatterns = patterns(
 if settings.DEBUG:  # pragma: no cover
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static("htmlcov", document_root="htmlcov", show_indexes=True)
+
+urlpatterns += (url(r'', include('django.contrib.flatpages.urls')),)

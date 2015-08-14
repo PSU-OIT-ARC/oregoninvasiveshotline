@@ -88,7 +88,10 @@ def detail(request, report_id):
     """
     report = get_object_or_404(Report, pk=report_id)
 
-    if report.pk in request.session.get("report_ids", []) and report.created_by.is_active and report.created_by_id != request.user.pk:
+    if (report.pk in request.session.get("report_ids", []) and
+            report.created_by.is_active and
+            report.created_by_id != request.user.pk and
+            not request.user.is_active):
         # if the report was created by an active user and they aren't logged in
         # as that user, force them to re-login
         return login_required(lambda request: None)(request)

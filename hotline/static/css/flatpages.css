@@ -1,0 +1,14 @@
+.flatpage-header {
+    float:left;
+    margin-top:0;
+}
+
+.flatpage-content h2 {
+    font-size: 18px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.flatpage-edit {
+    margin-left:10px;
+}

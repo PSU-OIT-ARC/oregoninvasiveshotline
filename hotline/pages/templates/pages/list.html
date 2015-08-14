@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<a href="{% url 'pages-create' %}" class="pull-right btn btn-primary"><strong>Create</strong> a new Page</a>
+<h3>Pages</h3>
+{% if pages %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>URL</th>
+                <th>Content</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for page in pages %}
+                <tr>
+                    <td><a href="{% url 'pages-edit' page.pk %}">{{ page.title }}</a></td>
+                    <td>{{ page.url }}</td>
+                    <td>{{ page.content|striptags|truncatewords:10 }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="alert alert-warning">No pages!</div>
+{% endif %}
+{% endblock %}

@@ -67,15 +67,13 @@ class UserHomeViewTest(TestCase):
         # session var
         r1 = make(Report)
         r2 = make(Report)
-        r3 = make(Report)
+        make(Report)  # this report shouldn't show up in the reported queryset
         session = self.client.session
         session['report_ids'] = [r1.pk, r2.pk]
         session.save()
 
         response = self.client.get(reverse("users-home"))
-        self.assertIn(reverse("reports-detail", args=[r1.pk]), response.content.decode())
-        self.assertIn(reverse("reports-detail", args=[r2.pk]), response.content.decode())
-        self.assertNotIn(reverse("reports-detail", args=[r3.pk]), response.content.decode())
+        self.assertTrue(set([r1, r2]) == set(response.context['reported']))
 
 
 class UserFormTest(TestCase):

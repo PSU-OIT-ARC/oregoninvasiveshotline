@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+{% if form.errors %}
+    <div class="alert alert-danger">
+        You must correct the errors below before you can save!
+    </div>
+{% endif %}
+<form method="post">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md-6">{{ form.url|bootstrap }}</div>
+        <div class="col-md-6">{{ form.title|bootstrap }}</div>
+    </div>
+    {{ form.content|bootstrap }}
+    <hr />
+    <div class="pull-right">
+        <a href="{% url 'pages-list' %}" class="btn btn-warning">Cancel</a>
+        {% if page_id %}
+            <a href="{% url 'pages-delete' page_id %}" class="btn btn-danger">Delete</a>
+        {% endif %}
+    </div>
+    <input type="submit" name="Submit" class="btn btn-primary" />
+</form>
+{% endblock %}

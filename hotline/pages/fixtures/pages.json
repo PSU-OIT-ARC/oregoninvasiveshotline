@@ -1,0 +1,137 @@
+[
+{
+    "fields": {
+        "enable_comments": false,
+        "url": "/pages/look/",
+        "title": "Look for Invaders",
+        "content": "\r\n Once you know what species to watch for, the next step is to look for them. Every time you are outdoors, take a few minutes to scan the area and look for signs of potential invasive species.\r\n \r\n Like a criminal investigator, you will be more successful spotting invasives in the field if you can \"get inside the mind\" of your suspects. For invasive plants, that means understanding when certain likely invaders emerge in the spring, when they flower and fruit, and when they lose their leaves in the fall. Knowing that certain types of invaders only reside in certain areas will make the task less overwhelming. Learn key habitats for particular invasive species. Some invaders only like shade. Others like the sun. Others only exist in forests, or prairies, or wetlands. What key characteristics makes that plant stand out from the rest of the vegetation? For invasive animals and insects, what kind of damage or evidence do they often leave behind?\r\n \r\n Here are a few tips on where to look:\r\n \r\n * Think pathways. Most invasive species spread along particular pathways such as along roads and trails, at trail heads, and other introduction points. Walk the boundaries of your property, as these new invaders can be creeping in from neighboring lands. Birds and wind also help spread invasive species, so it is possible to find many of these species in the interior of your land. Always keep an eye out for new invaders.\r\n * Think habitat. Which species to be looking for depends on the habitat they invade. Look for aquatic plant species in ditches, lakes, streams, and wetlands; look for terrestrial plant invaders along roadsides, in prairies, and fields; and look for riparian invaders along the edges of rivers, ponds, and even in roadside ditches.\r\n * Think distribution. Early detection means finding species that are still not abundant in a certain area so there is still a possibility or eradication or containment. Many invasive species, such as English Ivy, are already well established in Oregon and are not candidates for early detection and control. As you become more familiar with your environment and the species you'll get better at recognizing the native and established invasives in an area and noticing new species that seem out of place.\r\n \r\n <span class=\"encapsulated\">[NEXT: Report Your Find >>](/pages/report)</span>\r\n \r\n",
+        "template_name": "",
+        "registration_required": false,
+        "sites": [
+            1
+        ]
+    },
+    "model": "flatpages.flatpage",
+    "pk": 26
+},
+{
+    "fields": {
+        "enable_comments": false,
+        "url": "/pages/report/",
+        "title": "Reporting Your Find",
+        "content": "Gathering information in the Field\r\n-------------------------\r\n \r\n When you've spotted a potential invasive species in the field, document your find as accurately as possible so that the species can be positively identified and the location can be found again.\r\n \r\n * Try to identify the species. If you have a guide or watch list reference with you, review the species identification information. It is helpful if you are fairly confident you have found the correct species before you report it. If you are unsure of the identification, document as much information as you can. You can get identification assistance from an expert through the Online Hotline.\r\n * Take a digital photo. Photos are the most reliable method for experts to positively identify a species. Use the three shot method: a wide shot of species and surrounding habitat; a closeup of the species; a detail shot such as leaves or flowers. In the case of insects or animals, if you can't find a specimen to photograph, you many need to take photos of the habitat damage you've found.\r\n * Take notes. Write down a description of the specimen and the area and habitat where you found it. Estimate the number of individuals in the area and how widespread the infestation.\r\n * Note the location. If you have a gps or map, record the location of the site. The more accurate you can be, the easier it will be others to locate you find.\r\n*IMPORTANT - If the species you encountered is clearly on private property, be sure to get permission from the land owner before reporting. \r\n\r\nDocumentation Tools\r\n-------------------------\r\n \r\n Try to bring along the following tools whenever you plan to be out in natural areas. They are helpful for accurately documenting your finds.\r\n \r\n * Digital camera\r\n * A map of the area (USGS Quad maps are ideal) or GPS unit (if possible)\r\n * A notebook and pen for taking notes\r\n * An invasive species guide or watch list for the area (something with photos and descriptions is ideal)\r\n \r\nReport your find to the Online Hotline\r\n-------------------------\r\n \r\n When you return from the field, use the Online Hotline's reporting form to submit your find. You can use the Online Hotline to report a known invader or ask for identification help if you are unsure. Each submission will be reviewed by an expert from the Oregon Invasive Species Council who will review your submission and confirm the identification. You'll receive an email response from the expert with a confirmation and suggestions for what to do next.\r\n \r\n Once confirmed, your submission will go into the public database of submissions to help experts and the public with early detection and tracking of invasive outbreaks in Oregon.\r\n \r\n <span class=\"encapsulated\">[Online Hotline Home >>](/)</span>",
+        "template_name": "",
+        "registration_required": false,
+        "sites": [
+            1
+        ]
+    },
+    "model": "flatpages.flatpage",
+    "pk": 27
+},
+{
+    "fields": {
+        "enable_comments": false,
+        "url": "/pages/learn/",
+        "title": "Learn About the Invaders",
+        "content": "The first step in early detection is knowing what to look for. Learning about potential invaders in your area will make it easier to spot and identify them when you are outdoors. Start with the natural environments that you know the best: your garden, nearby parks or forests, a favorite fishing hole or hiking trail. Familiarize yourself with the \"watch list\" of invasive species that are threatening to invade these areas and get to know the native plants and animals species that should be living there.\r\n \r\nOregon has many user-friendly resources to help you identify what's invasive, what's a threat, and and what's native to your area.\r\n \r\n * The Oregon Invasive Species Council maintains a list of the [100 most dangerous invaders](http://www.oregoninvasivespeciescouncil.org/100-worst-list).\r\n * The [Western Invasives Network](http://www.cascadepacific.org/western-invasives-network) maintains a list of invasive plants and noxious weeds that local land managers want you to report. You can click on a region to learn what invaders to look for.\r\n * The [Oregon Department of Agriculture](http://www.oregon.gov/ODA/programs/Weeds/OregonNoxiousWeeds/Pages/AboutOregonWeeds.aspx) regulates and maintains a list of noxious weeds of state-wide importance.\r\n \r\nYou can also use printed or downloadable guides to begin to learn more about invasive species. These resources are helpful to carry with you out in the field for help with identification.\r\n \r\n * **Western Invasive Plant EDRR Guide** Published by the ODA, the guide is a detailed resource for identifying invasive plants. It is available online and as printable PDF files from the [ODA Web site](http://www.oregon.gov/ODA/programs/Weeds/Pages/EDRR.aspx).\r\n * **On the Lookout for Aquatic Invaders** - Created by Sea Grant Oregon, this guide is a resource of information about aquatic species threatening Pacific Northwest waterways. Find out how to get your copy at the [SeaGrant Web site](http://seagrant.oregonstate.edu/sgpubs/H14001-on-the-lookout)\r\n * **GardenSmart Oregon** - A gardener's guide to non-invasive plants, it identifies 25 of the most threatening invasive plants across Oregon and recommends non-invasive alternative plants for gardeners and landscapers. Find out how to get your copy at the [Pacific Northwest Plant Council site](http://www.pnw-ipc.org/docs/gardensmartguide.pdf).\r\n \r\n<span class=\"encapsulated\">[NEXT: Look for Invaders >>](/pages/look)</span>\r\n",
+        "template_name": "",
+        "registration_required": false,
+        "sites": [
+            1
+        ]
+    },
+    "model": "flatpages.flatpage",
+    "pk": 28
+},
+{
+    "fields": {
+        "enable_comments": false,
+        "url": "/_headline/",
+        "title": "headline",
+        "content": "<p><big>Have you seen something suspicious in your backyard or neighborhood?</big> Are you having trouble identifying something you've found? Report potential invasive species you've found to the Online Hotline. Your submission will provide vital early detection information to the experts working to stop the next invasion before it starts!</p>",
+        "template_name": "",
+        "registration_required": false,
+        "sites": [
+            1
+        ]
+    },
+    "model": "flatpages.flatpage",
+    "pk": 30
+},
+{
+    "fields": {
+        "enable_comments": false,
+        "url": "/_midline/",
+        "title": "midline",
+        "content": "<h1>Help stop the spread of invasive species in Oregon</h1>\r\n<p>In their efforts to detect new outbreaks, invasive species experts in Oregon\r\n    face the daunting challenge of tracking hundreds of potential new invaders\r\n    across millions of acres of farms, forests, and waterways. They can't do it\r\n    alone. <strong>They need the help of all Oregonians to be their eyes in the field.</strong></p>\r\n\r\n<p>The Oregon Invasive Species Online Hotline is designed to help you become\r\n    involved in this effort. By using the Online Hotline to report suspected\r\n    invasive species in your area, you'll be contributing vital early detection\r\n    information to the experts best able to stop the spread of invasives. The\r\n    Online Hotline also lets you connect directly with an expert to get positive\r\n    identifications and answers to your questions.</p>",
+        "template_name": "",
+        "registration_required": false,
+        "sites": [
+            1
+        ]
+    },
+    "model": "flatpages.flatpage",
+    "pk": 32
+},
+{
+    "fields": {
+        "enable_comments": false,
+        "url": "/_midline-block1/",
+        "title": "_midline-block1",
+        "content": "<strong><a href=\"/pages/learn\">Learn</a></strong> - Familiarize yourself with the potential invasive species in the areas where you live or visit frequently. Get started with <a href=\"http://www.opb.org/programs/invasives/guide.php\" title=\"The Silent Invasion: Quick Guide\">the Silent Invasion Quick Guide</a> or the <a href=\"http://www.nature.org/ourinitiatives/regions/northamerica/unitedstates/oregon/howwework/gardensmart-oregon.xml\" title=\"\">GardenSmart Oregon booklet</a>.",
+        "template_name": "",
+        "registration_required": false,
+        "sites": [
+            1
+        ]
+    },
+    "model": "flatpages.flatpage",
+    "pk": 33
+},
+{
+    "fields": {
+        "enable_comments": false,
+        "url": "/_midline-block2/",
+        "title": "_midline-block2",
+        "content": "<strong><a href=\"/pages/look\">Look</a></strong> - Wherever you are - hiking in the forest, on a fishing trip or digging in your garden - keep your eye out for unusual animals or plants that you have never seen before and be prepared to take a picture and document your find.",
+        "template_name": "",
+        "registration_required": false,
+        "sites": [
+            1
+        ]
+    },
+    "model": "flatpages.flatpage",
+    "pk": 34
+},
+{
+    "fields": {
+        "enable_comments": false,
+        "url": "/_midline-block3/",
+        "title": "_midline-block3",
+        "content": "<strong><a href=\"/pages/report\">Report</a></strong> - Use the Online Hotline to report your find.",
+        "template_name": "",
+        "registration_required": false,
+        "sites": [
+            1
+        ]
+    },
+    "model": "flatpages.flatpage",
+    "pk": 35
+},
+{
+    "fields": {
+        "enable_comments": false,
+        "url": "/_midline-footer/",
+        "title": "_midline-footer",
+        "content": "<p>To protect Oregon from invasive species, it is important to stop new outbreaks before they start. By the time an invader is easily noticeable and begins to cause damage, it is often too late. It can be difficult and expensive to remove an established invader. However, by detecting new outbreaks early and acting quickly to control them, we can avoid many of the environmental and economic losses caused by invasive species.</p>",
+        "template_name": "",
+        "registration_required": false,
+        "sites": [
+            1
+        ]
+    },
+    "model": "flatpages.flatpage",
+    "pk": 36
+}
+]

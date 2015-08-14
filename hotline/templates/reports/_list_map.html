@@ -26,6 +26,7 @@ google.maps.event.addDomListener(window, 'load', function(){;
             title: report.title,
             icon: generateIcon(report.icon),
         });
+        report.marker = marker
 
         var infowindow = new google.maps.InfoWindow({
             content: report.content
@@ -43,5 +44,11 @@ google.maps.event.addDomListener(window, 'load', function(){;
             });
         }
     }
+
+    $('.report-location-click').click(function(){
+        var index = $(this).data("report-index");
+        google.maps.event.trigger(reports[index].marker, 'click');
+
+    })
 })
 </script>
