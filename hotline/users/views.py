@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import DetailView
 from hotline.reports.models import Invite, Report
 
-from .forms import LoginForm, UserForm
+from .forms import LoginForm, UserForm, ImageUploadForm
 from .models import User
 from .perms import can_list_users, permissions
 
@@ -187,6 +187,13 @@ def _edit(request, user=None):
     """
     if request.POST:
         form = UserForm(request.POST, user=request.user, instance=user)
+        form.uploadForm = ImageUploadForm(request.POST, request.FILES)
+        
+        if form.uploadForm.is_valid():
+            m = User.objects.get(pk=request.user.pk)
+            m.photo = form.uploadForm.cleaned_data['image']
+            m.save()
+        
         if form.is_valid():
             is_new = user is None or user.pk is None
             user = form.save()
@@ -200,9 +207,11 @@ def _edit(request, user=None):
             return redirect("users-home")
     else:
         form = UserForm(user=request.user, instance=user)
+        form.uploadForm = ImageUploadForm()
 
     return render(request, 'users/edit.html', {
         "form": form,
+        "uploadForm": form.uploadForm,
     })
 
     
