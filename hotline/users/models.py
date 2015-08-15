@@ -18,7 +18,7 @@ class User(AbstractBaseUser):
     is_staff = models.BooleanField(default=False, blank=True)
     affiliations = models.TextField(blank=True, default=None)
     biography = models.TextField(blank=True, default=None)
-    photo = models.ImageField(blank=True, default=None)
+    photo = models.ImageField(upload_to="images", blank=True, default=None)
 
     USERNAME_FIELD = 'email'
 
