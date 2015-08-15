@@ -6,6 +6,11 @@ from django.template.loader import render_to_string
 from .models import User
 
 
+class ImageUploadForm(forms.Form):
+    """Image upload form."""
+    image = forms.ImageField()
+
+
 class LoginForm(forms.Form):
     """
     This form allows users to login via the authentication_url
