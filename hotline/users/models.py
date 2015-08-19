@@ -16,7 +16,9 @@ class User(AbstractBaseUser):
     date_joined = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True, blank=True, help_text="Inactive users cannot login and cannot manage reports")
     is_staff = models.BooleanField(default=False, blank=True)
-    affiliations = models.TextField()
+    affiliations = models.TextField(blank=True, default=None)
+    biography = models.TextField(blank=True, default=None)
+    photo = models.ImageField(upload_to="images", blank=True, default=None)
 
     USERNAME_FIELD = 'email'
 

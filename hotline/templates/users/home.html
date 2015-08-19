@@ -9,7 +9,10 @@ Account Home
         <a href="{% url 'pages-list' %}">Static Pages</a>
     {% endif %}
     {% if user.is_active %}
+        <a href="{% url 'reports-list' %}">Search Reports</a>
         <a href="{% url 'password_change' %}">Change Password</a>
+        <a href="{% url 'users-detail' user.pk %}">View Profile</a>
+        <a href="{% url 'users-edit' user.pk %}">Edit Profile</a>
     {% endif %}
     <a href="{% url 'logout' %}">Logout</a>
 </div>

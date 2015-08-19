@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if form.instance.pk %}
+    <h3>Edit Species</h3>
+{% else %}
+    <h3>Create Species</h3>
+{% endif %}
+    
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.name|bootstrap }}
+        {{ form.scientific_name|bootstrap }}
+        {{ form.category|bootstrap }}
+        {{ form.severity|bootstrap }}
+        {{ form.remedy|bootstrap }}
+        {{ form.resources|bootstrap }}
+        {{ form.is_confidential|bootstrap }}
+    <input type="submit" class="btn btn-primary" value="Update" />
+    </form>
+    
+{% endblock %}

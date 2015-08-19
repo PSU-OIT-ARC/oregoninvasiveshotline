@@ -452,6 +452,17 @@ blockquote {
     overflow-x:auto;
 }
 
+#avatar_box { 
+    padding: 20px;
+}
+
+#avatar_image {
+    display: center;
+}
+
+#biography_box {
+    word-wrap: break-word;
+
 @media (max-width: 992px){
     /* for small screens we need to have some space next to the map so the user
      * can scroll down the page. If we didn't have this, every time they try to
@@ -475,4 +486,5 @@ blockquote {
         text-align: left;
         border:none;
     }
+
 }

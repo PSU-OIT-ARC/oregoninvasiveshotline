@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h3>Delete severity</h3>
+    <form action="" method="post">{% csrf_token %}
+        <p>Are you sure you want to delete "{{ object }}"?</p>
+        <p>Deleting this severity will also cause the following to be deleted:</p>
+        <ul>
+            {% for cls, items in will_be_deleted_with %}
+                <li><strong>{{ cls|model_name }}</strong></li>
+                <ul>
+                {% for x in items %}
+                    <li>{{ x }}</li>
+                {% endfor %}
+                </ul>
+            {% empty %}
+                <li><em>N/A</em></li>
+            {% endfor %}
+        </ul>      
+        <input type="submit" value="Confirm" />
+    </form>
+
+{% endblock %}
