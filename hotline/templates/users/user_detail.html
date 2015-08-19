@@ -13,18 +13,20 @@
     {% endif %}
     <a href="{% url 'logout' %}">Logout</a>
 </div>
-
-    <h3>Details</h3>
-    <p>Name: {{ object.prefix }} {{ object.first_name }} {{ object.last_name }} {{ object.suffix }}</p>
-             
-    <p>Date joined: {{ object.date_joined }}</p>
-    <p>Photo: <img src="{{ object.photo.url }}" width="64" height="64"/></p>
-    <p>Biography: {{ object.biography }}</p>
-    <p>Affiliations: {{ object.affiliations }}</p>
-
+<div id="avatar_box" class="pull-left">
+    {% if object.photo %}
+        <img id="avatar_image" src="{{ object.photo.url }}" width="64" height="64"/>
+    {% endif %}
     {% if current_user.is_staff %}
-        <p>Email: {{ object.email }}</p>
+        <p>{{ object.email }}</p>
         <p>Active: {{ object.is_active }}</p>
         <p>Staff: {{ object.is_staff }}</p>
     {% endif %}
+    <p>Joined: {{ object.date_joined|date:"E d Y" }}</p>
+</div>
+<div id="biography_box">
+    <h3>{{ object.prefix }} {{ object.first_name }} {{ object.last_name }} {{ object.suffix }}</h3>
+    <p><b>Biography:</b> {{ object.biography }}</p>
+    <p><b>Affiliations:</b> {{ object.affiliations }}</p>
+</div>
 {% endblock %}
