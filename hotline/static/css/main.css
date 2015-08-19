@@ -450,3 +450,15 @@ blockquote {
     height:500px;
     overflow-x:auto;
 }
+
+#avatar_box { 
+    padding: 20px;
+}
+
+#avatar_image {
+    display: center;
+}
+
+#biography_box {
+    word-wrap: break-word;
+}
