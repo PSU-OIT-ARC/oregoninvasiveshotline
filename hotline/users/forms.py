@@ -47,6 +47,9 @@ class UserForm(forms.ModelForm):
             'email',
             'first_name',
             'last_name',
+            'biography',
+            'affiliations',
+            'photo',
             'is_active',
             'is_staff',
         )
