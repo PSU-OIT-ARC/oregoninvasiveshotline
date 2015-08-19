@@ -78,10 +78,12 @@ google.maps.event.addDomListener(window, 'load', function(){;
         });
 
         // randomly drop the pins on the map within a few seconds
-        setTimeout(function(marker){
-            marker.setAnimation(google.maps.Animation.DROP);
-            marker.setMap(map);
-        },  Math.min(1.5, i)*1000*Math.random(), marker)
+        with({marker: marker}){
+            setTimeout(function(){
+                marker.setAnimation(google.maps.Animation.DROP);
+                marker.setMap(map);
+            },  Math.min(1.5, i)*1000*Math.random())
+        }
 
 
         var infowindow = new google.maps.InfoWindow({

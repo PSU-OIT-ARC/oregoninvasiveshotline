@@ -1,10 +1,15 @@
+import csv
 import json
+import sys
+from collections import OrderedDict
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import render_to_string
 from django.utils.functional import curry
 
 from hotline.comments.forms import CommentForm
@@ -32,6 +37,11 @@ def list_(request):
         template = "reports/list_public.html"
 
     form = ReportSearchForm(request.GET, user=request.user, report_ids=request.session.get("report_ids", []))
+
+    # handle the case where they want to export the reports
+    if request.user.is_active and request.GET.get("export") in ['kml', 'csv']:
+        return _export(reports=form.results(page=1, items_per_page=sys.maxsize), format=request.GET['export'])
+
     reports = form.results(request.GET.get("page", 1))
 
     reports_json = []
@@ -43,6 +53,48 @@ def list_(request):
         "form": form,
         "reports_json": json.dumps(reports_json)
     })
+
+
+def _export(reports, format):
+    """
+    Returns an HttpResponse containing all the reports in the specified format
+    """
+    if format == "csv":
+        response = HttpResponse("", content_type="text/csv")
+        # maps a field name, to a function that gets the data for the field,
+        # given a Report object
+        fields = OrderedDict([
+            ("Report ID", lambda report: report.pk),
+            ("Category", lambda report: str(report.category)),
+            ("Common Name", lambda report: report.species.name if report.species else ""),
+            ("Scientific Name", lambda report: report.species.scientific_name if report.species else ""),
+            ("Species Confirmed", lambda report: bool(report.actual_species)),
+            ("Reported By", lambda report: str(report.created_by)),
+            ("Reported On", lambda report: str(report.created_on)),
+            ("Claimed By", lambda report: str(report.claimed_by)),
+            ("Description", lambda report: report.description),
+            ("Latitude", lambda report: report.point.y),
+            ("Longitude", lambda report: report.point.x),
+            ("EDRR Status", lambda report: report.edrr_status),
+            ("Is Public", lambda report: report.is_public),
+            ("Is Archived", lambda report: report.is_archived),
+        ])
+        writer = csv.DictWriter(response, fields.keys())
+        writer.writeheader()
+        for report in reports:
+            row = {}
+            for key, accessor in fields.items():
+                row[key] = accessor(report)
+            writer.writerow(row)
+    elif format == "kml":
+        response = HttpResponse(render_to_string("reports/export.kml", {
+            "reports": reports
+        }), content_type="text/csv")
+    else:
+        raise ValueError("%s in not a valid format" % format)
+
+    response['Content-Disposition'] = 'attachment; filename="reports.%s"' % format
+    return response
 
 
 def create(request):
@@ -209,5 +261,18 @@ def claim(request, report_id):
         return redirect("reports-detail", report.pk)
 
     return render(request, "reports/claim.html", {
+        "report": report,
+    })
+
+
+@permissions.can_unclaim_report
+def unclaim(request, report_id):
+    report = get_object_or_404(Report, pk=report_id)
+    if request.method == "POST":
+        report.claimed_by = None
+        report.save()
+        return redirect("reports-detail", report.pk)
+
+    return render(request, "reports/unclaim.html", {
         "report": report,
     })

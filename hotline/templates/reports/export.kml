@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.1">
+    <Document>
+        <name>Report Export</name>
+        {% for report in reports %}
+            <Placemark>
+                <name>#{{ report.pk }} {{ report }}</name>
+                <description>
+Created On: {{ report.created_on }}
+Created By: {{ report.created_by }}
+Claimed By: {{ report.claimed_by }}
+Species: {{ report.species }}
+Confirmed: {% if report.actual_species %}Yes{% else %}No{% endif %}
+
+{{ report.description }}
+                </description>
+                <Point>
+                    <coordinates>{{ report.point.x }},{{ report.point.y }}</coordinates>
+                </Point>
+            </Placemark>
+        {% endfor %}
+    </Document>
+</kml>

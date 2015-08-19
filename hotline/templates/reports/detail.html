@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 {% load permissions %}
+{% load markdown %}
+{% block title %}
+Report #{{ report.pk }} - {{ report }}
+{% endblock %}
 {% block content %}
 
 <div class="row">
@@ -41,7 +45,7 @@
             {% endif %}
         </p>
         <h4>Description of specimen</h4>
-        <blockquote>{{ report.description|linebreaksbr }}</blockquote>
+        <blockquote>{{ report.description|default:"No description provided"|linebreaksbr }}</blockquote>
 
         {% if images %}
             <div class="galleria">
@@ -96,7 +100,7 @@
 
         {% if report.claimed_by and report.claimed_by == user %}
             <div class="report-management clearfix sidebar-block">
-                <h4>Report Management</h4>
+                <h4>Report Management {% if report.claimed_by == user %}<small><a href="{% url 'reports-unclaim' report.pk %}">(unclaim)</a></small>{% endif %}</h4>
                 <ul class="nav nav-tabs" id="management-tabs">
                     <li class="active"><a data-toggle="tab" href="#confirm"><span class="glyphicon glyphicon-grain"></span> Species</a></li>
                     <li><a data-toggle="tab" href="#public"><span class="glyphicon glyphicon-pencil"></span> Settings</a></li>
@@ -194,6 +198,20 @@
                     This report is claimed...
                     <button class="btn btn-warning btn-xs" type="submit">steal it!</button>
                 </form>
+            </div>
+        {% endif %}
+
+        {% if report.actual_species.remedy %}
+            <div class="clearfix sidebar-block">
+                <h4>Remedy</h4>
+                {{ report.actual_species.remedy|md }}
+            </div>
+        {% endif %}
+
+        {% if report.actual_species.resources %}
+            <div class="clearfix sidebar-block">
+                <h4>Resources</h4>
+                {{ report.actual_species.resources|md }}
             </div>
         {% endif %}
     </div>

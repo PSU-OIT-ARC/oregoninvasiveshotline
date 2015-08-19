@@ -25,7 +25,11 @@ Report List
                 <div id="map-canvas" style="height:550px"></div>
             </div>
             <div class="col-md-12">
-                <p class="pull-right reports-table-subscribe"><a href="{% url 'notifications-create' %}?{{ request.GET.urlencode }}">Subscribe to this search</a></p>
+                <p class="pull-right reports-table-subscribe">
+                    <a href="{% url 'notifications-create' %}?{{ request.GET.urlencode }}">Subscribe to this search</a>
+                    | Export: <a href="{% add_get export="csv" %}">CSV</a>,
+                    <a href="{% add_get export="kml" %}">KML</a>
+                </p>
                 <p class="reports-table-sort comma-list">Sort By:
                     {% for subwidget in form.sort_by %}
                         <span class="comma"><a class="{% if subwidget.choice_value == form.cleaned_data.sort_by %}strong{% endif %}" href="{% add_get sort_by=subwidget.choice_value %}">{{ subwidget.choice_label }}</a></span>

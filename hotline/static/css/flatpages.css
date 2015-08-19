@@ -12,3 +12,16 @@
 .flatpage-edit {
     margin-left:10px;
 }
+
+.flatpage-tabs li {
+    float:right;
+}
+
+@media (max-width: 992px){
+    .flatpage-tabs {
+        clear:both;
+    }
+    .flatpage-tabs li {
+        float:left;
+    }
+}

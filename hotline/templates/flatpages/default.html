@@ -11,10 +11,10 @@
         <a href="{% url 'pages-edit' flatpage.id %}" class="btn btn-warning btn-xs flatpage-edit">Edit</a>
     {% endif %}
 </div>
-<ul class="nav nav-tabs clearfix">
-    <li class="pull-right {% if request.path == "/pages/report/" %}active{% endif %}"><a href="/pages/report">Reporting</a></li>
-    <li class="pull-right {% if request.path == "/pages/look/" %}active{% endif %}"><a href="/pages/look">Look</a></li>
-    <li class="pull-right {% if request.path == "/pages/learn/" %}active{% endif %}"><a href="/pages/learn/">Learn</a></li>
+<ul class="nav nav-tabs clearfix flatpage-tabs">
+    <li class="{% if request.path == "/pages/report/" %}active{% endif %}"><a href="/pages/report">Reporting</a></li>
+    <li class="{% if request.path == "/pages/look/" %}active{% endif %}"><a href="/pages/look">Look</a></li>
+    <li class="{% if request.path == "/pages/learn/" %}active{% endif %}"><a href="/pages/learn/">Learn</a></li>
 </ul>
 <br />
 <div class="flatpage-content">

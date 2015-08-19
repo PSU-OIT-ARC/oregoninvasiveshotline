@@ -28,5 +28,10 @@ def can_claim_report(user, report):
 
 
 @permissions.register(model=Report)
+def can_unclaim_report(user, report):
+    return report.claimed_by_id == user.pk
+
+
+@permissions.register(model=Report)
 def can_manage_report(user, report):
     return user.is_authenticated() and (user.is_staff or report.claimed_by_id == user.pk)

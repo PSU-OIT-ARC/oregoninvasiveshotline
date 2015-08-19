@@ -203,7 +203,8 @@ small {
 }
 
 .sidebar-block {
-    margin-top:50px;
+    margin-top:20px;
+    overflow-y:auto;
 }
 
 .report-management a {
@@ -461,4 +462,29 @@ blockquote {
 
 #biography_box {
     word-wrap: break-word;
+
+@media (max-width: 992px){
+    /* for small screens we need to have some space next to the map so the user
+     * can scroll down the page. If we didn't have this, every time they try to
+     * scroll, it would pan the map */
+    .scroll-space-on-mobile {
+        margin-right:40px;
+    }
+}
+
+/* The images table goes from a normal table with multiple cells per row, to a
+ * one-cell-per-row layout on smaller devices */
+@media (max-width: 992px) {
+    #images table tr {
+        margin-bottom: 10px;
+        display: block;
+        border-bottom: 1px solid #ddd;
+    }
+
+    #images table td {
+        display: block;
+        text-align: left;
+        border:none;
+    }
+
 }

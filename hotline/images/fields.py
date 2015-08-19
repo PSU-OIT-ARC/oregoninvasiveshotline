@@ -118,7 +118,6 @@ class ClearableImageInput(ClearableFileInput):
             attrs = {}
 
         attrs['accept'] = "image/*"
-        attrs['capture'] = "camera"
 
         output = super().render(name, value, attrs)
         if self.signed_path:

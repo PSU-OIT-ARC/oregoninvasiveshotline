@@ -1,4 +1,6 @@
 import base64
+import codecs
+import csv
 import json
 import os
 import re
@@ -20,6 +22,7 @@ from hotline.users.models import User
 
 from .forms import ConfirmForm, InviteForm, ReportForm, SettingsForm
 from .models import Invite, Report
+from .views import _export
 
 
 class ReportTest(TestCase):
@@ -560,3 +563,57 @@ class ReportListView(ESTestCase, TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Foobarius Foobar", response.content.decode())
         self.assertNotIn(str(other_reports[0]), response.content.decode())
+
+
+class SettingsFormTest(TestCase):
+    def test_is_public_field_disabled_for_is_confidential_species(self):
+        report = make(Report, actual_species__is_confidential=True)
+        form = SettingsForm(instance=report, data={
+            # even though this was submitted with a True-y value, the form
+            # should override it so it is always False
+            "is_public": 1,
+            "edrr_status": 0,
+        })
+        self.assertTrue(form.fields['is_public'].widget.attrs['disabled'])
+        self.assertTrue(form.is_valid())
+        form.save()
+        # even though the data spoofed the is_public flag as True, it should still be false
+        self.assertFalse(report.is_public)
+
+
+class UnclaimViewTest(TestCase):
+    def test_only_person_who_claimed_report_can_unclaim_it(self):
+        report = make(Report)
+        # to set it back to False
+        user = prepare(User, is_active=True)
+        user.set_password("foo")
+        user.save()
+        self.client.login(email=user.email, password="foo")
+
+        response = self.client.get(reverse("reports-unclaim", args=[report.pk]))
+        self.assertEqual(response.status_code, 403)
+
+        report.claimed_by = user
+        report.save()
+        response = self.client.get(reverse("reports-unclaim", args=[report.pk]))
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post(reverse("reports-unclaim", args=[report.pk]))
+        report.refresh_from_db()
+        self.assertEqual(None, report.claimed_by)
+
+
+class ExportTest(TestCase):
+    def test_csv(self):
+        reports = make(Report, _quantity=3)
+        response = _export(reports, format="csv")
+        reader = csv.DictReader(codecs.iterdecode(response, "utf8"))
+        rows = list(reader)
+        self.assertEqual(3, len(rows))
+        self.assertEqual(rows[2]['Description'], reports[2].description)
+
+    def test_kml(self):
+        reports = make(Report, _quantity=3)
+        response = _export(reports, format="kml")
+        # this is harder to test without trying to parse the XML
+        self.assertIn(reports[0].description, response.content.decode())

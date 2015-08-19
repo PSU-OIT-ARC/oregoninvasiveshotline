@@ -31,7 +31,7 @@ class ImageForm(forms.ModelForm):
 
         if user is None or not can_adjust_visibility(user, self.instance.report):
             self.fields.pop('visibility')
-            self.instance.visibility = Image.PROTECTED
+            self.instance.visibility = Image.PUBLIC
 
 
 class BaseImageFormSet(BaseModelFormSet):

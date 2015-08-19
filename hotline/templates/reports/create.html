@@ -1,7 +1,11 @@
 {% extends "base.html" %}
-{% block head %}
+{% block title %}
+Report an Invader
 {% endblock %}
 {% block content %}
+<h3>Report an Invader</h3>
+
+<p>Use this form to report a potential invasive species you've found in Oregon or to request help in identifying an unknown species. The information you provide will assist invasive species experts in positively identifying your find. Please try to be as complete and detailed as possible.</p>
 <form method="post" enctype="multipart/form-data">
     {% if form.errors or formset.errors %}
         <div class="alert alert-danger">
@@ -32,7 +36,7 @@
             </div>
         {% endif %}
         {{ form.point }}
-        <div id="map-canvas" style="height:500px"></div>
+        <div id="map-canvas" class="scroll-space-on-mobile" style="height:500px"></div>
         <br />
         {{ form.location|bootstrap }}
     </fieldset>

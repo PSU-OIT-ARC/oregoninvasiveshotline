@@ -251,6 +251,12 @@ class ReportForm(forms.ModelForm):
 
 
 class SettingsForm(forms.ModelForm):
+    """
+    Handles setting some flags on the report
+
+    The is_public flag is only enabled if the actual species associated with
+    the report is *not* marked as is_confidential
+    """
     SUBMIT_FLAG = "SETTINGS"
 
     class Meta:
@@ -260,6 +266,17 @@ class SettingsForm(forms.ModelForm):
             'is_archived',
             'edrr_status',
         ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.actual_species and self.instance.actual_species.is_confidential:
+            self.fields['is_public'].widget.attrs['disabled'] = True
+            self.fields['is_public'].help_text = "This species is marked as confidential, so you cannot make this report public."
+
+    def clean_is_public(self):
+        if self.instance.actual_species and self.instance.actual_species.is_confidential:
+            return False
+        return self.cleaned_data['is_public']
 
 
 class InviteForm(forms.Form):
@@ -334,7 +351,7 @@ class ConfirmForm(forms.ModelForm):
         actual_species = self.cleaned_data.get("actual_species")
         severity = self.cleaned_data.get("severity")
 
-        if not (bool(new_species) ^ bool(actual_species)):
+        if bool(new_species) & bool(actual_species):
             raise forms.ValidationError("Either choose a species or create a new one.", code="species_contradiction")
 
         if new_species and not severity:
@@ -350,5 +367,7 @@ class ConfirmForm(forms.ModelForm):
             species = Species(name=new_species, severity=severity, category=self.cleaned_data['category'])
             species.save()
             self.instance.actual_species = species
+        elif not self.cleaned_data.get("actual_species"):
+            self.instance.actual_species = None
 
         return super().save(*args, **kwargs)

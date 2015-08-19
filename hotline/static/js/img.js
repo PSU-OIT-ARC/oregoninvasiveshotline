@@ -1,7 +1,10 @@
-var MAX_WIDTH = 800.0;
-var MAX_HEIGHT = 600.0;
-
 function resizeImage(img){
+    /*
+    Returns the image element as a dataurl resized to be at most 800x600
+    */
+    var MAX_WIDTH = 800.0;
+    var MAX_HEIGHT = 600.0;
+
     var width = img.width;
     var height = img.height;
     var canvas = $('<canvas>');
@@ -25,36 +28,37 @@ function resizeImage(img){
 }
 
 $(document).ready(function(){
-    $('#images').on('change', 'input[type="file"]', function(e){
-        // bail out if the browser doesn't support the filereader
-        try {
-            new FileReader();
-        } catch(e) {
-            return
-        }
+    // bail out if the browser doesn't support the filereader
+    try {
+        new FileReader();
+    } catch(e) {
+        return
+    }
 
-        // now that we have a reference to the files, reset the input so the
-        // full-res images aren't posted too
+    // whenever an image is selected, resize it and generate a preview of it
+    $('#images').on('change', 'input[type="file"]', function(e){
         var files = $(this).get(0).files;
-        $(this).attr("type", "text");
-        $(this).attr("type", "file");
-        $(this).get(0).value = "";
         $('#previews').html("");
 
         for(var i = 0; i < files.length; i++){
             var file = files[i];
             if(file){
                 var reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onloadend = function (index, element, e) {
+                reader.onloadend = function(index, element, e) {
                     var append_to = element.closest(".formset-row").find(".preview");
                     var encoded_image = element.closest(".formset-row").find(".datauri");
                     var preview = $("<img />");
                     append_to.html(preview);
                     preview.attr('src', this.result);
-                    encoded_image.val(resizeImage(preview.get(0)))
-                    preview.attr("width", 100)
+                    preview.on("load", function(){
+                        encoded_image.val(resizeImage(preview.get(0)))
+                        preview.attr("width", 100)
+                        // remove the input element, so the full sized image
+                        // isn't POSTed
+                        element.remove()
+                    })
                 }.bind(reader, i, $(this))
+                reader.readAsDataURL(file);
             }
         }
     })
