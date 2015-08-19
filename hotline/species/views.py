@@ -1,9 +1,10 @@
-from django.shortcuts import render
-from hotline.species.models import Species, Category, Severity
+from arcutils import will_be_deleted_with
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse_lazy
-from django.views.generic import ListView, UpdateView, DeleteView, CreateView
-from arcutils import will_be_deleted_with
+from django.shortcuts import render
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+
+from hotline.species.models import Category, Severity, Species
 
 
 class SpeciesList(ListView):
