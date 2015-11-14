@@ -73,6 +73,3 @@ class Species(models.Model):
 
     def __str__(self):
         return "%s%s" % (self.name, " (%s)" % self.scientific_name if self.scientific_name else "")
-
-
-from .indexes import * # noqa isort:skip
