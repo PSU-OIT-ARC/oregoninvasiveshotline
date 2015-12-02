@@ -1,14 +1,14 @@
 from django import forms
-from elasticmodels.forms import SearchForm
+from haystack.forms import SearchForm
 
-from .indexes import SpeciesIndex
+from .search_indexes import SpeciesIndex
 
 
 class SpeciesSearchForm(SearchForm):
     """
     This form handles searching for a species in the species list view.
     """
-    q = None
+    q = None  # We don't want to use the q field
 
     querystring = forms.CharField(required=False, widget=forms.widgets.TextInput(attrs={
         "placeholder": "name:Bass OR category:Plants"
@@ -29,10 +29,12 @@ class SpeciesSearchForm(SearchForm):
 
     def __init__(self, *args, user, **kwargs):
         self.user = user
-        super().__init__(*args, index=SpeciesIndex, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def search(self):
         results = super().search()
+
+        #XXX results.query no longer used
         if self.cleaned_data.get("querystring"):
             query = results.query(
                 "query_string",
@@ -53,6 +55,6 @@ class SpeciesSearchForm(SearchForm):
         if sort_by:
             if order == "descending":
                 sort_by = "-" + sort_by
-            results = results.sort(sort_by)
+            results = results.sort(sort_by)  #XXX no longer used
 
         return results

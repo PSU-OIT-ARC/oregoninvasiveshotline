@@ -16,14 +16,16 @@ setup(
     install_requires=[
         'django-arcutils>=1.1.1,<2.0',
         'django-cloak',
-        'django-local-settings>=1.0a7',
+        'django-haystack>=2.4.0',
+        'django-local-settings>=1.0a10',
         'django-perms>=1.2.0',
-        'django>=1.8.5,<1.9',
-        'elasticmodels>=0.2.0',
-        'Markdown>=2.6.2',
+        'django-pgcli',
+        'django>=1.8.7,<1.9',
+        'elasticsearch>=1.9.0,<2.0.0',
+        'Markdown>=2.6.4',
         'Pillow>=3.0.0',
         'psycopg2>=2.6.1',
-        'pytz>=2015.6',
+        'pytz>=2015.7',
     ],
     extras_require={
         'dev': [

@@ -8,7 +8,7 @@ from django.core.validators import validate_email
 from django.db.models import Q
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
-from elasticmodels.forms import SearchForm
+from haystack.forms import SearchForm
 
 from hotline.comments.models import Comment
 from hotline.counties.models import County
@@ -16,7 +16,7 @@ from hotline.notifications.models import UserNotificationQuery
 from hotline.species.models import Category, Severity, Species
 from hotline.users.models import User
 
-from .indexes import ReportIndex
+from .search_indexes import ReportIndex
 from .models import Invite, Report
 
 
@@ -69,7 +69,7 @@ class ReportSearchForm(SearchForm):
     def __init__(self, *args, user, report_ids=(), **kwargs):
         self.user = user
         self.report_ids = report_ids
-        super().__init__(*args, index=ReportIndex, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # only certain fields on this form can be used by members of the public
         public_fields = ['querystring', 'sort_by', 'source']

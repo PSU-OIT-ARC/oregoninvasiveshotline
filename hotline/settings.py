@@ -34,6 +34,14 @@ ELASTICSEARCH_CONNECTIONS = {
     }
 }
 
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'http://localhost:9200/',
+        'INDEX_NAME': '{PACKAGE}-{ENV}',
+    }
+}
+
 SECRET_KEY = SecretSetting()
 
 globals().update(load_and_check_settings(globals()))

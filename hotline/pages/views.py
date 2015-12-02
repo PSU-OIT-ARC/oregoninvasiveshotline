@@ -33,6 +33,7 @@ def edit(request, page_id=None):
 
     return render(request, "pages/edit.html", {
         'form': form,
+        'page': page,
         'page_id': page_id,
     })
 

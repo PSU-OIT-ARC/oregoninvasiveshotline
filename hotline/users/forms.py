@@ -2,11 +2,11 @@ from django import forms
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
-from elasticmodels.forms import SearchForm
+from haystack.forms import SearchForm
 
 from hotline.utils import resize_image
 
-from .indexes import UserIndex
+from .search_indexes import UserIndex
 from .models import User
 
 
@@ -14,7 +14,7 @@ class UserSearchForm(SearchForm):
     is_manager = forms.BooleanField(initial=True, required=False)
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, index=UserIndex, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_queryset(self):
         queryset = super().get_queryset().order_by("last_name", "first_name")

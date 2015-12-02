@@ -83,7 +83,7 @@
     "pk": 13,
     "fields": {
         "icon": "icons/alligator.png",
-        "name": "Reptiles"
+        "name": "Reptiles and Amphibians"
     },
     "model": "species.category"
 }

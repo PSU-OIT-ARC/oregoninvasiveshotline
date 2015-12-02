@@ -19,6 +19,7 @@
             <a href="{% url 'pages-delete' page_id %}" class="btn btn-danger">Delete</a>
         {% endif %}
     </div>
-    <input type="submit" name="Submit" class="btn btn-primary" />
+    <input type="submit" name="Submit" class="btn btn-primary"
+           value="{% if page %}Update{% else %}Create{% endif %} Page">
 </form>
 {% endblock %}
