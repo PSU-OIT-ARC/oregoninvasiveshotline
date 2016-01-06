@@ -1,7 +1,6 @@
 import base64
 import hashlib
 import itertools
-import logging
 import os
 import posixpath
 import subprocess
@@ -12,13 +11,13 @@ from django.contrib.auth import get_user_model
 from django.contrib.gis.db import models
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
+from django.db.models.signals import post_init
+from django.dispatch import receiver
 from django.template import Context
 from django.template.loader import get_template, render_to_string
 
 from hotline.utils import generate_thumbnail
-
-
-log = logging.getLogger(__name__)
+from hotline.reports.utils import generate_icon
 
 
 class Report(models.Model):
@@ -135,56 +134,16 @@ class Report(models.Model):
         ``static/js/main.js`` also.
 
         """
-        # XXX: It seems a little weird to generate the icon here.
-        self.generate_icon()
         return posixpath.join(settings.MEDIA_URL, self.icon_rel_path)
 
     def generate_icon(self):
-        """Generate icon for this report.
-
+        """
         The file path for the generated icon is based on parameters that
         will change the appearance of the icon. This ensures the icon is
         updated if the report's category changes.
-
         """
         if not os.path.exists(self.icon_path):
-            icon = self.category.icon
-            color = self.icon_color
-
-            # XXX: This shouldn't be hard coded
-            generated_icon_size = '30x45'
-
-            # Note: We create an SVG because SVGs are easy to customize
-            #       then convert the SVG to PNG for browser compat.
-            with tempfile.NamedTemporaryFile('wt', suffix='.svg') as svg_fp:
-                if icon and os.path.exists(icon.path):
-                    with open(icon.path, 'rb') as icon_fp:
-                        image_data = base64.b64encode(icon_fp.read())
-                else:
-                    # Icon won't have a category image if the category
-                    # doesn't have an icon.
-                    image_data = None
-                svg_fp.write(render_to_string('reports/icon.svg', {
-                    'color': color,
-                    'image_data':  image_data,
-                }))
-                svg_fp.flush()
-
-                # XXX: This will fail silently, which may be desirable
-                # in this case since a broken image link isn't the worst
-                # thing, but we should at least log the failure.
-                args = [
-                    'convert',
-                    '-background', 'none',
-                    '-size', generated_icon_size,
-                    '-crop', '{size}+0+0'.format(size=generated_icon_size),
-                    svg_fp.name, self.icon_path
-                ]
-                return_code = subprocess.call(args)
-                if return_code:
-                    log.warn(
-                        'convert command returned error code {return_code}: `{command}`'
-                        .format(command=' '.join(args), return_code=return_code))
+            generate_icon(self.icon_path, self.category.icon, self.icon_color)
 
     @property
     def image_url(self):
@@ -223,6 +182,15 @@ class Report(models.Model):
         Returns True if the reported_species differs from the actual species (and both fields are filled out)
         """
         return bool(self.reported_species and self.actual_species and self.reported_species != self.actual_species)
+
+
+@receiver(post_init, sender=Report)
+def post_init__generate_icon(sender, instance, **kwargs):
+    """
+    Generate the icon if the report has just been initialized for the first time.
+    """
+    if instance.pk is not None:
+        instance.generate_icon()
 
 
 class Invite(models.Model):
