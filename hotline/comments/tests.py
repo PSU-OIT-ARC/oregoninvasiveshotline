@@ -1,5 +1,6 @@
 from unittest.mock import Mock
 
+from django.contrib.gis.geos import GEOSGeometry
 from django.core import mail
 from django.core.urlresolvers import reverse
 from django.test import TestCase
@@ -13,24 +14,29 @@ from .forms import CommentForm
 from .models import Comment
 
 
+# model_mommy will not mock the point field by default, so we create a test point
+# about 45 degrees lat/long and set point to that
+test_point = GEOSGeometry('POINT(45.0 45.0)')
+
+
 class CommentFormTest(TestCase):
     def test_report_and_created_by_initialized_for_new_comment(self):
         user = make(User)
-        report = make(Report)
+        report = make(Report, point=test_point)
         form = CommentForm(user=user, report=report)
         self.assertEqual(form.instance.created_by, user)
         self.assertEqual(form.instance.report, report)
 
     def test_visibility_field_removed_for_non_experts(self):
         user = make(User, is_active=False, is_staff=False)
-        report = make(Report)
+        report = make(Report, point=test_point)
         form = CommentForm(user=user, report=report)
         self.assertNotIn("visibility", form.fields)
         self.assertEqual(form.instance.visibility, Comment.PROTECTED)
 
     def test_emails_sent_out_for_new_comments_notifies_managers_and_staffers_who_commented(self):
         user = make(User, is_active=False, is_staff=False)
-        report = make(Report)
+        report = make(Report, point=test_point)
 
         should_be_notified = make(Comment, report=report, created_by__is_staff=True).created_by.email
         should_not_be_notified = make(Comment, report=report, created_by__is_staff=False, created_by__is_active=False).created_by.email
@@ -45,7 +51,7 @@ class CommentFormTest(TestCase):
 
     def test_email_sent_out_for_new_comment_to_user_who_claimed_report(self):
         user = make(User, is_active=False, is_staff=False)
-        report = make(Report, claimed_by=make(User))
+        report = make(Report, point=test_point, claimed_by=make(User))
 
         form = CommentForm({
             'body': "foo",
@@ -57,7 +63,7 @@ class CommentFormTest(TestCase):
 
     def test_email_sent_out_for_new_comment_to_all_invited_experts(self):
         user = make(User, is_active=False, is_staff=False)
-        report = make(Report)
+        report = make(Report, point=test_point)
         invite = make(Invite, report=report)
 
         form = CommentForm({
@@ -69,7 +75,7 @@ class CommentFormTest(TestCase):
         self.assertIn(invite.user.email, [email.to[0] for email in mail.outbox])
 
     def test_email_not_sent_to_person_submitting_comment(self):
-        report = make(Report)
+        report = make(Report, point=test_point)
         invite = make(Invite, report=report)
 
         form = CommentForm({
@@ -83,7 +89,7 @@ class CommentFormTest(TestCase):
 
     def test_email_only_sent_to_submitter_if_comment_is_PUBLIC_or_PROTECTED(self):
         user = make(User, is_active=False, is_staff=False)
-        report = make(Report, created_by=user)
+        report = make(Report, point=test_point, created_by=user)
         invite = make(Invite, report=report)
 
         form = CommentForm({
@@ -98,7 +104,7 @@ class CommentFormTest(TestCase):
         mail.outbox = []
         # if the comment is PRIVATE, they don't get notified
         user = make(User, is_active=False, is_staff=False)
-        report = make(Report, created_by=user)
+        report = make(Report, point=test_point, created_by=user)
         invite = make(Invite, report=report)
 
         form = CommentForm({
@@ -113,7 +119,7 @@ class CommentFormTest(TestCase):
 
 class CommentEditViewTest(TestCase):
     def test_get(self):
-        report = make(Report, created_by__is_active=False)
+        report = make(Report, point=test_point, created_by__is_active=False)
         session = self.client.session
         session['report_ids'] = [report.pk]
         session.save()
@@ -122,12 +128,12 @@ class CommentEditViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_anonymous_users_are_forced_to_login(self):
-        comment = make(Comment)
+        comment = make(Comment, report=make(Report, point=test_point))
         response = self.client.get(reverse("comments-edit", args=[comment.pk]))
         self.assertEqual(response.status_code, 302)
 
     def test_not_allowed_to_edit(self):
-        report = make(Report)
+        report = make(Report, point=test_point)
         comment = make(Comment, report=report)
         user = report.created_by
         user.set_password("foo")
@@ -137,7 +143,7 @@ class CommentEditViewTest(TestCase):
         self.assertEqual(response.status_code, 403)
 
     def test_post(self):
-        report = make(Report, created_by__is_active=False)
+        report = make(Report, point=test_point, created_by__is_active=False)
         session = self.client.session
         session['report_ids'] = [report.pk]
         session.save()
@@ -156,7 +162,7 @@ class CommentEditViewTest(TestCase):
     def test_post_with_image(self):
         # make a report for a user who is allowed to login and control
         # visibility
-        report = make(Report, created_by__is_active=True, created_by__is_staff=True)
+        report = make(Report, point=test_point, created_by__is_active=True, created_by__is_staff=True)
         user = report.created_by
         user.set_password("foo")
         user.save()
@@ -178,3 +184,35 @@ class CommentEditViewTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Comment.objects.get(pk=comment.pk).body, "hello")
         self.assertEqual(Image.objects.filter(comment=comment, visibility=Image.PUBLIC).count(), 1)
+
+
+class CommentDeleteViewTest(TestCase):
+    def test_get(self):
+        report = make(Report, point=test_point)
+        comment = make(Comment, report=report)
+        user = comment.created_by
+        user.set_password("foo")
+        user.save()
+        self.client.login(email=user.email, password="foo")
+        response = self.client.get(reverse("comments-delete", args=[comment.pk]))
+        self.assertEqual(response.status_code, 200)
+
+    def test_post(self):
+        report = make(Report, point=test_point)
+        comment = make(Comment, report=report)
+        user = comment.created_by
+        user.set_password("foo")
+        user.save()
+        self.client.login(email=user.email, password="foo")
+        response = self.client.post(reverse("comments-delete", args=[comment.pk]))
+        self.assertEqual(response.status_code, 302)
+
+    def test_not_allowed_to_delete(self):
+        report = make(Report, point=test_point)
+        comment = make(Comment, report=report)
+        user = report.created_by
+        user.set_password("foo")
+        user.save()
+        self.client.login(email=user.email, password="foo")
+        response = self.client.post(reverse("comments-delete", args=[comment.pk]))
+        self.assertRedirects(response, reverse("reports-detail", args=[report.pk]))

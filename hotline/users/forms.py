@@ -2,11 +2,10 @@ from django import forms
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
-from elasticmodels.forms import SearchForm
+from haystack.forms import SearchForm
 
 from hotline.utils import generate_thumbnail
 
-from .indexes import UserIndex
 from .models import User
 
 
@@ -14,14 +13,38 @@ class UserSearchForm(SearchForm):
     is_manager = forms.BooleanField(initial=True, required=False)
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, index=UserIndex, **kwargs)
+        super().__init__(*args, **kwargs)
 
-    def get_queryset(self):
-        queryset = super().get_queryset().order_by("last_name", "first_name")
-        if self.cleaned_data.get('is_manager'):
-            queryset = queryset.filter(is_active=True)
+        if User.objects.all().count() == 0:
+            # If there are no users in the database, there's nothing to search
+            self.in_search_mode = False
+        else:
+            # Otherwise, we're going to have at least one user
+            self.in_search_mode = True
 
-        return queryset
+    def no_query_found(self):
+        """
+        Override Haystack's implementation of no_query_found() to return
+        all users
+        """
+        return self.searchqueryset.all().models(User)
+
+    def search(self):
+        """
+        Searches ES index for users, returns a Haystack SearchQuerySet
+        """
+        results = super().search().models(User)
+
+        # If the query is invalid, skip returning no results and display
+        # the list of users
+        if not self.is_valid():
+            return self.no_query_found()
+
+        # If is_manager box is selected, return all managers (is_active=True)
+        if self.cleaned_data.get("is_manager"):
+            return results.filter(is_active=True)
+
+        return results
 
 
 class LoginForm(forms.Form):

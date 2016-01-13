@@ -3,6 +3,7 @@ from base64 import b64decode
 from unittest.mock import patch
 
 from django import forms
+from django.contrib.gis.geos import GEOSGeometry
 from django.forms.models import modelformset_factory
 from django.test import TestCase
 from model_mommy.mommy import make
@@ -13,6 +14,11 @@ from hotline.users.models import User
 from .fields import ClearableImageInput
 from .forms import BaseImageFormSet, ImageForm, get_image_formset
 from .models import Image
+
+
+# model_mommy will not mock the point field by default, so we create a test point
+# about 45 degrees lat/long and set point to that
+test_point = GEOSGeometry('POINT(45.0 45.0)')
 
 
 class ImageFormTest(TestCase):
@@ -40,7 +46,7 @@ class BaseImageFormSetTest(TestCase):
             "form-0-name": "Hello world",
         })
         self.assertTrue(formset.is_valid())
-        report = make(Report)
+        report = make(Report, point=test_point)
         user = make(User)
         formset.save(fk=report, user=user)
         self.assertEqual(Image.objects.filter(report=report, created_by=user).count(), 1)
@@ -60,7 +66,7 @@ class GetImageFormSetTest(TestCase):
             "form-0-visibility": Image.PUBLIC,
         })
         self.assertTrue(formset.is_valid())
-        report = make(Report)
+        report = make(Report, point=test_point)
         formset.save(fk=report, user=user)
         self.assertEqual(Image.objects.filter(report=report, created_by=user, visibility=Image.PUBLIC).count(), 1)
 
