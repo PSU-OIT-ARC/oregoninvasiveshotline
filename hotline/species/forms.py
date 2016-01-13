@@ -1,17 +1,15 @@
 from django import forms
-from elasticmodels.forms import SearchForm
+from haystack.forms import SearchForm
 
-from .indexes import SpeciesIndex
+from .models import Species
 
 
 class SpeciesSearchForm(SearchForm):
     """
     This form handles searching for a species in the species list view.
     """
-    q = None
-
-    querystring = forms.CharField(required=False, widget=forms.widgets.TextInput(attrs={
-        "placeholder": "name:Bass OR category:Plants"
+    q = forms.CharField(required=False, widget=forms.widgets.TextInput(attrs={
+        "placeholder": "Enter a keyword, then click \"Search\""
     }), label="Search")
 
     sort_by = forms.ChoiceField(choices=[
@@ -29,30 +27,23 @@ class SpeciesSearchForm(SearchForm):
 
     def __init__(self, *args, user, **kwargs):
         self.user = user
-        super().__init__(*args, index=SpeciesIndex, **kwargs)
+        super().__init__(*args, **kwargs)
+
+    def no_query_found(self):
+        """Return all species when no query is found."""
+        return self.searchqueryset.all().models(Species)
 
     def search(self):
-        results = super().search()
-        if self.cleaned_data.get("querystring"):
-            query = results.query(
-                "query_string",
-                query=self.cleaned_data.get("querystring", ""),
-                lenient=True,
-            )
-            if not self.is_valid_query(query):
-                results = results.query(
-                    "simple_query_string",
-                    query=self.cleaned_data.get("querystring", ""),
-                    lenient=True,
-                )
-            else:
-                results = query
+        results = super().search().models(Species)
+
+        if not self.is_valid():
+            return self.no_query_found()
 
         sort_by = self.cleaned_data.get("sort_by")
         order = self.cleaned_data.get("order")
         if sort_by:
             if order == "descending":
                 sort_by = "-" + sort_by
-            results = results.sort(sort_by)
+            results = results.order_by(sort_by)
 
         return results

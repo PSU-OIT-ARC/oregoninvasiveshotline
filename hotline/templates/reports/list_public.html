@@ -6,7 +6,7 @@ Report List
 {% endblock %}
 {% block content %}
 <form class="form-inline">
-    {{ form.querystring|bootstrap }}
+    {{ form.q|bootstrap }}
     {% if form.source %}{{ form.source|bootstrap }}{% endif %}
     <input type="submit" value="Search" name="submit" />
     <button onclick="window.location = '{% url 'reports-list' %}'; return false">Reset</button>

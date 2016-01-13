@@ -1,0 +1,7 @@
+{{ object.name }}
+{{ object.scientific_name }}
+{{ object.remedy }}
+{{ object.resources }}
+{{ object.is_confidential }}
+{{ object.severity }}
+{{ object.category }}

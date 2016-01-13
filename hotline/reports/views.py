@@ -4,9 +4,11 @@ import sys
 from collections import OrderedDict
 
 from arcutils.db import will_be_deleted_with
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -29,6 +31,7 @@ from hotline.utils import get_tab_counts
 from .forms import InviteForm, ManagementForm, ReportForm, ReportSearchForm
 from .models import Invite, Report
 from .perms import can_manage_report, can_view_private_report, permissions
+from .serializers import ReportSerializer
 
 
 def list_(request):
@@ -37,18 +40,29 @@ def list_(request):
     report_ids = request.session.get('report_ids', [])
 
     form = ReportSearchForm(params, user=user, report_ids=report_ids)
+    results = form.search()
 
     # Handle the case where they want to export the reports
     # XXX: Why isn't this a separate view?
     export_format = params.get('export')
     if user.is_active and export_format in ('kml', 'csv'):
-        export_data = form.results(page=1, items_per_page=sys.maxsize)
+        export_data = [report.object for report in results]
         return _export(reports=export_data, format=export_format)
 
-    reports = form.results(request.GET.get('page', 1))
-    reports_json = []
-    for report in reports:
-        reports_json.append(report.to_json())
+    # Paginate the results
+    paginator = Paginator(results, settings.ITEMS_PER_PAGE)
+    active_page = request.GET.get('page')
+
+    try:
+        page = paginator.page(active_page)
+    except PageNotAnInteger:
+        page = paginator.page(1)
+    except EmptyPage:
+        page = paginator.page(paginator.num_pages)
+
+    # Serialize and render report data to JSON
+    serializer = ReportSerializer(page.object_list, many=True)
+    reports = serializer.data
 
     template_name = 'list' if user.is_active else 'list_public'
     template = 'reports/{name}.html'.format(name=template_name)
@@ -58,8 +72,9 @@ def list_(request):
 
     context = {
         'reports': reports,
+        'page': page,
         'form': form,
-        'reports_json': json.dumps(reports_json),
+        'reports_json': json.dumps(reports),
         'tab': tab,
     }
     context.update(tab_context)
