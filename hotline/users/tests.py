@@ -9,8 +9,9 @@ from model_mommy.mommy import make, prepare
 
 from hotline.reports.models import Invite, Report
 
-from .forms import LoginForm, UserForm
+from .forms import LoginForm, UserForm, UserSearchForm
 from .models import User
+from .search_indexes import UserIndex
 
 
 class DetailViewTest(TestCase):
@@ -57,7 +58,7 @@ class AuthenticateViewTest(TestCase):
 
     def test_active_or_invited_users_are_logged_in(self):
         # test for an invited user
-        invite = make(Invite)
+        invite = make(Invite, report=make(Report))
         url = invite.user.get_authentication_url(request=Mock(build_absolute_uri=lambda a: a))
         response = self.client.get(url)
         self.assertRedirects(response, self.login_redirect_url)
@@ -151,6 +152,40 @@ class UserFormTest(TestCase):
             self.assertTrue(user.check_password("foobar"))
             # ensure the superclass was called (which actually saves the model)
             self.assertTrue(mock.called)
+
+class UserSearchFormTest(TestCase):
+    """
+    Tests for the User search form
+    """
+    def setUp(self):
+        user = prepare(User)
+        user.set_password("foo")
+        user.save()
+        self.user = user
+        self.index = UserIndex()
+        self.index.clear()
+
+    def tearDown(self):
+        self.index.clear()
+
+    def test_search_list_managers_only(self):
+        self.user.is_active = True
+        self.user.save()
+        admin = make(User, is_staff=True)
+        other_user = make(User, is_active=False)
+
+        form = UserSearchForm({"q": "", "is_manager": True})
+        results = form.search()
+
+        # Create a user queryset since form.search() returns a SearchQuerySet
+        users = list()
+        for u in results:
+            users.append(u.object)
+
+        self.assertNotIn(other_user, users)
+        self.assertIn(admin, users)
+        self.assertIn(self.user, users)
+        self.assertEqual(len(users), 2)
 
 
 class UserTest(TestCase):

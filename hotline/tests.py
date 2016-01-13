@@ -18,8 +18,8 @@ class GetTabCountsTest(TestCase):
 
     def test_invited_to(self):
         user = make(User)
-        make(Invite, user=user)
-        make(Invite)
+        make(Invite, user=user, report=make(Report))
+        make(Invite, report=make(Report))
         context = get_tab_counts(user, [])
         self.assertEqual(context['invited_to'], 1)
 

@@ -122,7 +122,7 @@ class CommentEditViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_anonymous_users_are_forced_to_login(self):
-        comment = make(Comment)
+        comment = make(Comment, report=make(Report))
         response = self.client.get(reverse("comments-edit", args=[comment.pk]))
         self.assertEqual(response.status_code, 302)
 
