@@ -358,10 +358,10 @@ class ReportSearchFormTest(TestCase):
 
     def test_inactive_users_only_see_public_fields(self):
         self.user.is_active = False
-        self.user.save()
         form = ReportSearchForm(self, user=self.user)
-        for field, public_field in zip(form.fields, ["q", "source", "sort_by"]):
-            self.assertEqual(field, public_field)
+        form_fields = sorted(tuple(form.fields.keys()))
+        public_fields = sorted(form.public_fields)
+        self.assertEqual(form_fields, public_fields)
 
     def test_inactive_users_only_see_public_reports_and_reports_they_created(self):
         self.user.is_active = False

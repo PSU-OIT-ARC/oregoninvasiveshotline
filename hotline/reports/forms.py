@@ -19,6 +19,12 @@ from hotline.users.models import User
 from .models import Invite, Report
 
 
+def get_county_choices():
+    county_choices = [('', 'Any')]
+    county_choices.extend((c.pk, c.name) for c in County.objects.all())
+    return county_choices
+
+
 class ReportSearchForm(SearchForm):
     """
     This form handles searching of reports by managers and anonymous users alike.
@@ -37,6 +43,8 @@ class ReportSearchForm(SearchForm):
         ("invited", "Invited to Review"),
         ("reported", "Reported by Me")
     ])
+
+    county = forms.ChoiceField(required=False, label='County', choices=get_county_choices)
 
     sort_by = forms.ChoiceField(choices=[
         ("_score", "Relevance"),
@@ -63,6 +71,8 @@ class ReportSearchForm(SearchForm):
         ("nobody", "Nobody"),
     ], required=False)
 
+    public_fields = ['q', 'sort_by', 'source', 'county']
+
     def __init__(self, *args, user, report_ids=(), **kwargs):
         self.user = user
         self.report_ids = report_ids
@@ -79,10 +89,9 @@ class ReportSearchForm(SearchForm):
         self.searchqueryset = self.searchqueryset.models(Report)
 
         # only certain fields on this form can be used by members of the public
-        public_fields = ['q', 'sort_by', 'source']
         if not user.is_active:
             for name in self.fields.keys():
-                if name not in public_fields:
+                if name not in self.public_fields:
                     self.fields.pop(name)
 
         # the invited choice doesn't make sense if you aren't authenticated
@@ -139,6 +148,10 @@ class ReportSearchForm(SearchForm):
                 results = results.filter(SQ(id__in=self.report_ids) | SQ(is_public=True))
             else:
                 results = results.filter(is_public=True)
+
+        county = self.cleaned_data.get('county')
+        if county:
+            results = results.filter(county_id=county)
 
         # collect all the species and filter by that
         species = []
