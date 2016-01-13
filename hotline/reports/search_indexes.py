@@ -25,6 +25,7 @@ class ReportIndex(indexes.SearchIndex, indexes.Indexable):
     description = indexes.CharField()
     location = indexes.CharField()
     county = indexes.CharField(model_attr="county__name", null=True)
+    county_id = indexes.IntegerField(model_attr="county__pk", null=True)
 
     edrr_status = indexes.CharField(model_attr="get_edrr_status_display")
     ofpd = indexes.BooleanField(model_attr="created_by__has_completed_ofpd")
