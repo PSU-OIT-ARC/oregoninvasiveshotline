@@ -46,7 +46,7 @@ def refresh_index(*args, **kwargs):
         if user.last_login is None or localtime(user.last_login).day < localtime(now()).day:
             user.last_login = now()
             user.save()
-            call_command('rebuild_index', noinput=True, clopen=True)
+            call_command('rebuild_index', interactive=False)
 
 
 # The sites framework is dumb. I don't want to hardcode the hostname of the

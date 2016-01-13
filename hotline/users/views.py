@@ -122,7 +122,7 @@ def list_(request):
     """
 
     form = UserSearchForm(request.GET)
-    users = form.results(page=request.GET.get("page"))
+    users = form.search()
 
     return render(request, "users/list.html", {
         "users": users,

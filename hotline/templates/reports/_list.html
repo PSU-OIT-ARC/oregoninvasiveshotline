@@ -33,12 +33,12 @@
                         <td colspan="2" style="vertical-align:bottom; width:100%">
                             <a class="strong" href="{% url 'reports-detail' report.pk %}">
                                 <small>#{{ report.pk }}:</small>
-                                {{ report.species.name|default:report.category }}
+                                {{ report.species|default:report.category }}
                             </a>
                             {% if report.species %}
                                 <small>({{ report.category }})</small>
                             {% endif %}
-                            &mdash; {{ report.created_on|date:"M j, Y" }}
+                            &mdash; {{ report.created_on }}
                             {% if user.is_active %}
                                 <span class="pull-right">
                                     {% if report.is_public %}
@@ -59,12 +59,12 @@
                     </tr>
                     <tr class="{{ report.css_class }}">
                         <td>{{ report.county|default:"Not in OR/WA" }}</td>
-                        <td class="text-right"><em title="Early Detection and Rapid Response">EDRR Status:</em> {{ report.get_edrr_status_display|default:"None" }}</td>
+                        <td class="text-right"><em title="Early Detection and Rapid Response">EDRR Status:</em> {{ report.edrr_status|default:"None" }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
-        {% include '_pagination.html' with items=reports %}
+        {% include '_pagination.html' with items=page %}
     </div>
 </div>
 <!--

@@ -7,12 +7,16 @@ from local_settings import LocalSetting, SecretSetting
 from arcutils.settings import init_settings
 
 
-ELASTICSEARCH_CONNECTIONS = {
+HAYSTACK_CONNECTIONS = {
     'default': {
-        'hosts': [LocalSetting(default='http://localhost:9200')],
-        'index_name': LocalSetting(),
+        'ENGINE': LocalSetting(),
+        'URL': LocalSetting(default='http://localhost:9200/'),
+        'INDEX_NAME': LocalSetting(),
     }
 }
+HAYSTACK_SIGNAL_PROCESSOR = LocalSetting()
+
+ITEMS_PER_PAGE = LocalSetting()
 
 init_settings()
 

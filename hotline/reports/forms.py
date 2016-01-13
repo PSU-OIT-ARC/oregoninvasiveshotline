@@ -5,10 +5,10 @@ from django import forms
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.core.validators import validate_email
-from django.db.models import Q
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
-from elasticmodels.forms import SearchForm
+from haystack.forms import SearchForm
+from haystack.query import SQ, SearchQuerySet
 
 from hotline.comments.models import Comment
 from hotline.counties.models import County
@@ -16,7 +16,6 @@ from hotline.notifications.models import UserNotificationQuery
 from hotline.species.models import Category, Severity, Species
 from hotline.users.models import User
 
-from .indexes import ReportIndex
 from .models import Invite, Report
 
 
@@ -29,7 +28,9 @@ class ReportSearchForm(SearchForm):
     QueryDict string. So be careful if you start renaming fields, since that
     will break any UserNotificationQuery rows that rely on that field.
     """
-    q = None  # the default SearchForm has a q field with we don't want to use
+    q = forms.CharField(required=False, widget=forms.widgets.TextInput(attrs={
+        "placeholder": "Enter a category, county, species, or other keyword"
+    }), label=mark_safe("Search <a target='_blank' class='help' href='help'>[?]</a>"))
 
     source = forms.ChoiceField(required=False, label="Extra Criteria", choices=[
         ("", "None"),
@@ -37,15 +38,11 @@ class ReportSearchForm(SearchForm):
         ("reported", "Reported by Me")
     ])
 
-    querystring = forms.CharField(required=False, widget=forms.widgets.TextInput(attrs={
-        "placeholder": "county:Washington AND category:Aquatic"
-    }), label=mark_safe("Search <a target='_blank' class='help' href='help'>[?]</a>"))
-
     sort_by = forms.ChoiceField(choices=[
         ("_score", "Relevance"),
-        ("species.raw", "Species"),
-        ("category.raw", "Category"),
-        ("-created_on", "Date"),
+        ("species", "Species"),
+        ("category", "Category"),
+        ("-created_on", "Newest"),
     ], required=False, widget=forms.widgets.RadioSelect)
 
     is_archived = forms.ChoiceField(choices=[
@@ -69,10 +66,20 @@ class ReportSearchForm(SearchForm):
     def __init__(self, *args, user, report_ids=(), **kwargs):
         self.user = user
         self.report_ids = report_ids
-        super().__init__(*args, index=ReportIndex, **kwargs)
+
+        sqs = SearchQuerySet().models(Report)
+        if not user.is_active:
+            if self.report_ids:
+                sqs = sqs.filter(SQ(id__in=self.report_ids) | SQ(is_public=True))
+            else:
+                sqs = sqs.filter(is_public=True)
+
+        super().__init__(*args, searchqueryset=sqs, **kwargs)
+
+        self.searchqueryset = self.searchqueryset.models(Report)
 
         # only certain fields on this form can be used by members of the public
-        public_fields = ['querystring', 'sort_by', 'source']
+        public_fields = ['q', 'sort_by', 'source']
         if not user.is_active:
             for name in self.fields.keys():
                 if name not in public_fields:
@@ -102,16 +109,6 @@ class ReportSearchForm(SearchForm):
                 widget=forms.widgets.CheckboxSelectMultiple
             )
 
-        # if they haven't entered anything into the search box, don't show the
-        # "Relevance" option
-        if not self.cleaned_data.get("querystring"):
-            self.fields['sort_by'].choices = self.fields['sort_by'].choices[1:]
-
-        # if they did enter a querystring, but haven't chosen anything to sort
-        # by, sort by the relevance by default
-        if self.cleaned_data.get("querystring") and not self.cleaned_data.get("sort_by"):
-            self.cleaned_data['sort_by'] = "_score"
-
     def iter_categories(self):
         """
         Just makes it easier to look through the category fields
@@ -119,90 +116,79 @@ class ReportSearchForm(SearchForm):
         for category in self.categories:
             yield category, self['category-%d' % category.pk]
 
-    def get_queryset(self):
-        # We do a monster join here so we get all the data we need on all the methods we
-        # call on the report
-        queryset = super().get_queryset().prefetch_related(
-            "image_set",
-            "comment_set__image_set"
-        ).select_related(
-            "reported_category",
-            "reported_species",
-            "actual_species",
-            "actual_species__severity",
-            "reported_species__severity",
-            "actual_species__category",
-            "reported_species__category"
-        )
+    def no_query_found(self):
+        """Return all reports when query is invalid."""
+        return self.searchqueryset.all()
 
+    def search(self):
+        if not self.is_valid():
+            return self.no_query_found()
+
+        search_term = self.cleaned_data.get('q')
+
+        # XXX: Not sure we want to do an auto query here; e.g., we might
+        #      want to boost the title field.
+        if search_term:
+            results = self.searchqueryset.auto_query(search_term)
+        else:
+            results = self.searchqueryset
+
+        # only show public reports if the user is inactive
         if not self.user.is_active:
-            # only show public reports, or reports that they were invited to,
-            # or reports that are in their session variable
-            queryset = queryset.filter(
-                Q(is_public=True) |
-                Q(pk__in=Invite.objects.filter(user_id=self.user.pk).values_list("report_id", flat=True)) |
-                Q(pk__in=self.report_ids)
-            )
-
-        # filter by the is_archived field
-        is_archived = self.cleaned_data.get("is_archived")
-        if is_archived:
-            queryset = queryset.filter(is_archived=is_archived == "archived")
+            if self.report_ids:
+                results = results.filter(SQ(id__in=self.report_ids) | SQ(is_public=True))
+            else:
+                results = results.filter(is_public=True)
 
         # collect all the species and filter by that
         species = []
         for category in self.categories:
             species.extend(map(int, self.cleaned_data.get("category-%d" % category.pk, [])))
         if species:
-            queryset = queryset.filter(
-                (Q(actual_species_id__in=species) & ~Q(actual_species_id=None)) |
-                (Q(reported_species_id__in=species) & Q(actual_species_id=None))
-            )
+            results = results.filter(species_id__in=species)
 
-        # filter by the is_public field
-        is_public = self.cleaned_data.get("is_public")
-        if is_public:
-            queryset = queryset.filter(is_public=is_public == "public")
-
-        # filter by the claimed_by field
-        claimed_by = self.cleaned_data.get("claimed_by")
-        if claimed_by == "me":
-            queryset = queryset.filter(claimed_by_id=self.user.pk)
-        elif claimed_by == "nobody":
-            queryset = queryset.filter(claimed_by_id=None)
-
-        # filter by the source field
+        # Filter by reports they were invited to, or their own reports
         source = self.cleaned_data.get("source")
         if source == "invited":
-            queryset = queryset.filter(pk=Invite.objects.filter(user_id=self.user.pk).values_list("report_id", flat=True))
+            results = results.filter(id__in=Invite.objects.filter(user_id=self.user.pk).values_list("report_id", flat=True))
         elif source == "reported":
-            queryset = queryset.filter(Q(created_by_id=self.user.pk) | Q(pk__in=self.report_ids))
+            if self.user.is_active:
+                results = results.filter(created_by_id=self.user.pk)
+            if self.report_ids:
+                results = results.filter(id__in=self.report_ids)
 
-        return queryset
+        # Filter by claimed/unclaimed reports
+        claimed_by = self.cleaned_data.get("claimed_by")
+        if claimed_by == "me":
+            results = results.filter(claimed_by_id=self.user.pk)
+        elif claimed_by == "nobody":
+            results = results.filter(_missing_='claimed_by_id')
 
-    def search(self):
-        results = super().search()
-        if self.cleaned_data.get("querystring"):
-            query = results.query(
-                "query_string",
-                query=self.cleaned_data.get("querystring", ""),
-                lenient=True,
-            )
+        # Filter for archived reports
+        is_archived = self.cleaned_data.get("is_archived")
+        if is_archived == "archived":
+            results = results.filter(is_archived=True)
+        elif is_archived == "notarchived":
+            results = results.exclude(is_archived=True)
 
-            # if the query isn't valid, fall back on a simple_query_string
-            # query
-            if not self.is_valid_query(query):
-                results = results.query(
-                    "simple_query_string",
-                    query=self.cleaned_data.get("querystring", ""),
-                    lenient=True,
-                )
-            else:
-                results = query
+        # Filter for public reports
+        is_public = self.cleaned_data.get("is_public")
+        if is_public == "public":
+            results = results.filter(is_public=True)
+        elif is_public == "notpublic":
+            results = results.exclude(is_public=True)
 
+        # if they haven't entered anything into the search box, don't show the
+        # "Relevance" option
+        if not self.cleaned_data.get("q"):
+            self.fields['sort_by'].choices = self.fields['sort_by'].choices[1:]
+
+        # Finally, sort the data
         sort_by = self.cleaned_data.get("sort_by")
         if sort_by:
-            results = results.sort(sort_by)
+            results = results.order_by(sort_by)
+        elif not search_term:
+            results = results.order_by('-created_on')
 
         return results
 

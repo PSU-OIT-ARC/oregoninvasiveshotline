@@ -15,7 +15,7 @@ def init(ctx, overwrite=False):
     install(ctx)
     createdb(ctx, drop=overwrite)
     migrate(ctx)
-    manage(ctx, 'rebuild_index --clopen --noinput')
+    manage(ctx, 'rebuild_index --noinput')
     loaddata(ctx)
 
 
@@ -25,6 +25,11 @@ def loaddata(ctx):
         'loaddata',
         'dummy_user.json category.json severity.json counties.json pages.json',
     ))
+
+
+@arctask(configured='dev')
+def rebuild_index(ctx, interactive=True):
+    manage(ctx, ('rebuild_index', '--noinput' if not interactive else ''))
 
 
 @arctask(configured='dev', timed=True)
@@ -39,7 +44,6 @@ def copy_records(ctx, recreate_db=False):
     from django.db import connections
     from django.db.models.signals import post_init, post_save
     from django.contrib.auth import get_user_model
-    from elasticmodels import suspended_updates
     from hotline.reports.models import Report, receiver__generate_icon
 
     # Keep icons from being generated on init and save
@@ -47,6 +51,7 @@ def copy_records(ctx, recreate_db=False):
     post_save.disconnect(receiver__generate_icon, sender=Report)
 
     settings = get_settings()
+    settings.HAYSTACK_SIGNAL_PROCESSOR = None
 
     password = getattr(settings, 'OLD_DATABASE_PASSWORD', None)
     if not password:
@@ -70,8 +75,7 @@ def copy_records(ctx, recreate_db=False):
         migrate(ctx)
         loaddata(ctx)
 
-    with suspended_updates():
-        _copy_records(settings)
+    _copy_records(settings)
 
     default = connections['default']
 
@@ -96,6 +100,8 @@ def copy_records(ctx, recreate_db=False):
     expert = User.objects.filter(first_name='EXPERT', last_name='CONTACT')
     expert.update(first_name='', last_name='')
     print('Done')
+
+    rebuild_index(ctx, False)
 
 
 def _copy_records(settings):

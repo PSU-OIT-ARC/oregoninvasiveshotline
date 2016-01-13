@@ -25,7 +25,13 @@
         <tbody>
             {% for user in users %}
                 <tr>
-                    <td><a href="{% url 'users-edit' user.pk %}">{{ user }}</a></td>
+                    <!--
+                    We manually build the user's full name if they have one
+                    instead of calling get_full_name because we cannot
+                    determine from the template if we recieve a full name or
+                    nothing at all.
+                    -->
+                    <td><a href="{% url 'users-edit' user.pk %}">{% if user.first_name and user.last_name %}{{ user.last_name }}, {{ user.first_name }}{% else %}{{ user.email }}{% endif %}</a></td>
                     <td>{{ user.email }}</td>
                     <td class="text-center">{% if user.is_active %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
                     <td class="text-right">
