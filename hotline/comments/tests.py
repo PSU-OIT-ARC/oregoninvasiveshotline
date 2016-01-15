@@ -178,3 +178,36 @@ class CommentEditViewTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Comment.objects.get(pk=comment.pk).body, "hello")
         self.assertEqual(Image.objects.filter(comment=comment, visibility=Image.PUBLIC).count(), 1)
+
+
+class CommentDeleteViewTest(TestCase):
+
+    def test_get(self):
+        report = make(Report)
+        comment = make(Comment, report=report)
+        user = comment.created_by
+        user.set_password("foo")
+        user.save()
+        self.client.login(email=user.email, password="foo")
+        response = self.client.get(reverse("comments-delete", args=[comment.pk]))
+        self.assertEqual(response.status_code, 200)
+
+    def test_post(self):
+        report = make(Report)
+        comment = make(Comment, report=report)
+        user = comment.created_by
+        user.set_password("foo")
+        user.save()
+        self.client.login(email=user.email, password="foo")
+        response = self.client.post(reverse("comments-delete", args=[comment.pk]))
+        self.assertEqual(response.status_code, 302)
+
+    def test_not_allowed_to_delete(self):
+        report = make(Report)
+        comment = make(Comment, report=report)
+        user = report.created_by
+        user.set_password("foo")
+        user.save()
+        self.client.login(email=user.email, password="foo")
+        response = self.client.post(reverse("comments-delete", args=[comment.pk]))
+        self.assertRedirects(response, reverse("reports-detail", args=[report.pk]))
