@@ -12,7 +12,7 @@ from hotline.species.models import Category, Severity, Species
 @permissions.is_active
 def list_(request):
     form = SpeciesSearchForm(request.GET, user=request.user)
-    species = form.results(request.GET.get("page"))
+    species = form.search()
 
     return render(request, 'species/list.html', {
         "all_species": species,

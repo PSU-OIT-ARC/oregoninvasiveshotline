@@ -2,6 +2,7 @@ import tempfile
 from base64 import b64decode
 from unittest.mock import patch
 
+from arcutils.test.user import UserMixin
 from django import forms
 from django.forms.models import modelformset_factory
 from django.test import TestCase
@@ -15,20 +16,21 @@ from .forms import BaseImageFormSet, ImageForm, get_image_formset
 from .models import Image
 
 
-class ImageFormTest(TestCase):
+class ImageFormTest(TestCase, UserMixin):
     def test_visibility_field_removed(self):
+        user = self.create_user(username="foo@example.com")
         form = ImageForm()
         self.assertNotIn("visibility", form.fields)
         with patch("hotline.images.forms.can_adjust_visibility", return_value=False):
-            form = ImageForm(user=make(User))
+            form = ImageForm(user=user)
             self.assertNotIn("visibility", form.fields)
 
         with patch("hotline.images.forms.can_adjust_visibility", return_value=True):
-            form = ImageForm(user=make(User))
+            form = ImageForm(user=user)
             self.assertIn("visibility", form.fields)
 
 
-class BaseImageFormSetTest(TestCase):
+class BaseImageFormSetTest(TestCase, UserMixin):
     def test_user_and_fk_gets_passed_to_save_new(self):
         ImageFormSet = modelformset_factory(Image, form=ImageForm, formset=BaseImageFormSet, can_delete=True)
         formset = ImageFormSet({
@@ -41,14 +43,14 @@ class BaseImageFormSetTest(TestCase):
         })
         self.assertTrue(formset.is_valid())
         report = make(Report)
-        user = make(User)
+        user = self.create_user(username="foo@example.com")
         formset.save(fk=report, user=user)
         self.assertEqual(Image.objects.filter(report=report, created_by=user).count(), 1)
 
 
-class GetImageFormSetTest(TestCase):
+class GetImageFormSetTest(TestCase, UserMixin):
     def test(self):
-        user = make(User, is_staff=True)
+        user = self.create_user(username="admin@example.com", is_staff=True)
         ImageFormSet = get_image_formset(user=user)
         formset = ImageFormSet({
             "form-TOTAL_FORMS": "1",

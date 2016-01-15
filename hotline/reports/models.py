@@ -245,6 +245,3 @@ class Invite(models.Model):
 
         invite.save()
         return True
-
-
-from .indexes import *  # noqa isort:skip

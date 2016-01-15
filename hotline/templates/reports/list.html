@@ -11,16 +11,16 @@ Report List
         <form class="reports-table-form">
             <div class="form-inline">
                 {{ form.non_field_errors }}
-                {{ form.querystring|bootstrap }}
+                {{ form.q|bootstrap }}
+                {{ form.county|bootstrap }}
                 {{ form.claimed_by|bootstrap }}
                 {{ form.is_public|bootstrap }}
                 {{ form.is_archived|bootstrap }}
                 {% if form.source %}{{ form.source|bootstrap }}{% endif %}
                 <div class="form-group">
                     <label class="control-label hidden-xs">&nbsp;</label>
-                    <div></div>
-                    <input type="submit" value="Search" name="submit" />
-                    <button onclick="window.location = '{% url 'reports-list' %}'; return false">Reset</button>
+                    <input type="submit" value="Search" name="submit" class="btn btn-primary">
+                    <a href="{% url 'reports-list' %}" class="btn btn-default">Reset</a>
                 </div>
                 <div class="form-group">
                     <label class="control-label hidden-xs">&nbsp;</label>

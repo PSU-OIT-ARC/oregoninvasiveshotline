@@ -7,13 +7,15 @@ import re
 import tempfile
 from unittest.mock import Mock, patch
 
+from arcutils.test.user import UserMixin
+from datetime import timedelta
 from django.conf import settings
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.core.files.base import File
 from django.core.urlresolvers import reverse
 from django.db.models.signals import post_save
 from django.test import TestCase
-from elasticmodels import ESTestCase
+from django.utils import timezone
 from model_mommy.mommy import make, prepare
 
 from hotline.comments.forms import CommentForm
@@ -22,8 +24,9 @@ from hotline.images.models import Image
 from hotline.species.models import Category, Severity, Species
 from hotline.users.models import User
 
-from .forms import InviteForm, ManagementForm, ReportForm
+from .forms import InviteForm, ManagementForm, ReportForm, ReportSearchForm
 from .models import Invite, Report, receiver__generate_icon
+from .search_indexes import ReportIndex
 from .views import _export
 
 
@@ -41,6 +44,16 @@ class SuppressPostSaveMixin:
 
 
 class ReportTest(SuppressPostSaveMixin, TestCase):
+
+    def setUp(self):
+        self.report = Report()
+        self.index = ReportIndex()
+        self.index.clear()
+
+    def tearDown(self):
+        if self.report.pk is not None:
+            self.report.delete()
+        self.index.clear()
 
     def test_species(self):
         reported_species = make(Species)
@@ -147,7 +160,233 @@ class TestReportIconGeneration(TestCase):
         os.unlink(report.icon_path)
 
 
+class ReportSearchFormTest(TestCase, UserMixin):
+
+    def setUp(self):
+        self.user = self.create_user(
+            username="foo@example.com",
+            password="foo",
+            is_active=True,
+            is_staff=True
+        )
+        self.report = Report()
+        self.index = ReportIndex()
+        self.index.clear()
+
+    def tearDown(self):
+        if self.report.pk is not None:
+            self.report.delete()
+        self.index.clear()
+
+    def test_filter_by_claimed_reports(self):
+        claimed_report = make(Report, claimed_by=self.user)
+        unclaimed_report = make(Report, claimed_by=None)
+
+        form = ReportSearchForm({
+            "q": "",
+            "claimed_by": "me",
+        }, user=self.user)
+        results = form.search()
+
+        # Since form.search() returns a SearchQuerySet, we create from that a
+        # list of reports so we can see if our desired reports are in the list.
+        reports = list()
+        for r in results:
+            reports.append(r.object)
+
+        self.assertIn(claimed_report, reports)
+        self.assertNotIn(unclaimed_report, reports)
+        self.assertEqual(len(reports), 1)
+
+    def test_filter_by_unclaimed_reports(self):
+        claimed_report = make(Report, claimed_by=self.user)
+        unclaimed_report = make(Report, claimed_by=None)
+
+        form = ReportSearchForm({
+            "q": "",
+            "claimed_by": "nobody",
+        }, user=self.user)
+        results = form.search()
+
+        # Since form.search() returns a SearchQuerySet, we create from that a
+        # list of reports so we can see if our desired reports are in the list.
+        reports = list()
+        for r in results:
+            reports.append(r.object)
+
+        self.assertIn(unclaimed_report, reports)
+        self.assertNotIn(claimed_report, reports)
+        self.assertEqual(len(reports), 1)
+
+    def test_filter_by_archived_reports(self):
+        archived_report = make(Report, is_archived=True)
+        unarchived_report = make(Report, is_archived=False)
+
+        form = ReportSearchForm({
+            "q": "",
+            "is_archived": "archived",
+        }, user=self.user)
+        results = form.search()
+
+        reports = list()
+        for r in results:
+            reports.append(r.object)
+
+        self.assertIn(archived_report, reports)
+        self.assertNotIn(unarchived_report, reports)
+        self.assertEqual(len(reports), 1)
+
+    def test_filter_by_unarchived_reports(self):
+        archived_report = make(Report, is_archived=True)
+        unarchived_report = make(Report, is_archived=False)
+
+        form = ReportSearchForm({
+            "q": "",
+            "is_archived": "notarchived",
+        }, user=self.user)
+        results = form.search()
+
+        reports = list()
+        for r in results:
+            reports.append(r.object)
+
+        self.assertIn(unarchived_report, reports)
+        self.assertNotIn(archived_report, reports)
+        self.assertEqual(len(reports), 1)
+
+    def test_filter_by_public_reports(self):
+        pub_report = make(Report, is_public=True)
+        priv_report = make(Report, is_public=False)
+
+        form = ReportSearchForm({
+            "q": "",
+            "is_public": "public",
+        }, user=self.user)
+        results = form.search()
+
+        reports = list()
+        for r in results:
+            reports.append(r.object)
+
+        self.assertIn(pub_report, reports)
+        self.assertNotIn(priv_report, reports)
+        self.assertEqual(len(reports), 1)
+
+    def test_filter_by_not_public_reports(self):
+        pub_report = make(Report, is_public=True)
+        priv_report = make(Report, is_public=False)
+
+        form = ReportSearchForm({
+            "q": "",
+            "is_public": "notpublic",
+        }, user=self.user)
+        results = form.search()
+
+        reports = list()
+        for r in results:
+            reports.append(r.object)
+
+        self.assertIn(priv_report, reports)
+        self.assertNotIn(pub_report, reports)
+        self.assertEqual(len(reports), 1)
+
+    def test_filter_by_reports_user_was_invited_to(self):
+        inviter = self.create_user(username="inviter@example.com")
+        invited_report = make(Report, created_by=inviter)
+        other_report = make(Report)
+        make(Invite, user=self.user, created_by=inviter, report=invited_report)
+
+        form = ReportSearchForm({
+            "q": "",
+            "source": "invited",
+        }, user=self.user)
+        results = form.search()
+
+        reports = list()
+        for r in results:
+            reports.append(r.object)
+
+        self.assertIn(invited_report, reports)
+        self.assertNotIn(other_report, reports)
+        self.assertEqual(len(reports), 1)
+
+    def test_filter_by_reports_user_reported(self):
+        my_report = make(Report, created_by=self.user)
+        other_report = make(Report)
+
+        form = ReportSearchForm({
+            "q": "",
+            "source": "reported",
+        }, user=self.user, report_ids=[my_report.pk])
+        results = form.search()
+
+        reports = list()
+        for r in results:
+            reports.append(r.object)
+
+        self.assertIn(my_report, reports)
+        self.assertNotIn(other_report, reports)
+        self.assertEqual(len(reports), 1)
+
+    def test_sort_by_field_sorts_reports(self):
+        now = timezone.now()
+        older_report = make(Report, created_on=now - timedelta(days=1))
+        old_report = make(Report, created_on=now)
+        current_report = make(Report, created_on=now + timedelta(days=1))
+
+        form = ReportSearchForm({
+            "sort_by": "-created_on",
+        }, user=self.user)
+        results = form.search()
+
+        reports = list()
+        for r in results:
+            reports.append(r.object)
+
+        self.assertTrue(reports, Report.objects.all().order_by("-created_on"))
+
+    def test_inactive_users_only_see_public_fields(self):
+        self.user.is_active = False
+        self.user.save()
+        form = ReportSearchForm(self, user=self.user)
+        form_fields = sorted(tuple(form.fields.keys()))
+        public_fields = sorted(form.public_fields)
+        self.assertEqual(form_fields, public_fields)
+
+    def test_inactive_users_only_see_public_reports_and_reports_they_created(self):
+        self.user.is_active = False
+        self.user.save()
+        pub_report = make(Report, is_public=True)
+        priv_report = make(Report, is_public=False)
+        my_report = make(Report, created_by=self.user)
+
+        # Since we aren't creating reports through a view, manually assign the
+        # created report to report_ids (already covered in view tests)
+        form = ReportSearchForm({"q": ""}, user=self.user, report_ids=[my_report.pk])
+        results = form.search()
+
+        # Since form.search() returns a SearchQuerySet, we create from that a
+        # list of reports so we can see if our desired reports are in the list.
+        reports = list()
+        for r in results:
+            reports.append(r.object)
+
+        # Ensure that only pub_report and my_report are in the list of reports
+        self.assertIn(pub_report, reports)
+        self.assertIn(my_report, reports)
+        self.assertNotIn(priv_report, reports)
+        self.assertEqual(len(reports), 2)
+
+
 class CreateViewTest(TestCase):
+
+    def setUp(self):
+        self.index = ReportIndex()
+        self.index.clear()
+
+    def tearDown(self):
+        self.index.clear()
+
     def test_get(self):
         c1 = make(Category)
         c2 = make(Category)
@@ -184,14 +423,37 @@ class CreateViewTest(TestCase):
         self.assertIn(Report.objects.order_by("-pk").first().pk, session['report_ids'])
 
 
-class DetailViewTest(TestCase):
+class DetailViewTest(TestCase, UserMixin):
+
+    def setUp(self):
+        self.user = self.create_user(
+            username="foo@example.com",
+            password="foo",
+            is_active=True
+        )
+        self.admin = self.create_user(
+            username="admin@example.com",
+            password="admin",
+            is_active=True,
+            is_staff=True
+        )
+        self.inactive_user = self.create_user(
+            username="inactive@example.com",
+            is_active=False
+        )
+        self.index = ReportIndex()
+        self.index.clear()
+
+    def tearDown(self):
+        self.index.clear()
+
     def test_anonymous_users_cant_view_non_public_reports_and_is_prompted_to_login(self):
         report = make(Report, is_public=False)
         response = self.client.get(reverse("reports-detail", args=[report.pk]))
         self.assertRedirects(response, reverse("login") + "?next=" + reverse("reports-detail", args=[report.pk]))
 
     def test_anonymous_users_with_proper_session_state_can_view_non_public_reports(self):
-        report = make(Report, is_public=False, created_by__is_active=False)
+        report = make(Report, is_public=False, created_by=self.inactive_user)
         session = self.client.session
         session['report_ids'] = [report.pk]
         session.save()
@@ -199,7 +461,7 @@ class DetailViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_anonymous_users_with_proper_session_state_should_be_prompted_to_login_if_the_report_was_created_by_an_active_user(self):
-        report = make(Report, is_public=False, created_by__is_active=True)
+        report = make(Report, is_public=False, created_by=self.user)
         session = self.client.session
         session['report_ids'] = [report.pk]
         session.save()
@@ -210,9 +472,7 @@ class DetailViewTest(TestCase):
         report = make(Report, is_public=False)
         # we set is_active to True just so self.client.login works, but we have
         # to set it back to False
-        invited_expert = prepare(User, is_active=True)
-        invited_expert.set_password("foo")
-        invited_expert.save()
+        invited_expert = self.user
         self.client.login(email=invited_expert.email, password="foo")
         invited_expert.is_active = False
         invited_expert.save()
@@ -242,7 +502,7 @@ class DetailViewTest(TestCase):
         self.assertEqual(None, response.context['comment_form'])
 
     def test_display_of_comments_for_each_permission_level(self):
-        report = make(Report, is_public=True, created_by__is_active=False)
+        report = make(Report, is_public=True, created_by=self.inactive_user)
         public = make(Comment, report=report, visibility=Comment.PUBLIC)
         protected = make(Comment, report=report, visibility=Comment.PROTECTED)
         private = make(Comment, report=report, visibility=Comment.PRIVATE)
@@ -263,10 +523,7 @@ class DetailViewTest(TestCase):
         self.assertNotIn(private.body, response.content.decode())
 
         # staffers should see everything
-        user = prepare(User, is_active=True)
-        user.set_password("foo")
-        user.save()
-        self.client.login(email=user.email, password="foo")
+        self.client.login(email=self.user.email, password="foo")
         session = self.client.session
         session['report_ids'] = []
         session.save()
@@ -277,13 +534,11 @@ class DetailViewTest(TestCase):
 
         # invited experts should see everything
         self.client.logout()
-        user = prepare(User, is_active=True, is_staff=False)
-        user.set_password("foo")
-        user.save()
-        self.client.login(email=user.email, password="foo")
-        user.is_active = False  # we just had to set this to True to make self.client.login work
-        user.save()
-        make(Invite, user=user, report=report)
+        invited_expert = self.user
+        self.client.login(email=invited_expert.email, password="foo")
+        invited_expert.is_active = False  # we just had to set this to True to make self.client.login work
+        invited_expert.save()
+        make(Invite, user=invited_expert, report=report)
         response = self.client.get(reverse("reports-detail", args=[report.pk]))
         self.assertIn(public.body, response.content.decode())
         self.assertIn(protected.body, response.content.decode())
@@ -291,10 +546,7 @@ class DetailViewTest(TestCase):
 
     def test_create_comment(self):
         report = make(Report)
-        user = prepare(User, is_active=True)
-        user.set_password("foo")
-        user.save()
-        self.client.login(email=user.email, password="foo")
+        self.client.login(email=self.user.email, password="foo")
         data = {
             "body": "foo",
             "visibility": Comment.PUBLIC,
@@ -320,11 +572,8 @@ class DetailViewTest(TestCase):
         for form in forms:
             self.assertEqual(None, response.context[form])
 
-    def test_forms_are_initialized_for_managers(self):
-        user = prepare(User, is_staff=True)
-        user.set_password("foo")
-        user.save()
-        self.client.login(email=user.email, password="foo")
+    def test_forms_are_initialized_for_admins(self):
+        self.client.login(email=self.admin.email, password="admin")
         report = make(Report)
         response = self.client.get(reverse("reports-detail", args=[report.pk]))
         forms = [
@@ -338,10 +587,7 @@ class DetailViewTest(TestCase):
 
     def test_forms_filled_out(self):
         report = make(Report)
-        user = prepare(User, is_staff=True)
-        user.set_password("foo")
-        user.save()
-        self.client.login(email=user.email, password="foo")
+        self.client.login(email=self.admin.email, password="admin")
 
         with patch("hotline.reports.views.ManagementForm", SUBMIT_FLAG="foo") as m:
             data = {
@@ -359,11 +605,19 @@ class DetailViewTest(TestCase):
             }
             response = self.client.post(reverse("reports-detail", args=[report.pk]), data)
             self.assertEqual(1, m.call_count)
-            m().save.assert_called_once_with(user=user, report=report, request=response.wsgi_request)
+            m().save.assert_called_once_with(user=self.admin, report=report, request=response.wsgi_request)
             self.assertRedirects(response, reverse("reports-detail", args=[report.pk]))
 
 
 class ReportFormTest(TestCase):
+
+    def setUp(self):
+        self.index = ReportIndex()
+        self.index.clear()
+
+    def tearDown(self):
+        self.index.clear()
+
     def test_reported_species_is_not_required(self):
         form = ReportForm({})
         self.assertFalse(form.is_valid())
@@ -427,6 +681,14 @@ class ReportFormTest(TestCase):
 
 
 class ManagementFormTest(SuppressPostSaveMixin, TestCase):
+
+    def setUp(self):
+        self.index = ReportIndex()
+        self.index.clear()
+
+    def tearDown(self):
+        self.index.clear()
+
     def test_species_and_category_initialized(self):
         species = make(Species)
         report = make(Report, reported_species=species, reported_category=species.category)
@@ -512,7 +774,15 @@ class ManagementFormTest(SuppressPostSaveMixin, TestCase):
         self.assertTrue(form.has_error(NON_FIELD_ERRORS, "species-confidential"))
 
 
-class InviteFormTest(TestCase):
+class InviteFormTest(TestCase, UserMixin):
+
+    def setUp(self):
+        self.index = ReportIndex()
+        self.index.clear()
+
+    def tearDown(self):
+        self.index.clear()
+
     def test_clean_emails(self):
         # test a few valid emails
         form = InviteForm({
@@ -554,7 +824,7 @@ class InviteFormTest(TestCase):
         })
         self.assertTrue(form.is_valid())
         with patch("hotline.reports.forms.Invite.create", side_effect=lambda *args, **kwargs: kwargs['email'] == "foo@pdx.edu") as m:
-            user = make(User)
+            user = self.create_user()
             report = make(Report)
             request = Mock()
             invite_report = form.save(user=user, report=report, request=request)
@@ -565,13 +835,26 @@ class InviteFormTest(TestCase):
             self.assertEqual(invite_report.already_invited, ["already_invited@pdx.edu"])
 
 
-class ClaimViewTest(TestCase):
+class ClaimViewTest(TestCase, UserMixin):
+
     def setUp(self):
-        user = prepare(User, is_active=True)
-        user.set_password("foo")
-        user.save()
-        self.client.login(email=user.email, password="foo")
-        self.user = user
+        self.user = self.create_user(
+            username="foo@example.com",
+            password="foo",
+            is_active=True,
+            is_staff=False
+        )
+        self.client.login(email=self.user.email, password="foo")
+        self.other_user = self.create_user(
+            username="other@example.com",
+            password="other",
+            is_active=True
+        )
+        self.index = ReportIndex()
+        self.index.clear()
+
+    def tearDown(self):
+        self.index.clear()
 
     def test_claim_unclaimed_report_immediately_claims_it(self):
         report = make(Report, claimed_by=None)
@@ -580,24 +863,35 @@ class ClaimViewTest(TestCase):
         self.assertRedirects(response, reverse("reports-detail", args=[report.pk]))
 
     def test_already_claimed_report_renders_confirmation_page(self):
-        report = make(Report, claimed_by=make(User))
+        report = make(Report, claimed_by=self.other_user)
         response = self.client.post(reverse("reports-claim", args=[report.pk]))
         self.assertIn("Are you sure you want to steal", response.content.decode())
 
     def test_stealing_already_claimed_report(self):
-        report = make(Report, claimed_by=make(User))
+        report = make(Report, claimed_by=self.other_user)
         response = self.client.post(reverse("reports-claim", args=[report.pk]), {"steal": 1})
         self.assertEqual(Report.objects.get(claimed_by=self.user), report)
         self.assertRedirects(response, reverse("reports-detail", args=[report.pk]))
 
 
-class ReportListView(ESTestCase, TestCase):
+class ReportListView(TestCase, UserMixin):
+
+    def setUp(self):
+        self.user = self.create_user(
+            username="foo@example.com",
+            password="foo",
+            is_active=True,
+            is_staff=False
+        )
+        self.index = ReportIndex()
+        self.index.clear()
+
+    def tearDown(self):
+        self.index.clear()
+
     def test_get(self):
         reports = make(Report, _quantity=3)
-        user = prepare(User, is_active=True)
-        user.set_password("foo")
-        user.save()
-        self.client.login(email=user.email, password="foo")
+        self.client.login(email=self.user.email, password="foo")
         response = self.client.get(reverse("reports-list"))
         self.assertEqual(response.status_code, 200)
         self.assertIn(str(reports[0]), response.content.decode())
@@ -606,29 +900,37 @@ class ReportListView(ESTestCase, TestCase):
         other_reports = make(Report, _quantity=3)
         make(Report, reported_category__name="Foobarius Foobar")
 
-        user = prepare(User, is_active=True)
-        user.set_password("foo")
-        user.save()
-        self.client.login(email=user.email, password="foo")
-        response = self.client.get(reverse("reports-list") + "?querystring=category:foobarius&sort_by=category")
+        self.client.login(email=self.user.email, password="foo")
+        response = self.client.get(reverse("reports-list") + "?q=foobarius&sort_by=category")
         self.assertEqual(response.status_code, 200)
         self.assertIn("Foobarius Foobar", response.content.decode())
         self.assertNotIn(str(other_reports[0]), response.content.decode())
 
 
-class UnclaimViewTest(TestCase):
+class UnclaimViewTest(TestCase, UserMixin):
+
+    def setUp(self):
+        self.user = self.create_user(
+            username="foo@example.com",
+            password="foo",
+            is_active=True,
+            is_staff=False
+        )
+        self.index = ReportIndex()
+        self.index.clear()
+
+    def tearDown(self):
+        self.index.clear()
+
     def test_only_person_who_claimed_report_can_unclaim_it(self):
         report = make(Report)
         # to set it back to False
-        user = prepare(User, is_active=True)
-        user.set_password("foo")
-        user.save()
-        self.client.login(email=user.email, password="foo")
+        self.client.login(email=self.user.email, password="foo")
 
         response = self.client.get(reverse("reports-unclaim", args=[report.pk]))
         self.assertEqual(response.status_code, 403)
 
-        report.claimed_by = user
+        report.claimed_by = self.user
         report.save()
         response = self.client.get(reverse("reports-unclaim", args=[report.pk]))
         self.assertEqual(response.status_code, 200)
@@ -639,6 +941,14 @@ class UnclaimViewTest(TestCase):
 
 
 class ExportTest(TestCase):
+
+    def setUp(self):
+        self.index = ReportIndex()
+        self.index.clear()
+
+    def tearDown(self):
+        self.index.clear()
+
     def test_csv(self):
         reports = make(Report, _quantity=3)
         response = _export(reports, format="csv")
@@ -654,35 +964,40 @@ class ExportTest(TestCase):
         self.assertIn(reports[0].description, response.content.decode())
 
 
-class DeleteViewTest(TestCase):
+class DeleteViewTest(TestCase, UserMixin):
+
+    def setUp(self):
+        self.user = self.create_user(
+            username="foo@example.com",
+            password="foo",
+            is_active=True,
+            is_staff=False
+        )
+        self.index = ReportIndex()
+        self.index.clear()
+
+    def tearDown(self):
+        self.index.clear()
+
     def test_permissions(self):
         report = make(Report)
         response = self.client.get(reverse("reports-delete", args=[report.pk]))
         self.assertRedirects(response, reverse("login") + "?next=" + reverse("reports-delete", args=[report.pk]))
 
-        user = prepare(User, is_active=True)
-        user.set_password("foo")
-        user.save()
-        self.client.login(email=user.email, password="foo")
-        user.is_active = False
-        user.save()
+        self.client.login(email=self.user.email, password="foo")
+        self.user.is_active = False
+        self.user.save()
         response = self.client.get(reverse("reports-delete", args=[report.pk]))
         self.assertEqual(response.status_code, 403)
 
     def test_get(self):
-        user = prepare(User, is_active=True)
-        user.set_password("foo")
-        user.save()
-        self.client.login(email=user.email, password="foo")
+        self.client.login(email=self.user.email, password="foo")
         report = make(Report)
         response = self.client.get(reverse("reports-delete", args=[report.pk]))
         self.assertEqual(response.status_code, 200)
 
     def test_post(self):
-        user = prepare(User, is_active=True)
-        user.set_password("foo")
-        user.save()
-        self.client.login(email=user.email, password="foo")
+        self.client.login(email=self.user.email, password="foo")
         report = make(Report)
         make(Report)
         response = self.client.post(reverse("reports-delete", args=[report.pk]))

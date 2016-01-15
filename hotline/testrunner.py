@@ -3,11 +3,10 @@ import shutil
 import tempfile
 
 from django.conf import settings
+from django.test.runner import DiscoverRunner
 
-from elasticmodels import SearchRunner
 
-
-class TestRunner(SearchRunner):
+class TestRunner(DiscoverRunner):
 
     def setup_test_environment(self, **kwargs):
         settings.MEDIA_ROOT = media_root = tempfile.mkdtemp()

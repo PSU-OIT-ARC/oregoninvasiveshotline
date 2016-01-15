@@ -83,6 +83,3 @@ class User(AbstractBaseUser):
         allowed to cloak as another user
         """
         return self.is_staff
-
-
-from .indexes import *  # noqa isort:skip

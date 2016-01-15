@@ -40,7 +40,7 @@ class UserNotificationQuery(models.Model):
             ):
                 if query.user.pk not in users:
                     form = ReportSearchForm(QueryDict(query.query), user=query.user)
-                    if form.is_valid() and form.search().filter("term", _id=report.pk).count() >= 1:
+                    if form.is_valid() and form.search().filter(id=report.pk).count() >= 1:
                         send_mail("New Online Hotline submission for review", render_to_string("notifications/email.txt", {
                             "user": query.user,
                             "name": query.name,

@@ -1,9 +1,9 @@
 from unittest.mock import Mock, patch
 
+from arcutils.test.user import UserMixin
 from django.core import mail
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from elasticmodels import ESTestCase
 from model_mommy.mommy import make, prepare
 
 from hotline.reports.models import Report
@@ -12,46 +12,61 @@ from hotline.users.models import User
 from .models import UserNotificationQuery
 
 
-class CreateViewTest(TestCase):
+class CreateViewTest(TestCase, UserMixin):
+
+    def setUp(self):
+        self.user = self.create_user(
+            username="foo@example.com",
+            password="foo",
+            is_active=True,
+            is_staff=False
+        )
+
     def test_only_active_users_can_view_page(self):
-        user = prepare(User, is_active=True)
-        user.set_password("foo")
-        user.save()
-        self.client.login(email=user.email, password="foo")
-        user.is_active = False
-        user.save()
+        self.client.login(email=self.user.email, password="foo")
+        self.user.is_active = False
+        self.user.save()
         response = self.client.get(reverse("notifications-create"))
         self.assertEqual(response.status_code, 403)
 
     def test_get(self):
-        user = prepare(User, is_active=True)
-        user.set_password("foo")
-        user.save()
-        self.client.login(email=user.email, password="foo")
+        self.client.login(email=self.user.email, password="foo")
         response = self.client.get(reverse("notifications-create"))
         self.assertEqual(response.status_code, 200)
 
     def test_post(self):
-        user = prepare(User, is_active=True)
-        user.set_password("foo")
-        user.save()
-        self.client.login(email=user.email, password="foo")
+        self.client.login(email=self.user.email, password="foo")
         pre_count = UserNotificationQuery.objects.count()
-        response = self.client.post(reverse("notifications-create") + "?querystring=foo", {
+        response = self.client.post(reverse("notifications-create") + "?q=foo", {
             "name": "bar"
         })
-        self.assertRedirects(response, reverse("reports-list") + "?querystring=foo")
+        self.assertRedirects(response, reverse("reports-list") + "?q=foo")
         self.assertEqual(UserNotificationQuery.objects.count(), pre_count+1)
 
 
-class UserNotificationQueryTest(ESTestCase, TestCase):
+class ListViewTest(TestCase, UserMixin):
+
+    def test_get(self):
+        user = self.create_user(
+            username="foo@example.com",
+            password="foo",
+            is_active=True
+        )
+        make(UserNotificationQuery, user=user, query="?q=foo")
+        self.client.login(email=user.email, password="foo")
+        response = self.client.get(reverse("notifications-list"))
+        self.assertEqual(response.status_code, 200)
+
+
+class UserNotificationQueryTest(TestCase, UserMixin):
+
     @patch("hotline.notifications.models.threading.Thread")
     def test_notify_sends_emails_to_subscribers(self, thread):
-        user = make(User)
+        user = self.create_user(username="foo@example.com")
         # we subscribe to the same thing twice, just to ensure that only one
         # email is sent to the user, when a report matches
-        make(UserNotificationQuery, query="querystring=category:foobarius", user=user)
-        make(UserNotificationQuery, query="querystring=category:foobarius", user=user)
+        make(UserNotificationQuery, query="q=foobarius", user=user)
+        make(UserNotificationQuery, query="q=foobarius", user=user)
 
         # this report doesn't have the words "foobarius" in it, so no email
         # should be sent
