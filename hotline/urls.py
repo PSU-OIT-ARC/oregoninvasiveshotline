@@ -78,10 +78,7 @@ urlpatterns = patterns(
     url(r'pages/', include('hotline.pages.urls')),
 
     # these routes allow you to masquerade as a user, and login as them from the command line
-    url(r'^cloak/', include('cloak.urls')),
-
-    # haystack URLconf
-    url(r'^search/', include('haystack.urls'))
+    url(r'^cloak/', include('cloak.urls'))
 )
 
 if settings.DEBUG:  # pragma: no cover
