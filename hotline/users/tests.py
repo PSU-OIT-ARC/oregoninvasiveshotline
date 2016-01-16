@@ -1,6 +1,7 @@
 import urllib.parse
 from unittest.mock import Mock, patch
 
+from arcutils.test.user import UserMixin
 from django.conf import settings
 from django.core import mail
 from django.core.urlresolvers import reverse
@@ -14,38 +15,51 @@ from .models import User
 from .search_indexes import UserIndex
 
 
-class DetailViewTest(TestCase):
-    """
-    Tests for the detail view
-    """
+class DetailViewTest(TestCase, UserMixin):
+
+    def setUp(self):
+        self.user = self.create_user(
+            username="foo@example.com",
+            password="foo",
+            is_active=True,
+            is_staff=False
+        )
+        self.admin = self.create_user(
+            username="admin@example.com",
+            password="admin",
+            is_active=True,
+            is_staff=True
+        )
+        self.inactive_user = self.create_user(
+            username="inactive@example.com",
+            is_active=False
+        )
+
     def test_permission(self):
-        user = make(User, is_active=False)
-        response = self.client.get(reverse("users-detail", args=[user.pk]))
+        response = self.client.get(reverse("users-detail", args=[self.inactive_user.pk]))
         self.assertEqual(response.status_code, 404)
 
-        user = make(User, is_active=True)
-        response = self.client.get(reverse("users-detail", args=[user.pk]))
+        response = self.client.get(reverse("users-detail", args=[self.user.pk]))
         self.assertEqual(response.status_code, 200)
 
     def test_get(self):
-        user = prepare(User)
-        user.set_password("foobar")
-        user.save()
-        self.client.login(email=user.email, password="foobar")
-        self.client.get(reverse("users-detail", args=[user.pk]))
+        self.client.login(email=self.user.email, password="foobar")
+        self.client.get(reverse("users-detail", args=[self.user.pk]))
 
 
-class EditViewTest(TestCase):
+class EditViewTest(TestCase, UserMixin):
 
     def test_get(self):
-        user = prepare(User)
-        user.set_password("test")
-        user.save()
-        self.client.login(email=user.email, password="test")
+        user = self.create_user(
+            username="foo@example.com",
+            password="foo",
+            is_active=True
+        )
+        self.client.login(email=user.email, password="foo")
         self.client.get(reverse("users-edit", args=[user.pk]))
 
 
-class AuthenticateViewTest(TestCase):
+class AuthenticateViewTest(TestCase, UserMixin):
 
     @classmethod
     def setUpClass(cls):
@@ -64,13 +78,13 @@ class AuthenticateViewTest(TestCase):
         self.assertRedirects(response, self.login_redirect_url)
 
         # test for an active user
-        user = make(User, is_active=True)
+        user = self.create_user(username="inactive@example.com", is_active=False)
         url = user.get_authentication_url(request=Mock(build_absolute_uri=lambda a: a))
         response = self.client.get(url)
         self.assertRedirects(response, self.login_redirect_url)
 
     def test_report_ids_session_variable_is_populated(self):
-        user = make(User, is_active=False)
+        user = self.create_user(username="foo@example.com", is_active=True)
         report = make(Report, created_by=user)
         url = user.get_authentication_url(request=Mock(build_absolute_uri=lambda a: a))
         response = self.client.get(url)
@@ -97,19 +111,32 @@ class UserHomeViewTest(TestCase):
         self.assertEqual(2, response.context['reported'])
 
 
-class UserFormTest(TestCase):
-    """
-    Tests for the UserForm
-    """
+class UserFormTest(TestCase, UserMixin):
+
+    def setUp(self):
+        self.user = self.create_user(
+            username="foo@example.com",
+            password="foo",
+            is_active=True,
+            is_staff=False
+        )
+        self.admin = self.create_user(
+            username="admin@example.com",
+            password="admin",
+            is_active=True,
+            is_staff=True
+        )
+
     def test_password_field_only_when_user_being_created(self):
         """
         The password field should only be on the form if the user is being
         created (not edited)
         """
-        form = UserForm(user=prepare(User))
+        other_user = self.create_user()
+        form = UserForm(user=other_user)
         self.assertIn("password", form.fields)
 
-        form = UserForm(instance=make(User), user=prepare(User))
+        form = UserForm(instance=self.user, user=other_user)
         self.assertNotIn("password", form.fields)
 
     def test_your_dangerous_fields_are_not_editable(self):
@@ -117,14 +144,12 @@ class UserFormTest(TestCase):
         Fields like is_active and is_staff should not be changable if the user
         is editing himself
         """
-        user = make(User, is_staff=True)
-        form = UserForm(user=user, instance=user)
+        form = UserForm(user=self.admin, instance=self.admin)
         self.assertNotIn("is_active", form.fields)
         self.assertNotIn("is_staff", form.fields)
 
         # if someone is editing someone else, they can update those fields
-        other_user = make(User)
-        form = UserForm(instance=other_user, user=user)
+        form = UserForm(instance=self.user, user=self.admin)
         self.assertIn("is_active", form.fields)
         self.assertIn("is_staff", form.fields)
 
@@ -132,8 +157,7 @@ class UserFormTest(TestCase):
         """
         Some fields should not be editable by non-staffers
         """
-        user = make(User, is_staff=False)
-        form = UserForm(user=user, instance=user)
+        form = UserForm(user=self.user, instance=self.user)
         self.assertNotIn("is_staff", form.fields)
 
     def test_save_sets_the_password_for_new_users(self):
@@ -144,24 +168,20 @@ class UserFormTest(TestCase):
         # superclass's save method and the form's cleaned_data
         with patch("hotline.users.forms.forms.ModelForm.save") as mock:
             user = prepare(User)
-            form = UserForm(instance=user, user=make(User))
+            form = UserForm(instance=user, user=self.user)
             form.cleaned_data = {"password": "foobar"}
 
             form.save()
 
-            self.assertTrue(user.check_password("foobar"))
+            self.assertTrue(self.user.check_password("foo"))
             # ensure the superclass was called (which actually saves the model)
             self.assertTrue(mock.called)
 
-class UserSearchFormTest(TestCase):
+class UserSearchFormTest(TestCase, UserMixin):
     """
     Tests for the User search form
     """
     def setUp(self):
-        user = prepare(User)
-        user.set_password("foo")
-        user.save()
-        self.user = user
         self.index = UserIndex()
         self.index.clear()
 
@@ -169,10 +189,22 @@ class UserSearchFormTest(TestCase):
         self.index.clear()
 
     def test_search_list_managers_only(self):
-        self.user.is_active = True
-        self.user.save()
-        admin = make(User, is_staff=True)
-        other_user = make(User, is_active=False)
+        user = self.create_user(
+            username="foo@example.com",
+            password="foo",
+            is_active=True,
+            is_staff=False
+        )
+        admin = self.create_user(
+            username="admin@example.com",
+            password="admin",
+            is_active=True,
+            is_staff=True
+        )
+        other_user = self.create_user(
+            username="other@example.com",
+            is_active=False
+        )
 
         form = UserSearchForm({"q": "", "is_manager": True})
         results = form.search()
@@ -184,75 +216,90 @@ class UserSearchFormTest(TestCase):
 
         self.assertNotIn(other_user, users)
         self.assertIn(admin, users)
-        self.assertIn(self.user, users)
+        self.assertIn(user, users)
         self.assertEqual(len(users), 2)
 
 
-class UserTest(TestCase):
-    """
-    Tests for the User model
-    """
+class UserTest(TestCase, UserMixin):
+
+    def setUp(self):
+        self.user = self.create_user(
+            username="foo@example.com",
+            password="foo",
+            first_name="foo",
+            last_name="bar",
+            is_active=True,
+            is_staff=False
+        )
+        self.admin = self.create_user(
+            username="admin@example.com",
+            password="admin",
+            is_active=True,
+            is_staff=True
+        )
+
     def test_str(self):
-        user = prepare(User, first_name="foo", last_name="bar")
-        self.assertEqual(str(user), "bar, foo")
+        self.assertEqual(str(self.user), "bar, foo")
         # the str method should fall back on the email address if a part of
         # their name is blank
-        user = prepare(User, first_name="", last_name="bar")
-        self.assertEqual(str(user), user.email)
+        self.user.first_name = ""
+        self.user.save()
+        self.assertEqual(str(self.user), self.user.email)
 
     def test_get_full_name(self):
-        user = prepare(User, first_name="foo", last_name="bar")
-        self.assertEqual(user.get_full_name(), "bar, foo")
+        self.assertEqual(self.user.get_full_name(), "bar, foo")
 
     def test_get_short_name(self):
-        user = prepare(User, first_name="foo", last_name="bar")
-        self.assertEqual(user.get_short_name(), "foo bar")
+        self.assertEqual(self.user.get_short_name(), "foo bar")
 
     def test_has_perm(self):
         """Staff members have all Django admin perms"""
-        user = prepare(User, is_staff=False)
-        self.assertFalse(user.has_perm("foo"), user)
-
-        user = prepare(User, is_staff=True)
-        self.assertTrue(user.has_perm("foo"), user)
+        self.assertFalse(self.user.has_perm("foo"), self.user)
+        self.assertTrue(self.admin.has_perm("foo"), self.admin)
 
     def test_has_module_perms(self):
         """Staff members have all Django admin perms"""
-        user = prepare(User, is_staff=False)
-        self.assertFalse(user.has_module_perms("foo"), user)
-
-        user = prepare(User, is_staff=True)
-        self.assertTrue(user.has_module_perms("foo"), user)
+        self.assertFalse(self.user.has_module_perms("foo"), self.user)
+        self.assertTrue(self.admin.has_module_perms("foo"), self.admin)
 
     def test_can_cloak_as(self):
         """Only staffers can cloak"""
-        user = prepare(User, is_staff=False)
-        self.assertFalse(user.has_module_perms("foo"), user)
-
-        user = prepare(User, is_staff=True)
-        self.assertTrue(user.has_module_perms("foo"), user)
+        self.assertFalse(self.user.has_module_perms("foo"), self.user)
+        self.assertTrue(self.admin.has_module_perms("foo"), self.admin)
 
     def test_get_proper_name(self):
-        user = prepare(User, prefix="Mr.", first_name="Foo", last_name="Bar", suffix="PHD")
+        user = self.create_user(
+            username="asdf",
+            prefix="Mr.",
+            first_name="Foo",
+            last_name="Bar",
+            suffix="PHD"
+        )
         self.assertEqual(user.get_proper_name(), "Mr. Foo Bar PHD")
-        user = prepare(User, first_name="Foo", last_name="Bar", prefix="", suffix="")
-        self.assertEqual(user.get_proper_name(), "Foo Bar")
+
+        other_user = self.create_user(
+            username="fdsa",
+            first_name="Foo",
+            last_name="Bar",
+            prefix="",
+            suffix=""
+        )
+        self.assertEqual(other_user.get_proper_name(), "Foo Bar")
 
     def test_get_authentication_url_and_authenticate(self):
-        u = make(User)
 
         def build_absolute_uri(arg):
             return "http://example.com" + arg
 
-        url = u.get_authentication_url(request=Mock(build_absolute_uri=build_absolute_uri), next="lame")
+        url = self.user.get_authentication_url(request=Mock(build_absolute_uri=build_absolute_uri), next="lame")
         parts = urllib.parse.urlparse(url)
         self.assertEqual(parts.path, reverse("users-authenticate"))
         query = urllib.parse.parse_qs(parts.query)
         self.assertEqual(query['next'][0], "lame")
-        self.assertEqual(u, User.authenticate(query['sig'][0]))
+        self.assertEqual(self.user, User.authenticate(query['sig'][0]))
 
 
-class LoginFormTest(TestCase):
+class LoginFormTest(TestCase, UserMixin):
     def test_clean_email_raises_validation_error_for_non_existing_user(self):
         form = LoginForm({
             "email": "foo@pdx.edu"
@@ -261,7 +308,7 @@ class LoginFormTest(TestCase):
         self.assertTrue(form.has_error("email"))
 
     def test_save_sends_email_to_user_with_login_link(self):
-        user = make(User)
+        user = self.create_user(username="foo@example.com")
         form = LoginForm({
             "email": user.email
         })
@@ -272,13 +319,13 @@ class LoginFormTest(TestCase):
             self.assertIn("foobarius", mail.outbox[0].body)
 
 
-class LoginViewTest(TestCase):
+class LoginViewTest(TestCase, UserMixin):
     def test_get(self):
         response = self.client.get(reverse("login"))
         self.assertEqual(response.status_code, 200)
 
     def test_logging_in_via_email_sends_an_email(self):
-        user = make(User)
+        user = self.create_user(username="foo@example.com")
         response = self.client.post(reverse("login"), {
             "email": user.email,
             "form": "OTHER_LOGIN",
