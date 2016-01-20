@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login as django_login
 from django.contrib.auth.views import login as django_login_view
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.signing import BadSignature
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import DetailView
@@ -124,6 +125,16 @@ def list_(request):
 
     form = UserSearchForm(request.GET)
     users = form.search()
+
+    paginator = Paginator(users, settings.ITEMS_PER_PAGE)
+
+    active_page = request.GET.get('page')
+    try:
+        users = paginator.page(active_page)
+    except PageNotAnInteger:
+        users = paginator.page(1)
+    except EmptyPage:
+        users = paginator.page(paginator.num_pages)
 
     return render(request, "users/list.html", {
         "users": users,

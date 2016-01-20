@@ -1,5 +1,7 @@
+from django.conf import settings
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
@@ -14,6 +16,16 @@ from oregoninvasiveshotline.species.models import Category, Severity, Species
 def list_(request):
     form = SpeciesSearchForm(request.GET, user=request.user)
     species = form.search()
+
+    paginator = Paginator(species, settings.ITEMS_PER_PAGE)
+
+    active_page = request.GET.get('page')
+    try:
+        species = paginator.page(active_page)
+    except PageNotAnInteger:
+        species = paginator.page(1)
+    except EmptyPage:
+        species = paginator.page(paginator.num_pages)
 
     return render(request, 'species/list.html', {
         "all_species": species,
