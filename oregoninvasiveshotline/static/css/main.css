@@ -99,6 +99,9 @@ kbd {
     margin-left:5px;
 }
 
+#header-links .dropdown-menu {
+    margin-right: 60px;
+}
 
 #header img {
     width:100%;
@@ -424,22 +427,6 @@ blockquote {
 .getcontent-edit:hover {
     text-decoration:underline;
     color:#fff;
-}
-
-.account-links {
-    float:right;
-}
-
-.account-links a {
-    padding: 10px 5px;
-    display:inline-block;
-}
-
-@media (max-width: 992px){
-    .account-links {
-        float:none;
-        text-align:center;
-    }
 }
 
 .reports-table {
