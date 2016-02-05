@@ -1,11 +1,3 @@
-<div class="account-links">
-    {% if user.is_staff %}
-        <a href="{% url 'admin-panel' %}">Admin</a>
-    {% elif user.is_active %}
-        <a href="{% url 'species-list' %}">Species</a>
-    {% endif %}
-    <a href="{% url 'logout' %}">Logout</a>
-</div>
 <ul class="nav nav-tabs" id="tabs">
   <li {% if tab == None %}class="active"{% endif %}><a class="#home" href="{% url 'users-home' %}">Home</a></li>
   <li {% if tab == "search" %}class="active"{% endif %}><a href="{% url 'reports-list' %}">Search</a></li>
