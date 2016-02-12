@@ -31,7 +31,7 @@ class User(AbstractBaseUser):
 
     class Meta:
         db_table = "user"
-        ordering = ['last_name', 'first_name']
+        ordering = ['first_name', 'last_name']
 
     def get_avatar_url(self):
         if self.photo:
