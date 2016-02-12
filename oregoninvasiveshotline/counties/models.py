@@ -10,7 +10,8 @@ class County(models.Model):
     objects = models.GeoManager()
 
     class Meta:
-        db_table = "county"
+        db_table = 'county'
+        ordering = ['state', 'name']
 
     def __str__(self):
         return self.name
