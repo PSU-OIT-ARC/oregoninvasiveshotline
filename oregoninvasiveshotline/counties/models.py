@@ -13,5 +13,13 @@ class County(models.Model):
         db_table = 'county'
         ordering = ['state', 'name']
 
+    @property
+    def label(self):
+        if self.state == 'Oregon':
+            return self.name
+        elif self.state == 'Washington':
+            return '{0.name}, WA'.format(self)
+        return '{0.name}, {0.state}'.format(self)
+
     def __str__(self):
         return self.name

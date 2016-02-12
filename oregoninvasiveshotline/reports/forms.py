@@ -28,13 +28,7 @@ def get_category_choices():
 def get_county_choices():
     county_choices = []
     for county in County.objects.all().order_by('state', 'name'):
-        if county.state == 'Oregon':
-            label = county.name
-        elif county.state == 'Washington':
-            label = '{0.name}, WA'.format(county)
-        else:
-            label = '{0.name}, {0.state}'.format(county)
-        county_choices.append((county.pk, label))
+        county_choices.append((county.pk, county.label))
     return county_choices
 
 
