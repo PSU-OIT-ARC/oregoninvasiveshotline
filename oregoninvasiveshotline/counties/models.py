@@ -22,4 +22,4 @@ class County(models.Model):
         return '{0.name}, {0.state}'.format(self)
 
     def __str__(self):
-        return self.name
+        return self.label
