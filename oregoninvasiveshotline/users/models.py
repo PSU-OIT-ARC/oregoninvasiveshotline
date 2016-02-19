@@ -21,8 +21,8 @@ class User(AbstractBaseUser):
 
     user_id = models.AutoField(primary_key=True)
     email = models.EmailField(max_length=255, unique=True)
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255, null=True)
+    last_name = models.CharField(max_length=255, null=True)
     phone = models.CharField(max_length=255, default="", blank=True)
     prefix = models.CharField(max_length=255)
     suffix = models.CharField(max_length=255)

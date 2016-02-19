@@ -7,8 +7,8 @@ class UserIndex(indexes.SearchIndex, indexes.Indexable):
 
     text = indexes.CharField(document=True, use_template=True)
     email = indexes.CharField(model_attr='email')
-    first_name = indexes.CharField(model_attr='first_name')
-    last_name = indexes.CharField(model_attr='last_name')
+    first_name = indexes.CharField(model_attr='first_name', null=True)
+    last_name = indexes.CharField(model_attr='last_name', null=True)
 
     # Data fields (stored by not indexed)
     full_name = indexes.CharField(model_attr='full_name', indexed=False)
