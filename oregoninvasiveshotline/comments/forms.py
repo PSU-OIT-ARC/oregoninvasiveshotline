@@ -75,9 +75,15 @@ class CommentForm(forms.ModelForm):
         emails = []
         subject = '{0.PROJECT[title]} - New Comment on Report'.format(settings)
 
+        # For all the notified users, if the user is active, they should be
+        # sent an email with a URL of the report + comment. Otherwise, the
+        # user is a member of the public, and should get an auto-login link
         for recipient in recipients:
-            user = User(email=recipient)
-            url = user.get_authentication_url(request, next=comment.get_absolute_url())
+            user = User.objects.get(email=recipient)
+            if user.is_active:
+                url = request.build_absolute_uri(self.instance.get_absolute_url())
+            else:
+                url = user.get_authentication_url(request, next=self.instance.get_absolute_url())
             body = render_to_string('reports/_new_comment.txt', {
                 'user': comment.created_by,
                 'body': comment.body,
