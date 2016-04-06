@@ -87,6 +87,22 @@ Report #{{ report.pk }} - {{ report }}
             <p id="add-comment"><a href="#">Add a Comment</a></p>
             {% include "comments/_edit.html" with form=comment_form formset=image_formset %}
         {% endif %}
+
+        {% if report.actual_species.remedy %}
+            <hr />
+            <div class="clearfix sidebar-block">
+                <h4>Remedy</h4>
+                {{ report.actual_species.remedy|markdown }}
+            </div>
+        {% endif %}
+
+        {% if report.actual_species.resources %}
+            <hr />
+            <div class="clearfix sidebar-block">
+                <h4>Resources</h4>
+                {{ report.actual_species.resources|markdown }}
+            </div>
+        {% endif %}
     </div>
 
     <div class="col-md-4 sidebar">
@@ -206,20 +222,6 @@ Report #{{ report.pk }} - {{ report }}
                     Delete this Report
                     <small>(will ask for confirmation first)</small>
                 </a>
-            </div>
-        {% endif %}
-
-        {% if report.actual_species.remedy %}
-            <div class="clearfix sidebar-block">
-                <h4>Remedy</h4>
-                {{ report.actual_species.remedy|markdown }}
-            </div>
-        {% endif %}
-
-        {% if report.actual_species.resources %}
-            <div class="clearfix sidebar-block">
-                <h4>Resources</h4>
-                {{ report.actual_species.resources|markdown }}
             </div>
         {% endif %}
     </div>
