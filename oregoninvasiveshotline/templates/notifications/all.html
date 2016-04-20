@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h3>User Subscriptions</h3>
+
+    {% if subscriptions %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Subscription Name</th>
+                    <th>Search Query</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for subscription in subscriptions %}
+                <tr>
+                    <td>
+                        <a href="{% url 'users-detail' subscription.user.pk %}">{{ subscription.user }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'reports-list' %}?{{ subscription.query}}">{{ subscription.name }}</a>
+                    </td>
+                    <td>{{ subscription.query|truncatechars:50 }}</td>
+                    <td class="text-right">
+                        <a href="{% url 'notifications-edit' subscription.pk %}"
+                            title="Edit this subscription"><span class="glyphicon glyphicon-edit"></span></a>
+                        &nbsp;
+                        <a href="{% url 'notifications-delete' subscription.pk %}" title="Delete this subscription"
+                            class="text-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% include '_pagination.html' with items=subscriptions %}
+    {% else %}
+        <div class="alert alert-warning">No one has subscribed to any searches!</div>
+    {% endif %}
+{% endblock %}

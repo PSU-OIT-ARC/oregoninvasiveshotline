@@ -32,6 +32,27 @@ class UserNotificationQuery(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
 
     @classmethod
+    def notify_new_owner(cls, subscription, request):
+        """Notify the new owner of a subscription when ownership has changed"""
+
+        subject = get_setting('NOTIFICATIONS.notify_new_owner__subject')
+        from_email = get_setting('NOTIFICATIONS.from_email')
+        new_owner = subscription.user
+        next_url = reverse('reports-list') + '?' + subscription.query
+
+        if new_owner.is_active:
+            url = request.build_absolute_uri(next_url)
+        else:
+            url = new_owner.get_authentication_url(request, next=next_url)
+
+        body = render_to_string('notifications/notify_new_owner.txt', {
+            'assigner': request.user,
+            'name': subscription.name,
+            'url': url,
+        })
+        send_mail(subject, body, from_email, [new_owner.email])
+
+    @classmethod
     def notify(cls, report, request):
         """Notify users subscribed to a query that matches ``report``.
 
