@@ -7,14 +7,18 @@
         {% endif %}
         <div class='pull-right btn-group'>
             {% if items.has_previous %}
+            <a class='btn btn-default btn-xs' href="{% add_get page=1 %}">beginning</a>
                 <a class='btn btn-default btn-xs prev' href="{% add_get page=items.previous_page_number %}">previous</a>
             {% else %}
+                <a class='btn btn-default btn-xs disabled' href="#">beginning</a>
                 <a class='btn btn-default btn-xs disabled prev' href="#">previous</a>
             {% endif %}
             {% if items.has_next %}
                 <a class='btn btn-default btn-xs next' href="{% add_get page=items.next_page_number %}">next</a>
+                <a class='btn btn-default btn-xs next' href="{% add_get page=items.paginator.num_pages %}">end</a>
             {% else %}
                 <a class='btn btn-default btn-xs disabled next' href="#">next</a>
+                <a class='btn btn-default btn-xs disabled next' href="#">end</a>
             {% endif %}
         </div>
     </span>
