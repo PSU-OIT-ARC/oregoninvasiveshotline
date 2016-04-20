@@ -25,8 +25,8 @@ urlpatterns = [
     url(r'^adminpanel/?$', species.admin_panel, name='admin-panel'),
 
     url(r'^categories/create/?$', permissions.is_staff(species.CategoryCreateView.as_view()), name='categories-create'),
-    url(r'^categories/delete/(?P<pk>[0-9]+)/?$', permissions.is_staff(species.CategoryDeleteView.as_view()), name='categories-delete'),
-    url(r'^categories/detail/(?P<pk>[0-9]+)/?$', permissions.is_staff(species.CategoryDetailView.as_view()), name='categories-detail'),
+    url(r'^categories/delete/(?P<pk>\d+)/?$', permissions.is_staff(species.CategoryDeleteView.as_view()), name='categories-delete'),
+    url(r'^categories/detail/(?P<pk>\d+)/?$', permissions.is_staff(species.CategoryDetailView.as_view()), name='categories-detail'),
     url(r'^categories/list/?$', permissions.is_staff(species.CategoryList.as_view()), name='categories-list'),
 
     url(r'^comments/delete/(?P<comment_id>\d+)/?$', comments.delete, name='comments-delete'),
@@ -44,20 +44,20 @@ urlpatterns = [
     url(r'^reports/unclaim/(?P<report_id>\d+)/?$', reports.unclaim, name='reports-unclaim'),
 
     url(r'^severities/create/?$', permissions.is_staff(species.SeverityCreateView.as_view()), name='severities-create'),
-    url(r'^severities/delete/(?P<pk>[0-9]+)/?$', permissions.is_staff(species.SeverityDeleteView.as_view()), name='severities-delete'),
-    url(r'^severities/detail/(?P<pk>[0-9]+)/?$', permissions.is_staff(species.SeverityDetailView.as_view()), name='severities-detail'),
+    url(r'^severities/delete/(?P<pk>\d+)/?$', permissions.is_staff(species.SeverityDeleteView.as_view()), name='severities-delete'),
+    url(r'^severities/detail/(?P<pk>\d+)/?$', permissions.is_staff(species.SeverityDetailView.as_view()), name='severities-detail'),
     url(r'^severities/list/?$', permissions.is_staff(species.SeverityList.as_view()), name='severities-list'),
 
     url(r'^species/create/?$', permissions.is_active(species.SpeciesCreateView.as_view()), name='species-create'),
-    url(r'^species/delete/(?P<pk>[0-9]+)/?$', permissions.is_active(species.SpeciesDeleteView.as_view()), name='species-delete'),
-    url(r'^species/detail/(?P<pk>[0-9]+)/?$', permissions.is_active(species.SpeciesDetailView.as_view()), name='species-detail'),
+    url(r'^species/delete/(?P<pk>\d+)/?$', permissions.is_active(species.SpeciesDeleteView.as_view()), name='species-delete'),
+    url(r'^species/detail/(?P<pk>\d+)/?$', permissions.is_active(species.SpeciesDetailView.as_view()), name='species-detail'),
     url(r'^species/list/?$', species.list_, name='species-list'),
 
     url(r'^users/authenticate/?$', users.authenticate, name='users-authenticate'),
     url(r'^users/avatar/(?P<user_id>\d+)/?$', users.avatar, name='users-avatar'),
     url(r'^users/create/?$', users.create, name='users-create'),
     url(r'^users/delete/(?P<user_id>\d+)/?$', users.delete, name='users-delete'),
-    url(r'^users/detail/(?P<pk>[0-9]+)/?$', users.Detail.as_view(), name='users-detail'),
+    url(r'^users/detail/(?P<pk>\d+)/?$', users.Detail.as_view(), name='users-detail'),
     url(r'^users/edit/(?P<user_id>\d+)/?$', users.edit, name='users-edit'),
     url(r'^users/home/?$', users.home, name='users-home'),
     url(r'^users/list/?$', users.list_, name='users-list'),
