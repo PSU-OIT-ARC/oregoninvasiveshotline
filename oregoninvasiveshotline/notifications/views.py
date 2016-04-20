@@ -1,12 +1,16 @@
+from django.conf import settings
 from django.contrib import messages
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
+
+from arcutils.db import will_be_deleted_with
 
 from oregoninvasiveshotline.perms import permissions
 from oregoninvasiveshotline.utils import get_tab_counts
 
-from .forms import UserNotificationQueryForm, UserSubscriptionDeleteForm
+from .forms import UserNotificationQueryForm, UserSubscriptionAdminForm, UserSubscriptionDeleteForm
 from .models import UserNotificationQuery
 
 
@@ -29,6 +33,30 @@ def create(request):
     })
 
 
+@permissions.is_staff
+def edit(request, subscription_id):
+    subscription = UserNotificationQuery.objects.get(pk=subscription_id)
+    if request.method == 'POST':
+        form = UserSubscriptionAdminForm(request.POST, instance=subscription)
+        old_owner = subscription.user
+        if form.is_valid():
+            instance = form.save()
+            new_owner = instance.user
+            if new_owner != old_owner:
+                # If the owner has changed, send the new owner an email updating
+                # them of their newly assigned subscription
+                instance.notify_new_owner(subscription, request)
+                messages.success(request, 'Subscription updated. {0.full_name} has been notified'.format(new_owner))
+            else:
+                messages.success(request, 'Subscription updated')
+            return redirect('notifications-all')
+    else:
+        form = UserSubscriptionAdminForm(instance=subscription)
+    return render(request, 'notifications/edit.html', {
+        'form': form,
+    })
+
+
 @permissions.is_active
 def list_(request):
     user = request.user
@@ -45,3 +73,38 @@ def list_(request):
     context = {'form': form}
     context.update(tab_context)
     return render(request, 'notifications/list.html', context)
+
+
+@permissions.is_staff
+def all(request):
+    subscriptions = UserNotificationQuery.objects.all()
+
+    active_page = request.GET.get('page')
+    paginator = Paginator(subscriptions, settings.ITEMS_PER_PAGE)
+
+    try:
+        subscriptions = paginator.page(active_page)
+    except PageNotAnInteger:
+        subscriptions = paginator.page(1)
+    except EmptyPage:
+        subscriptions = paginator.page(paginator.num_pages)
+
+    return render(request, 'notifications/all.html', {
+        'subscriptions': subscriptions,
+    })
+
+
+@permissions.is_staff()
+def delete(request, subscription_id):
+    subscription = get_object_or_404(UserNotificationQuery, pk=subscription_id)
+    if request.method == 'POST':
+        subscription.delete()
+        messages.success(request, 'Subscription deleted!')
+        return redirect('notifications-all')
+
+    related_objects = list(will_be_deleted_with(subscription))
+
+    return render(request, 'delete.html', {
+        'object': subscription,
+        'will_be_deleted_with': related_objects,
+    })

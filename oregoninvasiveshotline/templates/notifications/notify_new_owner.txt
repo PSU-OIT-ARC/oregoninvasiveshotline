@@ -1,0 +1,8 @@
+You are recieving this alert because a subscription has been assigned to you by
+{{ assigner.full_name }} (email: {{ assigner.email }})
+
+Subscription Name: {{ name }}
+
+To login and view your new subscription, click this link: {{ url }}
+
+You can manage your subscriptions by logging in, and clicking "My Account".

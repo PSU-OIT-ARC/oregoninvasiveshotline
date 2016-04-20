@@ -32,7 +32,10 @@ urlpatterns = [
     url(r'^comments/delete/(?P<comment_id>\d+)/?$', comments.delete, name='comments-delete'),
     url(r'^comments/edit/(?P<comment_id>\d+)/?$', comments.edit, name='comments-edit'),
 
+    url(r'^notifications/all/?$', notifications.all, name='notifications-all'),
     url(r'^notifications/create/?$', notifications.create, name='notifications-create'),
+    url(r'^notifications/delete/(?P<subscription_id>\d+)/?$', notifications.delete, name='notifications-delete'),
+    url(r'^notifications/edit/(?P<subscription_id>\d+)/?$', notifications.edit, name='notifications-edit'),
     url(r'^notifications/list/?$', notifications.list_, name='notifications-list'),
 
     url(r'^reports/claim/(?P<report_id>\d+)/?$', reports.claim, name='reports-claim'),
