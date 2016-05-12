@@ -9,6 +9,7 @@ from model_mommy.mommy import make
 from arcutils.test.user import UserMixin
 
 from oregoninvasiveshotline.reports.models import Report
+from oregoninvasiveshotline.species.models import Category
 
 from .models import UserNotificationQuery
 
@@ -86,3 +87,19 @@ class UserNotificationQueryTest(TestCase, UserMixin):
         UserNotificationQuery.notify(report, request=request)
         thread.call_args[1]['target']()
         self.assertEqual(len(mail.outbox), 1)
+
+
+class UserNotificationQueryPrettyQuery(TestCase, UserMixin):
+
+    def test_pretty_query(self):
+        user = self.create_user(username='foo@example.com')
+        Category.objects.create(name='Ocean Animal')
+        Category.objects.create(name='Pencil')
+        subscription = UserNotificationQuery.objects.create(
+            query='q=foobarius&categories=1&categories=2', user=user,
+        )
+        expected_output = {
+            'Categories': 'Ocean Animal, Pencil',
+            'Keyword': 'foobarius'
+        }
+        self.assertEqual(subscription.pretty_query, expected_output)
