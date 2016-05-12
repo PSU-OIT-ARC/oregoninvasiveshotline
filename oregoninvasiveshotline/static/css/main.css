@@ -506,3 +506,7 @@ blockquote {
 .map-legend thead>tr>th {
     text-align:center;
 }
+
+.subscriptions td:last-child {
+    width: 10%;
+}

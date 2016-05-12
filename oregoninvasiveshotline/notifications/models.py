@@ -8,6 +8,9 @@ from django.template.loader import render_to_string
 
 from arcutils.settings import get_setting
 
+from oregoninvasiveshotline.species.models import Category
+from oregoninvasiveshotline.counties.models import County
+
 
 class UserNotificationQuery(models.Model):
 
@@ -93,6 +96,23 @@ class UserNotificationQuery(models.Model):
                         notified_users.add(user.pk)
 
         threading.Thread(target=runnable).start()
+
+    @property
+    def pretty_query(self):
+        """
+        Returns a dictionary of human-readable names for select query parameters
+        """
+        query = QueryDict(self.query)
+        query_items = {}
+        if query.get('categories'):
+            categories = [Category.objects.get(pk=c).name for c in query.getlist('categories')]
+            query_items['Categories'] = ", ".join(categories)
+        if query.get('counties'):
+            counties = [County.objects.get(pk=c).name for c in query.getlist('counties')]
+            query_items['Counties'] = ", ".join(counties)
+        if query.get('q'):
+            query_items['Keyword'] = query['q']
+        return query_items
 
     def __str__(self):
         return self.name
