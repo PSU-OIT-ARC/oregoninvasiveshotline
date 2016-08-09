@@ -13,7 +13,7 @@ class Comment(Visibility, models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     edited_on = models.DateField(auto_now=True)
 
-    visibility = models.IntegerField(choices=Visibility.choices, default=Visibility.PRIVATE, help_text="Controls who can see this comment")
+    visibility = models.IntegerField(choices=Visibility.choices, default=Visibility.PROTECTED, help_text="Controls who can see this comment")
 
     created_by = models.ForeignKey("users.User")
     report = models.ForeignKey("reports.Report")
