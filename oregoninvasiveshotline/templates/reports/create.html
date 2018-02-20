@@ -36,7 +36,15 @@ Report an Invader
 
     <fieldset>
         <legend>Location</legend>
-        <p>Drag the pin where you found the specimen. Zoom in to provide the most accurate location.</p>
+        <p>Drag the pin where you found the specimen (zoom in to provide the most accurate location) or enter an address or nearby intersection below:</p>
+        <p>
+          <div class="form-group address">
+            <label>Address</label>
+            <input class="form-control" type="text" id="address">
+              <span style="display:none" class="loader"></span>
+            </input>
+          </div>
+        </p>
         {% if form.point.errors %}
             <div class="alert alert-danger">
                 Please drag the pin to the location where the specimen was found.
@@ -113,7 +121,7 @@ Report an Invader
 
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(function (position) {
-                        console.log({lat: position.coords.latitude, lng: position.coords.longitude})
+                        // console.log({lat: position.coords.latitude, lng: position.coords.longitude})
                         var latlng = {lat: position.coords.latitude, lng: position.coords.longitude}
                         marker.setPosition(latlng)
                         map.setZoom(10);
@@ -143,7 +151,88 @@ Report an Invader
                 google.maps.event.addListener(map, 'center_changed', set_cookies);
                 google.maps.event.addListener(map, 'click', function (event) {
                     marker.setPosition(event.latLng);
-                })
+                });
+
+              // ADDRESS GEOCODING/PIN DROP //
+              var OVER_QUERY_LIMIT = false;
+              var BUSY_GEOCODING = false;
+
+              function showNoResults () {
+                var no_results = $("<span/>", {
+                    class: "address help-block",
+                    title: "No results found",
+                    text: "No results found",
+                  });
+                  $(".form-group.address").addClass("has-warning");
+                  $('#address').after(no_results);
+              }
+
+              function parseGeoResults(results, status) {
+                  if (status == 'OK') {
+                      if (results[0].address_components[4].long_name == "Oregon") {
+                          // drop pin and zoom in
+                          marker.setPosition(results[0].geometry.location);
+                          map.setCenter(results[0].geometry.location);
+                          map.setZoom(15);
+                          // and set value to the result we found
+                          $('#address').val(results[0].formatted_address);
+                      }
+                      else {
+                          showNoResults();
+                      }
+                  }
+                  else if (status == "ZERO_RESULTS") {
+                      showNoResults();
+                  }
+                  else if (status == 'OVER_QUERY_LIMIT') {
+                      OVER_QUERY_LIMIT = true;
+                      console.error(
+                        "You are over your Google Maps geocoding daily limit."
+                      );
+                  }
+                  else {
+                      console.log("There was an error in your request.");
+                      showNoResults();
+                  }
+                    $(".loader").hide();
+                    BUSY_GEOCODING = false;
+              }
+
+              var geocodeAddress = function(address) {
+                  $(".loader").show();
+                  BUSY_GEOCODING = true;
+                  var geocoder = new google.maps.Geocoder();
+                  geocoder.geocode(
+                      {'address': address},
+                      function (results, status) {
+                          parseGeoResults(results, status)
+                      }
+                  );
+              };
+
+              // Listen to address input
+              $("#address").on("keydown", function (e) {
+                  $(".address.help-block").remove();
+                  $(".form-group.address").removeClass("has-warning");
+
+                  if (e.key == 'Enter') {
+                      e.preventDefault();
+                      var address = e.target.value;
+                      if (address.length < 10 || OVER_QUERY_LIMIT) {
+                          return;
+                      }
+                      geocodeAddress(address);
+                  }
+              });
+
+              // disallow form submit while BUSY_GEOCODING
+              $("#reports-form").submit(function (e) {
+                  if (BUSY_GEOCODING) {
+                    return false
+                  };
+                return true;
+              });
+
             });
         });
     </script>
