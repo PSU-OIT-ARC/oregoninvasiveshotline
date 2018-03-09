@@ -24,7 +24,7 @@ class ReportIndex(indexes.SearchIndex, indexes.Indexable):
     category_id = indexes.IntegerField(model_attr='category__pk')
 
     claimed_by = indexes.CharField(model_attr='claimed_by', null=True)
-    claimed_by_id = indexes.IntegerField(model_attr='claimed_by__user_id', null=True)
+    claimed_by_id = indexes.IntegerField(null=True)
 
     county = indexes.CharField(model_attr='county__name', null=True, boost=1.0625)
     county_id = indexes.IntegerField(model_attr='county__pk', null=True)
@@ -62,5 +62,11 @@ class ReportIndex(indexes.SearchIndex, indexes.Indexable):
     def prepare_lng(self, obj):
         try:
             return obj.point.x
+        except:
+            return None
+
+    def prepare_claimed_by_id(self, obj):
+        try:
+            return obj.claimed_by.pk
         except:
             return None
