@@ -1,5 +1,5 @@
 -f https://pypi.research.pdx.edu/dist
-psu.oit.arc.oregoninvasiveshotline==1.13
+psu.oit.arc.oregoninvasiveshotline==1.13.1
 amqp==2.3.2
 awscli==1.15.42
 billiard==3.5.0.3
@@ -40,7 +40,7 @@ pgcli==1.9.1
 pgspecial==1.11.0
 Pillow==5.1.0
 prompt-toolkit==1.0.15
-psu.oit.wdt.emcee==1.0.0rc6
+psu.oit.wdt.emcee==1.0.0rc7
 psycopg2==2.7.5
 pwgen==0.8.2.post0
 pyasn1==0.4.3

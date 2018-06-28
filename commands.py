@@ -114,12 +114,12 @@ class InvasivesDeployer(DjangoDeployer):
         manage_remote(('rebuild_index', '--noinput'))
 
         # Install crontab
-        push_crontab()
+        push_crontab(template='assets/crontab')
 
     def make_active(self):
         super(InvasivesDeployer, self).make_active()
 
-        push_supervisor_config()
+        push_supervisor_config(template='assets/supervisor.conf')
 
 
 @command

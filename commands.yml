@@ -20,12 +20,12 @@ environment:
       venv: venv
   docker:
     python:
-      venv: venv-docker
+      venv: /venv/venv-docker
   stage:
     db:
       host: oregoninvasiveshotline-stage.c6xuiyamhpsi.us-west-2.rds.amazonaws.com
     index:
-      url: search-oregoninvasiveshotline-stage-ct6llktkgbha76i7ysyn3rgh2u.us-west-2.es.amazonaws.com
+      url: vpc-oregoninvasiveshotline-stage-ct6llktkgbha76i7ysyn3rgh2u.us-west-2.es.amazonaws.com
   prod:
     db:
       host: oregoninvasiveshotline-prod.c6xuiyamhpsi.us-west-2.rds.amazonaws.com

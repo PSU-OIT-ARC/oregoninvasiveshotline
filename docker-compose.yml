@@ -51,12 +51,12 @@ services:
 
   oregoninvasiveshotline:
     image: psu.oit.wdt/oregoninvasiveshotline
-    build: app
+    build: docker
     user: oregoninvasiveshotline
     environment:
       - LOCAL_SETTINGS_FILE=local.docker.cfg
       - APP_ROOT=/webapps/oregoninvasiveshotline
-      - APP_VENV=/webapps/oregoninvasiveshotline/venv-docker
+      - APP_VENV=/venv/venv-docker
       - APP_SERVICE=wsgi
     networks:
       - default
@@ -70,13 +70,13 @@ services:
       - rabbitmq
 
   celery:
-    build: app
+    build: docker
     user: oregoninvasiveshotline
     user: oregoninvasiveshotline
     environment:
       - LOCAL_SETTINGS_FILE=local.docker.cfg
       - APP_ROOT=/webapps/oregoninvasiveshotline
-      - APP_VENV=/webapps/oregoninvasiveshotline/venv-docker
+      - APP_VENV=/venv/venv-docker
       - APP_SERVICE=celery
     networks:
       - default

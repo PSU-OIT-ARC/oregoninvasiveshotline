@@ -1,5 +1,14 @@
 # Changelog for Oregon Invasives Hotline
 
+## 1.13.1 - 2018-06-27
+
+### Fixed
+
+- Uses Emcee 1.0.0.rc7 to avoid on-going STS credential expiry
+  issues related to the use of Elasticsearch connections.
+- Revises and corrects construction and runtime behavior of
+  docker containers to be more robust.
+
 ## 1.13.0 - 2018-06-21
 
 ### Added

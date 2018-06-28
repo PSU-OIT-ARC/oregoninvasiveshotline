@@ -18,14 +18,14 @@
     </div>
 
     <div class="col-md-5 {% if not reports %}hidden{% endif %}">
-        <p class="reports-table-sort comma-list">Sort By:
+        <p class="reports-table-sort comma-list">
+            Sort By:
             {% for subwidget in form.order_by %}
+                {# closing tag placement is intentional to remove trailing whitespace #}
                 <span class="comma">
-                    <a href="{% add_get order_by=subwidget.choice_value %}"
-                       class="{% if subwidget.choice_value == form.cleaned_data.order_by %}strong{% endif %}">
-                        {{ subwidget.choice_label }}
-                    </a>
-                </span>
+                    <a href="{% add_get order_by=subwidget.data.value %}"
+                       class="{% if subwidget.data.value == form.cleaned_data.order_by %}strong{% endif %}">
+                      {{ subwidget.choice_label }}</a></span>
             {% endfor %}
             {% if user.is_active %}
                 {% if subscription_url %}
@@ -34,8 +34,6 @@
                 | Export: <a href="{% add_get export='csv' %}">CSV</a>, <a href="{% add_get export='kml' %}">KML</a>
             {% endif %}
         </p>
-
-        <div class="hidden">{{ form.order_by }}</div>
 
         <table class="table reports-table double-zebra">
             <tbody>
