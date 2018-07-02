@@ -36,7 +36,9 @@ setup(
             'coverage',
             'flake8',
             'model_mommy',
-            'docker-compose'
+            'docker-compose',
+            'selenium',
+            'xvfbwrapper'
         ]
     },
 )

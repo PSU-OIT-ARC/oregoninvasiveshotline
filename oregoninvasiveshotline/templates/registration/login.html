@@ -13,7 +13,7 @@ Login
             {% csrf_token %}
             {{ other_form|bootstrap }}
             <input type="hidden" name="form" value="OTHER_LOGIN" />
-            <input type="submit" name="submit" value="Submit" class="btn btn-primary"/>
+            <input id="public_login" type="submit" name="submit" value="Submit" class="btn btn-primary"/>
         </form>
 
     </div>
@@ -23,7 +23,7 @@ Login
         <form action="" method="post">
             {% csrf_token %}
             {{ form|bootstrap }}
-            <input type="submit" name="submit" value="Submit" class="btn btn-primary"/>
+            <input id="staff_login" type="submit" name="submit" value="Submit" class="btn btn-primary"/>
         </form>
         <hr />
         <p><a href="{% url 'password_reset' %}">Forgot your password?</a></p>

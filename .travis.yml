@@ -8,6 +8,7 @@ sudo: false
 
 addons:
     postgresql: "9.6"
+    chrome: stable
     apt:
       packages:
         - postgresql-9.6-postgis-2.3
@@ -28,6 +29,9 @@ before_script:
     - psql -U postgres -c 'create database test_oregoninvasiveshotline owner oregoninvasiveshotline;'
     - psql -U postgres -d test_oregoninvasiveshotline -c 'create extension postgis;'
     - curl -XPUT 'http://localhost:9200/oregoninvasiveshotline-test/'
+    - "export DISPLAY=:0"
+    - "sh -e /etc/init.d/xvfb start"
+    - sleep 3 # give xvfb some time to start
 
 script:
     - LOCAL_SETTINGS_FILE="local.base.cfg#travis" python manage.py test --keepdb
