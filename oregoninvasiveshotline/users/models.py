@@ -3,6 +3,7 @@ import binascii
 from datetime import datetime, timedelta
 from urllib import parse
 
+from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, UserManager
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
@@ -29,7 +30,7 @@ class User(AbstractBaseUser):
     phone = models.CharField(max_length=255, default="", blank=True)
     prefix = models.CharField(max_length=255)
     suffix = models.CharField(max_length=255)
-    date_joined = models.DateTimeField(auto_now_add=True)
+    date_joined = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(default=True, blank=True, verbose_name="Is Manager (can login and manage reports)")
     is_staff = models.BooleanField(default=False, blank=True, verbose_name="Is Admin (can do anything)")
     affiliations = models.TextField(blank=True)

@@ -2,10 +2,11 @@ import posixpath
 import logging
 import os
 
-from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.utils import timezone
 from django.core.urlresolvers import reverse
 from django.contrib.gis.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.conf import settings
 
 from arcutils.settings import get_setting
@@ -53,7 +54,7 @@ class Report(models.Model):
     county = models.ForeignKey('counties.County', null=True)
 
     created_by = models.ForeignKey("users.User", related_name="reports")
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_on = models.DateTimeField(default=timezone.now)
 
     claimed_by = models.ForeignKey("users.User", null=True, default=None, related_name="claimed_reports")
 
@@ -202,7 +203,7 @@ class Invite(models.Model):
 
     invite_id = models.AutoField(primary_key=True)
     created_by = models.ForeignKey('users.User', related_name='+')
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_on = models.DateTimeField(default=timezone.now)
     report = models.ForeignKey(Report)
 
     # The invitee

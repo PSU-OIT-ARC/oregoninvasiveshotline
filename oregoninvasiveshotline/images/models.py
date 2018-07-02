@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 
 from oregoninvasiveshotline.visibility import Visibility
@@ -8,7 +9,7 @@ class Image(Visibility, models.Model):
     image = models.ImageField(upload_to="images")
     name = models.CharField(max_length=255, blank=True)
     created_by = models.ForeignKey("users.User")
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_on = models.DateTimeField(default=timezone.now)
     visibility = models.IntegerField(choices=Visibility.choices, default=Visibility.PROTECTED)
 
     # create a nullable FK to every object that can have images

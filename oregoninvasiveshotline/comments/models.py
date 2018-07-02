@@ -1,3 +1,6 @@
+import datetime
+
+from django.utils import timezone
 from django.core.urlresolvers import reverse
 from django.db import models
 
@@ -10,8 +13,8 @@ class Comment(Visibility, models.Model):
     """
     comment_id = models.AutoField(primary_key=True)
     body = models.TextField()
-    created_on = models.DateTimeField(auto_now_add=True)
-    edited_on = models.DateField(auto_now=True)
+    created_on = models.DateTimeField(default=timezone.now)
+    edited_on = models.DateField(default=datetime.date.today)
 
     visibility = models.IntegerField(choices=Visibility.choices, default=Visibility.PROTECTED, help_text="Controls who can see this comment")
 

@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from django.http import QueryDict
 
@@ -27,7 +28,7 @@ class UserNotificationQuery(models.Model):
             'ReportSearchForm that match reports the user should be notified about.'
         )
     )
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_on = models.DateTimeField(default=timezone.now)
 
     @property
     def pretty_query(self):
@@ -65,7 +66,7 @@ class Notification(models.Model):
     notification_id = models.AutoField(primary_key=True)
     user = models.ForeignKey('users.User')
     report = models.ForeignKey('reports.Report')
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_on = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return 'Notification for: report "{0.report.title}"'.format(self)
