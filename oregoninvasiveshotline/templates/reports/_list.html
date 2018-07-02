@@ -24,7 +24,8 @@
                 {# closing tag placement is intentional to remove trailing whitespace #}
                 <span class="comma">
                     <a href="{% add_get order_by=subwidget.data.value %}"
-                       class="{% if subwidget.data.value == form.cleaned_data.order_by %}strong{% endif %}">
+                       class="{% if subwidget.data.value == form.cleaned_data.order_by %}strong{% endif %}"
+                       id="id_orderby_{{ subwidget.data.value }}">
                       {{ subwidget.choice_label }}</a></span>
             {% endfor %}
             {% if user.is_active %}
@@ -38,7 +39,7 @@
         <table class="table reports-table double-zebra">
             <tbody>
                 {% for report in reports %}
-                    <tr class="{{ report.css_class }}">
+                    <tr id="report-list-entry-{{ report.pk }}" class="report-list-entry">
                         <td class="reports-table-img" rowspan="2">
                             <a href="#map-canvas" class="report-location-click" data-report-index="{{ forloop.counter0 }}">
                                 <img src="{{ report.image_url|default:report.icon_url }}">
