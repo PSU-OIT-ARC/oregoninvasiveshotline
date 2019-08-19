@@ -20,15 +20,14 @@ from emcee.provision.services import (provision_nginx,
                                       provision_supervisor,
                                       provision_rabbitmq)
 from emcee.provision.secrets import show_secret, provision_secret
-from emcee.deploy.base import push_nginx_config, push_crontab, push_supervisor_config
-from emcee.deploy.python import push_uwsgi_ini, push_uwsgi_config, restart_uwsgi
-from emcee.deploy.django import Deployer as DjangoDeployer
+from emcee.deploy.base import push_crontab, push_supervisor_config
+from emcee.deploy.django import Deployer
 
 # from emcee.backends.dev.provision.db import provision_database as provision_database_local
 from emcee.backends.aws.infrastructure.commands import *
 from emcee.backends.aws.provision.db import provision_database, import_database
 from emcee.backends.aws.provision.volumes import provision_volume
-
+from emcee.backends.aws.deploy import EC2RemoteProcessor
 
 DEFAULT_FIXTURES = ('counties.json',)
 DEVELOPMENT_FIXTURES = ('dummy_user.json', 'category.json', 'severity.json', 'pages.json')
@@ -102,7 +101,9 @@ def provision_media_assets():
         )
 
 
-class InvasivesDeployer(DjangoDeployer):
+class InvasivesDeployer(Deployer):
+    remote_processor_cls = EC2RemoteProcessor
+
     def bootstrap_application(self):
         super(InvasivesDeployer, self).bootstrap_application()
 

@@ -1,5 +1,11 @@
 # Changelog for Oregon Invasives Hotline
 
+## 1.13.4 - 2019-08-19
+
+### Maintenance
+
+- Uses Emcee 1.0.0.rc9.
+
 ## 1.13.3 - 2019-04-22
 
 ### Maintenance
