@@ -9,10 +9,10 @@ remote:
   nginx:
     alt_fqdns: oregoninvasiveshotline.org
     client_max_body_size: 8m
-    csp_policy: "default-src 'unsafe-inline' data: oregoninvasiveshotline.org *.wdt.pdx.edu
-      cdn.research.pdx.edu cdn.ravenjs.com cdnjs.cloudflare.com http://*.tiles.osgeo.org
-      khms0.googleapis.com khms1.googleapis.com maps.googleapis.com *.google-analytics.com
-      *.gstatic.com fonts.googleapis.com fonts.gstatic.com; connect-src sentry.io;"
+    csp_policy: 'default-src ''unsafe-inline'' data: oregoninvasiveshotline.org *.wdt.pdx.edu
+      cdnjs.cloudflare.com http://*.tiles.osgeo.org khms0.googleapis.com khms1.googleapis.com
+      maps.googleapis.com *.google-analytics.com *.gstatic.com fonts.googleapis.com fonts.gstatic.com;
+      connect-src sentry.io;'
 environment:
   dev:
     python:
