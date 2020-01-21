@@ -1,5 +1,11 @@
 # Changelog for Oregon Invasives Hotline
 
+## 1.13.6 - 2020-01-21
+
+### Maintenance
+
+- Replaces use of assets hosted on 'cdn.research.pdx.edu'.
+
 ## 1.13.5 - 2019-10-22
 
 ### Maintenance
