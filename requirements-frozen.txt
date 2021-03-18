@@ -45,7 +45,7 @@ model-mommy==2.0.0
 oyaml==1.0
 packaging==20.8
 paramiko==2.7.2
-Pillow==8.0.1
+Pillow==8.1.1
 prompt-toolkit==3.0.8
 psu.oit.wdt.emcee==1.0.7
 psycopg2==2.8.6
