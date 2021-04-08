@@ -1,1 +1,16 @@
-docker/requirements.txt
+-f https://packages.wdt.pdx.edu/dist
+
+pytz
+Markdown~=3.2
+Pillow~=8.1.1
+
+Django~=2.2.20
+psycopg2~=2.8.6
+elasticsearch>=2.4.0,<3.0.0
+celery~=5.0.5
+djangorestframework~=3.12.4
+django-bootstrap-form==3.4
+django-haystack~=3.0.0
+
+psu.oit.wdt.emcee[aws]~=1.1.0b3
+sentry-sdk~=1.0.0
