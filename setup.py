@@ -50,7 +50,7 @@ setup(
     install_requires=[
         'pytz',
         'Markdown~=3.3.4',
-        'Pillow~=8.2.0',
+        'Pillow>=8.2,<8.4',
 
         'Django~=2.2.0',
         'psycopg2~=2.8.6',
