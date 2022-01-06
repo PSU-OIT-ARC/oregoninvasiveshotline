@@ -63,7 +63,7 @@ setup(
         #
         # Refs: https://github.com/PSU-OIT-ARC/oregoninvasiveshotline/issues/59
         'elasticsearch>=2.4.0,<3.0.0',
-        'celery~=5.1.0',
+        'celery>=5.1,<5.3',
         'djangorestframework~=3.12.4',
         'django-bootstrap-form==3.4',
         'django-haystack~=3.1.0',
