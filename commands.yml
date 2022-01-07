@@ -27,7 +27,7 @@ environment:
   docker:
     backend: emcee.backends.docker
     python:
-      venv: /venv/venv-docker
+      venv: /opt/venv
   stage:
     backend: emcee.backends.aws
     services:

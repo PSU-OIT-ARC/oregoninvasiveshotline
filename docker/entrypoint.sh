@@ -2,6 +2,8 @@
 set -e
 
 
+cd ${PROJECT_DIR}
+
 # Bootstrap application if requested
 if [[ ${APP_BOOTSTRAP} == "yes" ]]; then
     ${APP_ENV}/bin/python manage.py migrate --noinput
@@ -16,6 +18,6 @@ if [[ ${APP_SERVICE} == "wsgi" ]]; then
 elif [[ ${APP_SERVICE} == "celery" ]]; then
     exec ${APP_ENV}/bin/celery -A oregoninvasiveshotline worker -l INFO
 elif [[ ${APP_SERVICE} == "test" ]]; then
-    ${APP_ENV}/bin/pip install -r /requirements-dev.txt
+    ${APP_ENV}/bin/pip install -r requirements-dev.txt
     exec ${APP_ENV}/bin/python manage.py test
 fi

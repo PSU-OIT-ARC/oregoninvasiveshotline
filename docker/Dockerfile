@@ -26,8 +26,7 @@ RUN groupadd "${APP_GROUP}" || echo "Group already exists"
 RUN useradd -m -g "${APP_GROUP}" "${APP_USER}" || echo "User already exists"
 
 # Prepare virtual environment package requirements
-COPY --chown=${APP_USER}:${APP_GROUP} /requirements.txt /requirements.txt
-COPY --chown=${APP_USER}:${APP_GROUP} /requirements-dev.txt /requirements-dev.txt
+COPY --chown=${APP_USER}:${APP_GROUP} /requirements-frozen.txt /requirements-frozen.txt
 
 # Prepare virtual environment
 RUN mkdir -p ${APP_ENV}
@@ -37,7 +36,7 @@ RUN chown ${APP_USER}:${APP_GROUP} ${APP_ENV}
 USER ${APP_USER}
 RUN ${APP_PYTHON} -m venv ${APP_ENV}
 RUN ${APP_ENV}/bin/pip install --upgrade pip wheel
-RUN ${APP_ENV}/bin/pip install -r /requirements.txt
+RUN ${APP_ENV}/bin/pip install -r /requirements-frozen.txt
 RUN ${APP_ENV}/bin/pip cache purge
 
 # Install container entrypoint

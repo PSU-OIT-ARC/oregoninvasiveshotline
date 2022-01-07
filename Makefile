@@ -22,6 +22,8 @@ update_pip_requirements:  ## Updates python dependencies
 	@./release-env/bin/pip install --upgrade --upgrade-strategy=eager -r requirements.txt
 	@./release-env/bin/pip freeze > requirements-frozen.txt
 	@sed -i '1 i\--find-links https://packages.wdt.pdx.edu/dist/' requirements-frozen.txt
+	@cp ./requirements-frozen.txt ./docker/requirements-frozen.txt
+	@sed -i '/psu.oit.arc.oregoninvasiveshotline/d' ./docker/requirements-frozen.txt
 	@./release-env/bin/pip list --outdated
 
 client_dependencies:  ## Builds npm dependencies and copies built ('dist') artifacts into static collection directory.
