@@ -86,18 +86,3 @@ services:
     secrets:
       - SecretKey
       - DBPassword
-
-  test:
-    build: docker
-    environment:
-      - APP_CONFIG=app.test.yml
-      - APP_SERVICE=test
-      - EMCEE_CMD_ENV=test
-    networks:
-      - default
-    volumes:
-      - ./:/webapps/oregoninvasiveshotline
-    depends_on:
-      - postgres
-      - elasticsearch
-      - rabbitmq
