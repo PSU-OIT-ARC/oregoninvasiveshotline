@@ -23,7 +23,7 @@ class ReportSerializer(serializers.Serializer):
     created_on = serializers.DateTimeField(format='%b %d, %Y',
                                            default_timezone=pytz.utc)
 
-    edrr_status = serializers.CharField()
+    edrr_status = serializers.SerializerMethodField()
     icon_url = serializers.CharField(required=False)
     image_url = serializers.CharField(required=False)
     lat = serializers.SerializerMethodField()
@@ -36,6 +36,9 @@ class ReportSerializer(serializers.Serializer):
             'report': instance,
             'image_url': instance.image_url,
         })
+
+    def get_edrr_status(self, instance):
+        return instance.get_edrr_status_display()
 
     def get_lat(self, instance):
         if isinstance(instance, Report):

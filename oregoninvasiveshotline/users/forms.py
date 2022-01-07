@@ -3,32 +3,16 @@ from django.core.mail import send_mail
 from django.urls import reverse
 from django import forms
 
-from haystack.forms import SearchForm
-
-from oregoninvasiveshotline.utils.settings import get_setting
+from oregoninvasiveshotline.utils.search import SearchForm
 from oregoninvasiveshotline.utils.images import generate_thumbnail
-
-from .models import User
+from oregoninvasiveshotline.users.models import User
 
 
 class UserSearchForm(SearchForm):
-
     is_manager = forms.BooleanField(initial=True, required=False)
 
-    def no_query_found(self):
-        return self.searchqueryset.all().models(User)
-
-    def search(self):
-        results = super().search().models(User)
-
-        # Show all users when search isn't valid
-        if not self.is_valid():
-            return self.no_query_found()
-
-        if self.cleaned_data.get('is_manager'):
-            results = results.filter(is_active=True)
-
-        return results
+    def get_search_fields(self):
+        return ('first_name', 'last_name', 'email')
 
 
 class PublicLoginForm(forms.Form):

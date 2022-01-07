@@ -32,22 +32,102 @@ from .utils import icon_file_name
 
 
 def list_(request):
-    user = request.user
     params = request.GET
+    user = request.user
+    form = ReportSearchForm(params, user=user)
+
+    # Search parameters
+    q = params.get('q')
     report_ids = request.session.get('report_ids', [])
 
-    form = ReportSearchForm(params, user=user, report_ids=report_ids)
-    results = form.search()
+    reports = Report.objects.all()
+    if form.is_valid() and q:
+        reports = form.search(reports, q)
+
+    # Ensure anonymous/public users cannot see non-public reports in all cases
+    if not user.is_active:
+        if report_ids:
+            reports = reports.filter(
+                Q(pk__in=report_ids) | Q(is_public=True)
+            )
+        else:
+            reports = reports.filter(is_public=True)
+
+    if form.cleaned_data.get('counties'):
+        reports = reports.filter(
+            county__in=form.cleaned_data.get('counties')
+        )
+    if form.cleaned_data.get('categories'):
+        reports = reports.filter(
+            Q(reported_category__in=form.cleaned_data.get('categories')) |  \
+            Q(actual_species__category__in=form.cleaned_data.get('categories'))
+        )
+
+    is_archived = form.cleaned_data.get('is_archived')
+    if is_archived == 'archived':
+        reports = reports.filter(is_archived=True)
+    elif is_archived == 'notarchived':
+        reports = reports.exclude(is_archived=True)
+
+    is_public = form.cleaned_data.get('is_public')
+    if is_public == 'public':
+        reports = reports.filter(is_public=True)
+    elif is_public == 'notpublic':
+        reports = reports.exclude(is_public=True)
+
+    claimed_by = form.cleaned_data.get('claimed_by')
+    if claimed_by == 'me':
+        reports = reports.filter(claimed_by=user)
+    elif claimed_by == 'nobody':
+        reports = reports.filter(claimed_by__isnull=True)
+
+    source = form.cleaned_data.get('source')
+    if source == 'invited':
+        user_invites = Invite.objects.filter(user=user)
+        reports = reports.filter(
+            pk__in=user_invites.values_list('report_id', flat=True)
+        )
+    elif source == 'reported':
+        if user.is_active:
+            reports = reports.filter(created_by=user)
+        if report_ids:
+            reports = reports.filter(pk__in=report_ids)
+
+    order_by = form.cleaned_data.get('order_by')
+    if order_by:
+        if order_by == 'species':
+            reports = reports.order_by(
+                'actual_species__name',
+                'reported_species__name'
+            )
+        elif order_by == '-species':
+            reports = reports.order_by(
+                '-actual_species__name',
+                '-reported_species__name'
+            )
+        elif order_by == 'category':
+            reports = reports.order_by(
+                'actual_species__category__name',
+                'reported_category__name'
+            )
+        elif order_by == '-category':
+            reports = reports.order_by(
+                '-actual_species__category__name',
+                '-reported_category__name'
+            )
+        else:
+            reports = reports.order_by(order_by)
+    elif not form.cleaned_data.get('q'):
+        reports = reports.order_by('-created_on')
 
     # Handle the case where they want to export the reports
     # XXX: Why isn't this a separate view?
     export_format = params.get('export')
     if user.is_active and export_format in ('kml', 'csv'):
-        export_data = [report.object for report in results]
-        return _export(reports=export_data, format=export_format)
+        return _export(reports=reports, format=export_format)
 
     # Paginate the results
-    paginator = Paginator(results, settings.ITEMS_PER_PAGE)
+    paginator = Paginator(reports, settings.ITEMS_PER_PAGE)
     active_page = request.GET.get('page')
 
     try:

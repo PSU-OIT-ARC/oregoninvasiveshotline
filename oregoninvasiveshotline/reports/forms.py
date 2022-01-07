@@ -4,17 +4,17 @@ from django.core.validators import validate_email
 from django.db import transaction
 from django import forms
 
-from haystack.forms import SearchForm
-from haystack.query import AutoQuery, SQ, SearchQuerySet
-
+from oregoninvasiveshotline.utils.search import SearchForm
 from oregoninvasiveshotline.comments.models import Comment
 from oregoninvasiveshotline.counties.models import County
 from oregoninvasiveshotline.species.models import Category, Severity, Species
 from oregoninvasiveshotline.users.models import User
-
-from .models import Invite, Report
-from .tasks import (notify_report_submission, notify_report_subscribers,
-                    notify_invited_reviewer)
+from oregoninvasiveshotline.reports.models import Invite, Report
+from oregoninvasiveshotline.reports.tasks import (
+    notify_report_submission,
+    notify_report_subscribers,
+    notify_invited_reviewer
+)
 
 
 def get_category_choices():
@@ -46,15 +46,6 @@ class ReportSearchForm(SearchForm):
     """
     public_fields = ['q', 'order_by', 'source', 'categories', 'counties']
 
-    q = forms.CharField(
-        required=False,
-        label='Search',
-        widget=forms.widgets.TextInput(attrs={
-            'type': 'search',
-            'placeholder': 'Enter a category, county, species, or other keyword'
-        })
-    )
-
     source = forms.ChoiceField(
         required=False,
         label='',
@@ -64,25 +55,18 @@ class ReportSearchForm(SearchForm):
             ('reported', 'Reported by Me')
         ]
     )
-
     categories = forms.MultipleChoiceField(
-        required=False, label='', choices=get_category_choices,
-        widget=forms.SelectMultiple(attrs={'title': 'Categories'}))
-    counties = forms.MultipleChoiceField(
-        required=False, label='', choices=get_county_choices,
-        widget=forms.SelectMultiple(attrs={'title': 'Counties'}))
-
-    order_by = forms.ChoiceField(
         required=False,
-        choices=[
-            ('_score', 'Relevance'),
-            ('species', 'Species'),
-            ('category', 'Category'),
-            ('-created_on', 'Newest'),
-        ],
-        widget=forms.widgets.RadioSelect
+        label='',
+        choices=get_category_choices,
+        widget=forms.SelectMultiple(attrs={'title': 'Categories'})
     )
-
+    counties = forms.MultipleChoiceField(
+        required=False,
+        label='',
+        choices=get_county_choices,
+        widget=forms.SelectMultiple(attrs={'title': 'Counties'})
+    )
     is_archived = forms.ChoiceField(
         required=False,
         initial='notarchived',
@@ -93,7 +77,6 @@ class ReportSearchForm(SearchForm):
             ('notarchived', 'Not archived'),
         ]
     )
-
     is_public = forms.ChoiceField(
         required=False,
         label='',
@@ -102,7 +85,6 @@ class ReportSearchForm(SearchForm):
             ('public', 'Public'),
             ('notpublic', 'Not public'),
         ])
-
     claimed_by = forms.ChoiceField(
         required=False,
         label='',
@@ -111,25 +93,32 @@ class ReportSearchForm(SearchForm):
             ('me', 'Me'),
             ('nobody', 'Nobody'),
         ])
+    order_by = forms.ChoiceField(
+        required=False,
+        choices=[
+            ('species', 'Species'),
+            ('category', 'Category'),
+            ('-created_on', 'Newest'),
+        ],
+        widget=forms.widgets.RadioSelect
+    )
+
+    def get_search_fields(self):
+        return (
+            'county__name',
+            'reported_category__name',
+            'reported_species__name',
+            'reported_species__scientific_name',
+            'actual_species__category__name',
+            'actual_species__name',
+            'actual_species__scientific_name',
+            'report_id'
+        )
 
     def __init__(self, *args, user, report_ids=(), **kwargs):
-        sqs = SearchQuerySet().models(Report)
+        super().__init__(*args, **kwargs)
 
-        # Ensure anonymous/public users cannot see non-public reports in all
-        # cases.
-        if not user.is_active:
-            if report_ids:
-                sqs = sqs.filter(SQ(id__in=report_ids) | SQ(is_public=True))
-            else:
-                sqs = sqs.filter(is_public=True)
-
-        super().__init__(*args, searchqueryset=sqs, **kwargs)
-
-        self.user = user
-        self.report_ids = report_ids
-
-        # Only certain fields on this form can be used by members of the
-        # public.
+        # Only certain fields on this form can be used by members of the public
         if not user.is_active:
             for name in list(self.fields):
                 if name not in self.public_fields:
@@ -140,84 +129,10 @@ class ReportSearchForm(SearchForm):
                 source_field = self.fields['source']
                 source_choices = source_field.choices
                 source_field.choices = [
-                    (value, label) for (value, label) in source_choices if value != 'invited']
+                    (value, label)
+                    for (value, label) in source_choices if value != 'invited']
             else:
                 self.fields.pop('source')
-
-    def no_query_found(self):
-        """Return all reports when query is invalid."""
-        return self.searchqueryset.all()
-
-    def search(self):
-        if not self.is_valid():
-            return self.no_query_found()
-
-        sqs = self.searchqueryset
-        user = self.user
-        report_ids = self.report_ids
-        form_data = self.cleaned_data
-        term = form_data.get('q')
-        order_by = form_data.get('order_by')
-
-        if term:
-            auto_query = AutoQuery(term)
-            query = (
-                SQ(title=auto_query) |
-                SQ(category=auto_query) |
-                SQ(county=auto_query) |
-                SQ(species=auto_query) |
-                SQ(text=auto_query)
-            )
-            if term.isdecimal():
-                query = SQ(report_id=auto_query) | query
-            sqs = sqs.filter(query)
-        else:
-            # Don't show the relevance ordering option when there's no
-            # search term.
-            self.fields['order_by'].choices = self.fields['order_by'].choices[1:]
-
-        counties = form_data.get('counties')
-        if counties:
-            sqs = sqs.filter(county_id__in=counties)
-
-        categories = form_data.get('categories')
-        if categories:
-            sqs = sqs.filter(category_id__in=categories)
-
-        is_archived = form_data.get('is_archived')
-        if is_archived == 'archived':
-            sqs = sqs.filter(is_archived=True)
-        elif is_archived == 'notarchived':
-            sqs = sqs.exclude(is_archived=True)
-
-        is_public = form_data.get('is_public')
-        if is_public == 'public':
-            sqs = sqs.filter(is_public=True)
-        elif is_public == 'notpublic':
-            sqs = sqs.exclude(is_public=True)
-
-        claimed_by = form_data.get('claimed_by')
-        if claimed_by == 'me':
-            sqs = sqs.filter(claimed_by_id=user.pk)
-        elif claimed_by == 'nobody':
-            sqs = sqs.filter(_missing_='claimed_by_id')
-
-        source = form_data.get('source')
-        if source == 'invited':
-            user_invites = Invite.objects.filter(user_id=user.pk)
-            sqs = sqs.filter(id__in=user_invites.values_list('report_id', flat=True))
-        elif source == 'reported':
-            if user.is_active:
-                sqs = sqs.filter(created_by_id=user.pk)
-            if report_ids:
-                sqs = sqs.filter(id__in=report_ids)
-
-        if order_by:
-            sqs = sqs.order_by(order_by)
-        elif not term:
-            sqs = sqs.order_by('-created_on')
-
-        return sqs
 
 
 class ReportForm(forms.ModelForm):

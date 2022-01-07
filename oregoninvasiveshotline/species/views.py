@@ -31,19 +31,14 @@ def list_(request):
     # Search parameters
     q = params.get('q')
 
-    if q:
-        results = form.search()
-        # XXX: Is there a better way to grab the species?
-        pks = (r.pk for r in results)
-        species = Species.objects.filter(pk__in=pks)
-    else:
-        species = Species.objects.all()
+    species = Species.objects.all()
+    if form.is_valid() and q:
+        species = form.search(species, q)
 
-    order_by = params.get('order_by', 'name')
-    order = params.get('order')
+    order_by = form.cleaned_data.get('order_by')
     if order_by:
-        if order == 'descending':
-            order_by = '-{order_by}'.format_map(locals())
+        if form.cleaned_data.get('order') == 'descending':
+            order_by = '-{}'.format(order_by)
         species = species.order_by(order_by)
 
     active_page = params.get('page')

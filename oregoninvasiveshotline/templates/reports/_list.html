@@ -80,8 +80,12 @@
                             {{ report.county|default:'Not in OR/WA' }}
                         </td>
                         <td class="text-right">
-                            <em title="Early Detection and Rapid Response">EDRR Status:</em>
-                            {{ report.edrr_status|default:"None" }}
+                          <em title="Early Detection and Rapid Response">EDRR Status:</em>
+                          {% if report.edrr_status %}
+                            {{ report.edrr_status }}
+                          {% else %}
+                            &mdash;
+                          {% endif %}
                         </td>
                     </tr>
                 {% endfor %}

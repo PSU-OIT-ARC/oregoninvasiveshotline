@@ -29,7 +29,7 @@ Report #{{ report.pk }} - {{ report }}
                 {% endif %}
             {% endif %}
 
-            {% if report.get_edrr_status_display %}
+            {% if report.edrr_status %}
                 <strong title="Early Detection and Rapid Response">EDRR Status:</strong> {{ report.get_edrr_status_display }}
                 <br />
             {% endif %}

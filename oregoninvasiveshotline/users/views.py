@@ -147,38 +147,24 @@ def list_(request):
 
     # Search parameters
     q = params.get('q')
-    is_manager = params.get('is_manager')
 
-    # XXX: Temporary (remove line)
-    only_dupes = params.get('$dupes') == '1'
+    users = User.objects.all()
+    if form.is_valid() and q:
+        users = form.search(users, q)
 
-    if q:
-        users = form.search()
-    else:
-        users = User.objects.all()
-        if is_manager:
-            users = users.filter(is_active=True)
-
-        # XXX: Temporary (remove entire block)
-        if only_dupes:
-            users = User.objects.raw(
-                'SELECT * from "user" u1 '
-                'WHERE ('
-                '    SELECT count(*) FROM "user" u2 WHERE lower(u2.email) = lower(u1.email )'
-                ') > 1 '
-                'ORDER BY lower(email)'
-            )
+    if form.cleaned_data.get('is_manager'):
+        users = users.filter(is_active=True)
 
     active_page = params.get('page')
     paginator = Paginator(users, settings.ITEMS_PER_PAGE)
 
-    if not only_dupes:  # XXX: Temporary (remove this line & dedent block)
-        try:
-            users = paginator.page(active_page)
-        except PageNotAnInteger:
-            users = paginator.page(1)
-        except EmptyPage:
-            users = paginator.page(paginator.num_pages)
+    # if not only_dupes:  # XXX: Temporary (remove this line & dedent block)
+    try:
+        users = paginator.page(active_page)
+    except PageNotAnInteger:
+        users = paginator.page(1)
+    except EmptyPage:
+        users = paginator.page(paginator.num_pages)
 
     return render(request, 'users/list.html', {
         'users': users,
