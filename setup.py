@@ -55,18 +55,9 @@ setup(
         # Django 2.2 can only tolerate psycopg2<2.9
         # Refs: https://github.com/psycopg/psycopg2/issues/1293
         'psycopg2~=2.8.6',
-        # TODO
-        #
-        # django-haystack now supports ES7 so work should be completed
-        # in order to update the declarative infrastructure and application
-        # dependencies to use it
-        #
-        # Refs: https://github.com/PSU-OIT-ARC/oregoninvasiveshotline/issues/59
-        'elasticsearch>=2.4.0,<3.0.0',
         'celery~=5.1.0',
         'djangorestframework~=3.12.4',
         'django-bootstrap-form==3.4',
-        'django-haystack~=3.1.0',
         'psu.oit.wdt.emcee[aws]~=1.1.0b3',
         'sentry-sdk~=1.4.0',
     ],

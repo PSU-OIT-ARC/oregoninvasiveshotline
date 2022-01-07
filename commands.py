@@ -140,12 +140,6 @@ class InvasivesDeployer(django.Deployer):
     remote_processor_cls = InvasivesRemoteProcessor
     app_config_cls = YAMLAppConfiguration
 
-    def bootstrap_application(self):
-        super().bootstrap_application()
-
-        printer.header("Rebuilding search indexes...")
-        manage(('rebuild_index', '--noinput'), build=True)
-
     def setup_application_hosting(self):
         super().setup_application_hosting()
 

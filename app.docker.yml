@@ -13,9 +13,6 @@ SECRET_KEY: "NOT A SECRET"
 DATABASES:
   default:
     HOST: postgres
-HAYSTACK_CONNECTIONS:
-  default:
-    URL: elasticsearch:9200
 CELERY_BROKER_URL: pyamqp://guest:guest@rabbitmq//
 STATIC_ROOT: /static
 MEDIA_ROOT: /media

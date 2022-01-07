@@ -14,9 +14,6 @@ SECRET_KEY: "NOT A SECRET"
 DATABASES:
   default:
     HOST: 172.23.0.1
-HAYSTACK_CONNECTIONS:
-  default:
-    URL: 172.23.0.1:9200
 CELERY_BROKER_URL: pyamqp://guest:guest@172.23.0.1//
 STATIC_ROOT: static
 MEDIA_ROOT: media

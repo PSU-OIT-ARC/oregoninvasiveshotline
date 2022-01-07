@@ -15,9 +15,5 @@ DATABASES:
     NAME: oregoninvasiveshotline
     USER: oregoninvasiveshotline_l
     PASSWORD: ''
-HAYSTACK_CONNECTIONS:
-  default:
-    URL: localhost:9200
-    INDEX_NAME: oregoninvasiveshotline-stage
 STATIC_ROOT: /vol/www/oregoninvasiveshotline/static
 MEDIA_ROOT: /vol/www/oregoninvasiveshotline/media

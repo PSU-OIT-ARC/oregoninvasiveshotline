@@ -105,7 +105,6 @@ INSTALLED_APPS = [
 
     # Third party
     "bootstrapform",
-    "haystack",
     "rest_framework",
 
     # Django
@@ -138,14 +137,6 @@ DATABASES = {
         'USER': "invasives",
         'PASSWORD': "invasives",
         'ATOMIC_REQUESTS': True
-    }
-}
-
-HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.RealtimeSignalProcessor"
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': "haystack.backends.elasticsearch2_backend.Elasticsearch2SearchEngine",
-        'INDEX_NAME': "oregoninvasiveshotline"
     }
 }
 

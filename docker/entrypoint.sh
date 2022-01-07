@@ -8,7 +8,6 @@ if [[ ${APP_BOOTSTRAP} == "yes" ]]; then
     ${APP_ENV}/bin/python manage.py loaddata counties.json
     ${APP_ENV}/bin/python manage.py loaddata dummy_user.json category.json severity.json pages.json
     ${APP_ENV}/bin/python manage.py generate_icons --no-input --clean --force
-    ${APP_ENV}/bin/python manage.py rebuild_index --noinput
 fi
 
 # Select the entrypoint given the APP_SERVICE
