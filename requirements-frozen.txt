@@ -1,5 +1,5 @@
 --find-links https://packages.wdt.pdx.edu/dist/
-psu.oit.arc.oregoninvasiveshotline==1.15.0
+psu.oit.arc.oregoninvasiveshotline==1.15.1
 amqp==5.0.9
 asgiref==3.4.1
 awscli==1.22.32
