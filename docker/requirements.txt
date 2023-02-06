@@ -59,4 +59,4 @@ urllib3==1.26.12; python_version >= '3.6'
 uwsgi==2.0.21
 vine==5.0.0; python_version >= '3.6'
 wcwidth==0.2.5
-zipp==3.10.0; python_version >= '3.7'
+zipp==3.12.1; python_version >= '3.7'
