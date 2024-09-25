@@ -19,7 +19,7 @@
   ],
   "scripts": {},
   "dependencies": {
-    "@sentry/browser": "~7.118.0",
+    "@sentry/browser": "~8.32.0",
     "@sentry/tracing": "~7.118.0",
     "bootstrap": "~3.4.0",
     "galleria": "~1.6.0",
